@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:game_app/controllers/home_page_controller.dart';
-import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:http/http.dart' as http;
 
 import '../views/constants/index.dart';
@@ -107,38 +106,35 @@ class AccountsForSaleModel extends GetxController {
     }
   }
 
-  Future<List<AccountsForSaleModel>> getTypeAccounts({required Map<String, String> parametrs, required int type}) async {
-    final List<AccountsForSaleModel> accountList = [];
-    final ShowAllAccountsController controller = Get.put(ShowAllAccountsController());
-    controller.loading.value = 0;
-    final response = await http.get(
-      Uri.parse(
-        '$serverURL/api/accounts/type-accounts/$type/',
-      ).replace(queryParameters: parametrs),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final decoded = utf8.decode(response.bodyBytes);
-      final responseJson = json.decode(decoded);
-      for (final Map product in responseJson['results']) {
-        if (AccountsForSaleModel.fromJson(product).forSale == true) {
-          accountList.add(AccountsForSaleModel.fromJson(product));
-          controller.list.add(AccountsForSaleModel.fromJson(product));
-        }
-      }
-      controller.loading.value = 1;
-      return accountList;
-    } else if (response.statusCode == 404) {
-      controller.loading.value = 1;
-      controller.pageNumber.value -= 1;
-      return [];
-    } else {
-      Get.find<HomePageController>().loading.value = 2;
-      return [];
-    }
-  }
+  // Future<List<AccountsForSaleModel>> getTypeAccounts({required Map<String, String> parametrs, required int type}) async {
+  //   final List<AccountsForSaleModel> accountList = [];
+  //   final ShowAllAccountsController controller = Get.put(ShowAllAccountsController());
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       '$serverURL/api/accounts/type-accounts/$type/',
+  //     ).replace(queryParameters: parametrs),
+  //     headers: <String, String>{
+  //       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final decoded = utf8.decode(response.bodyBytes);
+  //     final responseJson = json.decode(decoded);
+  //     for (final Map product in responseJson['results']) {
+  //       if (AccountsForSaleModel.fromJson(product).forSale == true) {
+  //         accountList.add(AccountsForSaleModel.fromJson(product));
+  //         controller.list.add(AccountsForSaleModel.fromJson(product));
+  //       }
+  //     }
+  //     return accountList;
+  //   } else if (response.statusCode == 404) {
+  //     controller.pageNumber.value -= 1;
+  //     return [];
+  //   } else {
+  //     Get.find<HomePageController>().loading.value = 2;
+  //     return [];
+  //   }
+  // }
 }
 
 class PostByIdModel extends GetxController {

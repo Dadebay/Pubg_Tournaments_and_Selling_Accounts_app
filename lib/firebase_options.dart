@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:35945321409:android:a31697d67e9cd1c11a5540',
     messagingSenderId: '35945321409',
     projectId: 'uc-dayy-45236',
-    storageBucket: 'uc-dayy-45236.appspot.com',
+    storageBucket: 'uc-dayy-45236.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:35945321409:ios:7fa243453083f6381a5540',
     messagingSenderId: '35945321409',
     projectId: 'uc-dayy-45236',
-    storageBucket: 'uc-dayy-45236.appspot.com',
+    storageBucket: 'uc-dayy-45236.firebasestorage.app',
     iosBundleId: 'com.northernerwolf.gameApp',
   );
 

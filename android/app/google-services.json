@@ -2,38 +2,9 @@
   "project_info": {
     "project_number": "35945321409",
     "project_id": "uc-dayy-45236",
-    "storage_bucket": "uc-dayy-45236.appspot.com"
+    "storage_bucket": "uc-dayy-45236.firebasestorage.app"
   },
   "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:35945321409:android:d6ead6f51f699f981a5540",
-        "android_client_info": {
-          "package_name": "com.gurbanov.gameApp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "35945321409-28jmf9sp7kvpc5urqdh7ecu7u8bjn2dl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC00fgrPbGm54V4XLofYt9XLhWFKbiqkLw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "35945321409-28jmf9sp7kvpc5urqdh7ecu7u8bjn2dl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:35945321409:android:a31697d67e9cd1c11a5540",
@@ -41,12 +12,7 @@
           "package_name": "com.northernerwolf.gameApp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "35945321409-28jmf9sp7kvpc5urqdh7ecu7u8bjn2dl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyC00fgrPbGm54V4XLofYt9XLhWFKbiqkLw"
@@ -54,12 +20,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "35945321409-28jmf9sp7kvpc5urqdh7ecu7u8bjn2dl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

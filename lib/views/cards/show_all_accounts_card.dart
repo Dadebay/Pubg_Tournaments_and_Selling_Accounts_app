@@ -55,6 +55,7 @@ class ShowAllProductsCard extends StatelessWidget {
                               image: DecorationImage(
                                 image: imageProvider,
                                 fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
                               ),
                             ),
                           ),

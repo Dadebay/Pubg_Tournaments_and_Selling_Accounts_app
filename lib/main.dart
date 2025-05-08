@@ -31,7 +31,6 @@ Future<void> main() async {
 
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp(
-    name: 'gameApp',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FCMConfig().requestPermission();
@@ -84,6 +83,8 @@ class _MyAppRunState extends State<MyAppRun> {
 
   dynamic firebaseTask() async {
     await FCMConfig().requestPermission();
+    final String? token = await FirebaseMessaging.instance.getToken();
+    print(token);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       FCMConfig().sendNotification(body: message.notification!.body!, title: message.notification!.title!);
     });
@@ -94,14 +95,6 @@ class _MyAppRunState extends State<MyAppRun> {
     return GetMaterialApp(
       initialBinding: AllControllerBindings(),
       defaultTransition: Transition.fade,
-      builder: (context, childd) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.noScaling,
-          ), //set desired text scale factor here
-          child: childd!,
-        );
-      },
       locale: storage.read('langCode') != null
           ? Locale(storage.read('langCode'))
           : const Locale(

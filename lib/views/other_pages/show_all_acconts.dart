@@ -1,7 +1,5 @@
-// ignore_for_file: file_names
-
+import 'package:flutter/scheduler.dart';
 import 'package:game_app/controllers/show_all_account_controller.dart';
-import 'package:game_app/models/get_posts_model.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/views/constants/index.dart';
@@ -21,7 +19,7 @@ class ShowAllAccounts extends StatefulWidget {
 }
 
 class _ShowAllAccountsState extends State<ShowAllAccounts> {
-  ShowAllAccountsController controller = Get.put(ShowAllAccountsController());
+  final ShowAllAccountsController controller = Get.put(ShowAllAccountsController());
   String name = 'selectCitySubtitle';
   int value = 0;
 
@@ -32,8 +30,27 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
   @override
   void initState() {
     super.initState();
-    controller.clearData();
+
+    name = 'selectCitySubtitle';
     value = 0;
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // Bu kod birinji kadr çekilenden soň işlär
+      if (mounted) {
+        // Widgetyň entek agaçda bardygyny barlaň
+        controller.clearData();
+        controller.fetchPosts(DANGEROUS_clearList: true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller1.dispose();
+    _refreshController.dispose();
+
+    super.dispose();
   }
 
   Row leftSideAppBar() {
@@ -56,22 +73,12 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                     activeColor: kPrimaryColor,
                     groupValue: value,
                     onChanged: (ind) {
-                      final int a = int.parse(ind.toString());
-                      value = a;
-                      controller.list.clear();
-                      controller.pageNumber.value = 1;
+                      setState(() {
+                        value = int.parse(ind.toString());
+                      });
                       controller.sortName.value = sortData[index]['sort_column'];
                       controller.sortType.value = sortData[index]['sort_direction'];
-                      GetPostsAccountModel().getPosts(
-                        parametrs: {
-                          'page': '${controller.pageNumber}',
-                          'size': '10',
-                          controller.sortName.value: controller.sortType.value,
-                          controller.sortCityName.value: controller.sortCityType.value,
-                          controller.sortNamePrice.value: controller.sortTypePrice.value,
-                          controller.sortNamePriceMax.value: controller.sortTypePriceMax.value,
-                        },
-                      );
+                      controller.clearAndFetch();
                       Get.back();
                     },
                     title: Text(
@@ -107,24 +114,11 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                       child: AgreeButton(
                         name: 'agree',
                         onTap: () {
-                          controller.list.clear();
-                          controller.pageNumber.value = 1;
-                          controller.sortNamePrice.value = 'min';
+                          controller.sortNamePrice.value = _controller.text.isNotEmpty ? 'min' : '';
                           controller.sortTypePrice.value = _controller.text;
-                          controller.sortNamePriceMax.value = 'max';
+                          controller.sortNamePriceMax.value = _controller1.text.isNotEmpty ? 'max' : '';
                           controller.sortTypePriceMax.value = _controller1.text;
-                          GetPostsAccountModel().getPosts(
-                            parametrs: {
-                              'page': '${controller.pageNumber}',
-                              'size': '10',
-                              controller.sortName.value: controller.sortType.value,
-                              controller.sortCityName.value: controller.sortCityType.value,
-                              controller.sortNamePrice.value: controller.sortTypePrice.value,
-                              controller.sortNamePriceMax.value: controller.sortTypePriceMax.value,
-                            },
-                          );
-                          // setState(() {});
-
+                          controller.clearAndFetch();
                           Get.back();
                         },
                       ),
@@ -198,11 +192,11 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   style: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
                   cursorColor: kPrimaryColor,
                   controller: controller2,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    // LengthLimitingTextInputFormatter(9),
+                    LengthLimitingTextInputFormatter(9),
                   ],
                   decoration: InputDecoration(
                     suffixIcon: const Padding(padding: EdgeInsets.only(right: 8), child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: josefinSansSemiBold, fontSize: 14, color: Colors.grey))),
@@ -262,12 +256,13 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   return const Center(
                     child: Text('Error'),
                   );
-                } else if (snapshot.data == null) {
+                } else if (snapshot.data == null || snapshot.data!.isEmpty) {
                   return const Center(
-                    child: Text('Null'),
+                    child: Text('No cities found'),
                   );
                 }
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: List.generate(
                     snapshot.data!.length,
                     (index) => Wrap(
@@ -277,21 +272,12 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                         customDivider(),
                         TextButton(
                           onPressed: () {
-                            controller.list.clear();
-                            controller.pageNumber.value = 1;
+                            setState(() {
+                              name = (Get.locale?.languageCode == 'tr' ? snapshot.data![index].name_tm : snapshot.data![index].name_ru)!;
+                            });
                             controller.sortCityName.value = 'city';
                             controller.sortCityType.value = snapshot.data![index].id.toString();
-                            name = (Get.locale?.languageCode == 'tr' ? snapshot.data![index].name_tm : snapshot.data![index].name_ru)!;
-                            GetPostsAccountModel().getPosts(
-                              parametrs: {
-                                'page': '${controller.pageNumber}',
-                                'size': '10',
-                                controller.sortName.value: controller.sortType.value,
-                                controller.sortCityName.value: controller.sortCityType.value,
-                                controller.sortNamePrice.value: controller.sortTypePrice.value,
-                                controller.sortNamePriceMax.value: controller.sortTypePriceMax.value,
-                              },
-                            );
+                            controller.clearAndFetch();
                             Get.back();
                             Get.back();
                           },
@@ -314,31 +300,30 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
   }
 
   void _onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    controller.list.clear();
-    controller.pageNumber.value = 1;
+    setState(() {
+      value = 0;
+    });
+
     controller.clearData();
-    value = 0;
-    await GetPostsAccountModel().getPosts(parametrs: {'page': '${controller.pageNumber}', 'size': '10'});
+    await controller.fetchPosts(DANGEROUS_clearList: true);
     _refreshController.refreshCompleted();
+
+    if (controller.list.length < 10 && controller.list.isNotEmpty) {
+      _refreshController.loadNoData();
+    } else {
+      _refreshController.resetNoData();
+    }
   }
 
   void _onLoading() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted) {
-      controller.pageNumber.value += 1;
-      await GetPostsAccountModel().getPosts(
-        parametrs: {
-          'page': '${controller.pageNumber}',
-          'size': '10',
-          controller.sortName.value: controller.sortType.value,
-          controller.sortCityName.value: controller.sortCityType.value,
-          controller.sortNamePrice.value: controller.sortTypePrice.value,
-          controller.sortNamePriceMax.value: controller.sortTypePriceMax.value,
-        },
-      );
+    controller.pageNumber.value += 1;
+    final int oldListLength = controller.list.length;
+    await controller.fetchPosts(DANGEROUS_clearList: false);
+    if (controller.list.length > oldListLength) {
+      _refreshController.loadComplete();
+    } else {
+      _refreshController.loadNoData();
     }
-    _refreshController.loadComplete();
   }
 
   @override
@@ -348,46 +333,73 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
         appBar: MyAppBar(fontSize: 20.0, backArrow: true, iconRemove: false, icon: leftSideAppBar(), name: widget.name.tr, elevationWhite: true),
-        body: SmartRefresher(
-          footer: footer(),
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          enablePullDown: true,
-          enablePullUp: true,
-          physics: const BouncingScrollPhysics(),
-          header: const MaterialClassicHeader(
-            color: kPrimaryColor,
-          ),
-          child: FutureBuilder<List<GetPostsAccountModel>>(
-            future: GetPostsAccountModel().getVIPPosts(parametrs: {}),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: spinKit());
-              } else if (snapshot.hasError) {
-                return errorData(onTap: () {});
-              } else if (snapshot.data.toString() == '[]') {
-                return emptyData();
-              }
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: size.width >= 800 ? 3 : 2, mainAxisSpacing: 10, childAspectRatio: size.width >= 800 ? 3 / 4 : 2 / 3, crossAxisSpacing: 10),
-                  itemBuilder: (BuildContext context, int index) {
-                    return ShowAllProductsCard(
-                      fav: false,
-                      model: snapshot.data![index],
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        ),
+        body: Obx(() {
+          if (controller.isLoading.value && controller.list.isEmpty) {
+            return Center(child: spinKit());
+          } else if (controller.list.isEmpty && !controller.isLoading.value) {
+            return emptyData();
+          }
+          return SmartRefresher(
+            footer: footer(),
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            enablePullDown: true,
+            enablePullUp: controller.list.isNotEmpty,
+            physics: const BouncingScrollPhysics(),
+            header: const MaterialClassicHeader(
+              color: kPrimaryColor,
+            ),
+            child: GridView.builder(
+              itemCount: controller.list.length,
+              shrinkWrap: false,
+              padding: const EdgeInsets.all(8.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: size.width >= 800 ? 3 : 2,
+                mainAxisSpacing: 10,
+                childAspectRatio: size.width >= 800 ? 3 / 4 : 2 / 3,
+                crossAxisSpacing: 10,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return ShowAllProductsCard(
+                  fav: false,
+                  model: controller.list[index],
+                );
+              },
+            ),
+          );
+        }),
       ),
+    );
+  }
+
+  final List<Map<String, dynamic>> sortData = [
+    {'name': 'Newest', 'sort_column': 'created_at', 'sort_direction': 'desc'},
+    {'name': 'Oldest', 'sort_column': 'created_at', 'sort_direction': 'asc'},
+    {'name': 'Price: Low to High', 'sort_column': 'price', 'sort_direction': 'asc'},
+    {'name': 'Price: High to Low', 'sort_column': 'price', 'sort_direction': 'desc'},
+  ];
+
+  CustomFooter footer() {
+    return CustomFooter(
+      builder: (BuildContext context, LoadStatus? mode) {
+        Widget body;
+        if (mode == LoadStatus.idle) {
+          body = Text('Dowamyny ýüklemek üçin ýokary çekiň'.tr);
+        } else if (mode == LoadStatus.loading) {
+          body = const CircularProgressIndicator(color: kPrimaryColor);
+        } else if (mode == LoadStatus.failed) {
+          body = Text('Ýüklemek başa barmady'.tr);
+        } else if (mode == LoadStatus.canLoading) {
+          body = Text('Dowamyny ýüklemek üçin goýberiň'.tr);
+        } else {
+          body = Text('Başga maglumat ýok'.tr);
+        }
+        return SizedBox(
+          height: 55.0,
+          child: Center(child: body),
+        );
+      },
     );
   }
 }

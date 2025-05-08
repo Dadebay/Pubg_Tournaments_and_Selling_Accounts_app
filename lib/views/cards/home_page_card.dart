@@ -35,7 +35,7 @@ class HomePageCard extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: kPrimaryColor.withOpacity(0.8),
+          color: model.vip == true ? kPrimaryColor : Colors.grey.withOpacity(0.4),
           border: Border.all(color: kPrimaryColor.withOpacity(0.6)),
           borderRadius: borderRadius15,
         ),

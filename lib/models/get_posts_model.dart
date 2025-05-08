@@ -44,7 +44,7 @@ class GetPostsAccountModel {
 
   Future<List<GetPostsAccountModel>> getVIPPosts({required Map<String, String> parametrs}) async {
     final List<GetPostsAccountModel> pubgPost = [];
-
+    print(parametrs);
     final response = await http.get(
       Uri.parse(
         '$serverURL/api/accounts/get-vip-posts/',
@@ -57,6 +57,7 @@ class GetPostsAccountModel {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded)['results'];
       for (final Map product in responseJson) {
+        print(GetPostsAccountModel.fromJson(product).id);
         pubgPost.add(GetPostsAccountModel.fromJson(product));
       }
       return pubgPost;
@@ -76,10 +77,14 @@ class GetPostsAccountModel {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },
     );
+    print(parametrs);
+    print(response.body);
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded)['results'];
+
       for (final Map product in responseJson) {
+        print(GetPostsAccountModel.fromJson(product).id);
         pubgPost.add(GetPostsAccountModel.fromJson(product));
       }
       return pubgPost;
