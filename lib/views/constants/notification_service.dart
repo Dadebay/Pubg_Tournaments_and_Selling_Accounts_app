@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class FCMConfig {
   Future<void> initAwesomeNotification() async {
-    await AwesomeNotifications().initialize(
+    AwesomeNotifications().initialize(
       null,
       [
         NotificationChannel(

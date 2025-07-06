@@ -1,3 +1,11 @@
+plugins {
+    id "com.android.application"
+    id 'com.google.gms.google-services'
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,10 +29,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '0.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
 
 
 def keystoreProperties = new Properties()
@@ -34,8 +38,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.gurbanov.ucdayy"
     compileSdkVersion 34
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -53,40 +57,32 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.northernerwolf.gameApp"
-        minSdkVersion  21
-        targetSdkVersion 34
-        versionCode 15
-        versionName "1.1.5"
+        applicationId = "com.gurbanov.ucdayy"
+        minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
+        targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion').toInteger()
+        versionCode localProperties.getProperty('flutter.versionCode').toInteger()
+        versionName localProperties.getProperty('flutter.versionName')
         multiDexEnabled true
     }
 
-    signingConfigs {
-    //   release {
-    //      keyAlias keystoreProperties['keyAlias']
-    //      keyPassword keystoreProperties['keyPassword']
-    //      storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-    //      storePassword keystoreProperties['storePassword']
-    //   }
-   }
 
 
-   buildTypes {
-       release {
-           signingConfig signingConfigs.debug
-            // signingConfig signingConfigs.release
-       }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+            // minifyEnabled true  // Bu true olmalı
+            // shrinkResources true // Bu da true olmalı
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+       
+        }
     }
 }
 
 flutter {
     source '../..'
 }
-
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:29.0.4')
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.otaliastudios:transcoder:0.10.5'
 }

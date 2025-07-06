@@ -1,10 +1,11 @@
 // ignore_for_file: file_names, deprecated_member_use
 
+import 'package:game_app/connection_check.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/views/constants/index.dart';
-import 'package:restart_app/restart_app.dart';
-import 'package:share/share.dart';
+// import 'package:restart_app/restart_app.dart';
+// import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/settings_button.dart';
@@ -64,7 +65,7 @@ class _SettingsState extends State<Settings> {
           SettingButton(
             name: 'share',
             onTap: () {
-              Share.share(appShareLink, subject: appName);
+              // Share.share(appShareLink, subject: appName);
             },
             icon: IconButton(
               onPressed: () {},
@@ -90,7 +91,8 @@ class _SettingsState extends State<Settings> {
           SettingButton(
             name: 'deleteAccount',
             onTap: () {
-              Restart.restartApp();
+              // Restart.restartApp();
+              Get.to(() => const ConnectionCheck());
               Auth().removeToken();
               Auth().removeRefreshToken();
             },

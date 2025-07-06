@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:35945321409:android:ddae1115ad7fa9fb1a5540",
+        "android_client_info": {
+          "package_name": "com.gurbanov.ucdayy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC00fgrPbGm54V4XLofYt9XLhWFKbiqkLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:35945321409:android:a31697d67e9cd1c11a5540",
         "android_client_info": {
           "package_name": "com.northernerwolf.gameApp"

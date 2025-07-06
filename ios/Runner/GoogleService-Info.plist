@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.northernerwolf.gameApp</string>
+	<string>com.gurbanov.ucdayy</string>
 	<key>PROJECT_ID</key>
 	<string>uc-dayy-45236</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:35945321409:ios:7fa243453083f6381a5540</string>
+	<string>1:35945321409:ios:504a5663e890f5c71a5540</string>
 </dict>
 </plist>
