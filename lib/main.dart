@@ -19,6 +19,7 @@ class MyHttpOverrides extends HttpOverrides {
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel', // id
   'High Importance Notifications', // title
+  // 'This channel is used for important notifications.',
   description: 'This channel is used for important notifications.', // description
   importance: Importance.high,
 );
@@ -35,6 +36,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       android: AndroidNotificationDetails(
         channel.id,
         channel.name,
+        // '',
         channelDescription: channel.description,
         color: Colors.white,
         styleInformation: const BigTextStyleInformation(''),
@@ -65,7 +67,9 @@ Future<void> main() async {
     iOS: null,
     macOS: null,
   );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: (String? a) {});
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -105,6 +109,7 @@ class _MyAppRunState extends State<MyAppRun> {
           android: AndroidNotificationDetails(
             channel.id,
             channel.name,
+            // '',
             channelDescription: channel.description,
             styleInformation: const BigTextStyleInformation(''),
             color: Colors.white,

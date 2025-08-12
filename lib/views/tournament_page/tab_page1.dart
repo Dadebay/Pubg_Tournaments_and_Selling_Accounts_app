@@ -50,7 +50,7 @@ class TabPage1 extends StatelessWidget {
                 Html(
                   data: Get.locale?.languageCode == 'tr' ? model.description_tm ?? '' : model.description_ru ?? '',
                   style: {
-                    'body': Style(fontFamily: josefinSansRegular, fontSize: const FontSize(18.0), color: Colors.white70, textAlign: TextAlign.left),
+                    'body': Style(fontFamily: josefinSansRegular, fontSize: FontSize(18.0), color: Colors.white70, textAlign: TextAlign.left),
                   },
                 ),
                 const SizedBox(

@@ -57,7 +57,7 @@ class BannerProfileView extends GetView {
             child: Html(
               data: description,
               style: {
-                'body': Style(fontFamily: josefinSansMedium, fontSize: const FontSize(20.0), textAlign: TextAlign.left),
+                'body': Style(fontFamily: josefinSansMedium, fontSize: FontSize(20.0), textAlign: TextAlign.left),
               },
             ),
           )
