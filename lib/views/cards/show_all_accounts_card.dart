@@ -78,7 +78,7 @@ class ShowAllProductsCard extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Container(
                 padding: const EdgeInsets.only(left: 6, top: 4),
                 width: Get.size.width,

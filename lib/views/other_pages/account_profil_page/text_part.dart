@@ -30,7 +30,7 @@ class CustomFlexibleSpace extends StatelessWidget {
           ),
           Container(
             color: kPrimaryColorBlack,
-            height: 70,
+            height: 75,
             margin: const EdgeInsets.symmetric(vertical: 18),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

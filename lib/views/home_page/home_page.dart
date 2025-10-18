@@ -12,7 +12,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../models/user_models/auth_model.dart';
 import '../../models/user_models/user_sign_in_model.dart';
 import '../cards/home_page_card.dart';
-import 'Banners.dart';
 import 'pubg_types.dart';
 
 class HomePage extends StatefulWidget {

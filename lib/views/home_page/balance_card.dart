@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
-import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/home_page/paymant/add_monay.dart';
+import 'package:game_app/views/home_page/paymant/transfer_monay.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
@@ -13,7 +13,7 @@ class BalanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         child: Container(
           width: MediaQuery.of(context).size.width - 32,
-          margin: const EdgeInsets.symmetric(vertical: 0),
+          margin: EdgeInsets.zero,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
@@ -178,7 +178,14 @@ class BalanceCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TopUpScreen(),
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 Icons.add_card,
                                 size: 20,
@@ -190,6 +197,7 @@ class BalanceCard extends StatelessWidget {
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
+                                  color: kAccentColor,
                                 ),
                               ),
                             ),
@@ -225,7 +233,14 @@ class BalanceCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TransferScreen(),
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 Icons.send_rounded,
                                 size: 20,
