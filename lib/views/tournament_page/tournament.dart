@@ -44,6 +44,12 @@ class _TournamentPageState extends State<TournamentPage> {
         Tab(
           text: 'endTournament'.tr,
         ),
+        const Tab(
+          text: 'Pol Final',
+        ),
+        const Tab(
+          text: 'Final',
+        ),
       ],
     );
   }

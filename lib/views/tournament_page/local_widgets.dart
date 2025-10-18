@@ -81,6 +81,12 @@ TabBar tabbar() {
       Tab(
         text: 'endTournament'.tr,
       ),
+      Tab(
+        text: 'Pol Final',
+      ),
+      Tab(
+        text: 'Final',
+      ),
     ],
   );
 }
