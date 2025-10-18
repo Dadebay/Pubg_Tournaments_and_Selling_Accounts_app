@@ -34,7 +34,7 @@ class _NewTournamentPageState extends State<NewTournamentPage> {
         body: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemExtent: 220,
-          itemCount: 3,
+          itemCount: 2,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             return tournamentCard(index);

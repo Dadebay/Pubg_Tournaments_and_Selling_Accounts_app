@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/home_page/balance_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -168,19 +169,20 @@ class _HomePageState extends State<HomePage> {
           ),
           child: ListView(
             children: [
-              FutureBuilder<List<BannerModel>>(
-                future: _futureBanners,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(height: size.height * 0.2, child: Center(child: spinKit()));
-                  } else if (snapshot.hasError) {
-                    return SizedBox(height: size.height * 0.2, child: Center(child: Text('bannerError'.tr)));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const SizedBox.shrink();
-                  }
-                  return Banners(future: _futureBanners);
-                },
-              ),
+              // FutureBuilder<List<BannerModel>>(
+              //   future: _futureBanners,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return SizedBox(height: size.height * 0.2, child: Center(child: spinKit()));
+              //     } else if (snapshot.hasError) {
+              //       return SizedBox(height: size.height * 0.2, child: Center(child: Text('bannerError'.tr)));
+              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              //       return const SizedBox.shrink();
+              //     }
+              //     return Banners(future: _futureBanners);
+              //   },
+              // ),
+              const BalanceCard(),
               listViewName('pubgTypes'.tr, false, size),
               PubgTypes(),
               listViewName('accountsForSale'.tr, true, size),

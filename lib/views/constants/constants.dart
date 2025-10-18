@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 const String serverURL = 'http://216.250.11.240';
 const Color backgroundColor = Color(0xfff2f2f2);
 const Color kPrimaryColor = Color(0xFFFF9800);
+const kAccentColor = Color(0xFFFFB74D);
+const kDarkOrange = Color(0xFFF57C00);
 const Color kPrimaryColorBlack = Color(0xff161621);
 const Color kPrimaryColorBlack1 = Color.fromARGB(255, 37, 42, 51);
 const MaterialColor colorCustom = MaterialColor(0xff55b539, color);

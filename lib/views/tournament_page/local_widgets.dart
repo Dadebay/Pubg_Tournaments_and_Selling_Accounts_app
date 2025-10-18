@@ -12,18 +12,20 @@ import '../constants/index.dart';
 
 final List names = [
   'Turnir',
-  'Duo',
   'Squad',
 ];
 
 final List images = [
   'assets/image/1.png',
-  'assets/image/2.png',
   'assets/image/3.png',
 ];
+// 'Duo',
+// 'assets/image/2.png',
+
 dynamic tournamentCard(int index) {
   return GestureDetector(
     onTap: () {
+      
       Get.to(
         () => TournamentPage(
           tournamentType: index + 1,
