@@ -48,7 +48,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
                   children: [
                     const Icon(IconlyLight.infoSquare, color: kPrimaryColor, size: 30),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Text(
                         'accountsForSale'.tr,
                         textAlign: TextAlign.center,

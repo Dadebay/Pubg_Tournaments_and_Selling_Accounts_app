@@ -44,6 +44,17 @@
 	<string>Main</string>
 	<key>UIStatusBarStyle</key>
 	<string></string>
+
+	<key>NSAppTransportSecurity</key>
+    <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    </dict>
+
+
+	
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
