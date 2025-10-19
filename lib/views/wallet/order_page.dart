@@ -86,7 +86,7 @@ class _OrderPageState extends State<OrderPage> {
               ),
               Expanded(
                 child: AgreeButton(
-                  name: 'Nagt',
+                  name: 'Balance',
                   showIcon: true,
                   onTap: () async {
                     final token = await Auth().getToken();

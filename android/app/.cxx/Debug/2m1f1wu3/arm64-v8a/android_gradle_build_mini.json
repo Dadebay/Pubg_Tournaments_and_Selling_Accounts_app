@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/guwanchhaldurdyyev/Development/Programs/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/guwanchhaldurdyyev/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/guwanchhaldurdyyev/Development/dadebay/Pubg_Tournaments_and_Selling_Accounts_app/android/app/.cxx/Debug/2m1f1wu3/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/guwanchhaldurdyyev/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/guwanchhaldurdyyev/Development/dadebay/Pubg_Tournaments_and_Selling_Accounts_app/android/app/.cxx/Debug/2m1f1wu3/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
