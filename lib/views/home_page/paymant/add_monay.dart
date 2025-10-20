@@ -1,5 +1,6 @@
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/user_profil/pages/add_cash.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -49,12 +50,12 @@ class _TopUpScreenState extends State<TopUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(
+      appBar:  MyAppBar(
         backArrow: true,
         fontSize: 0.0,
         iconRemove: false,
         elevationWhite: true,
-        name: 'Hasap Doldyrmak',
+        name: 'full_balance'.tr,
       ),
       body: Container(
         color: kPrimaryColorBlack,
@@ -76,8 +77,8 @@ class _TopUpScreenState extends State<TopUpScreen> {
         children: [
           _buildMethodCard(
             number: '1',
-            title: 'Kartdan doldyrmak',
-            subtitle: 'Bank kartyňyz arkaly',
+            title: 'with_cart'.tr,
+            subtitle: 'banc_cart'.tr,
             icon: Icons.credit_card,
             color: kAccentColor,
             onTap: () {
@@ -88,13 +89,18 @@ class _TopUpScreenState extends State<TopUpScreen> {
           const SizedBox(height: 16),
           _buildMethodCard(
             number: '2',
-            title: 'TMCell arkaly',
-            subtitle: 'Telefon hasabyňyzdan',
+            title: 'tmcell'.tr,
+            subtitle: 'phone_b'.tr,
             icon: Icons.smartphone,
             color: kAccentColor,
             onTap: () {
               setState(() => selectedMethod = 'tmcell');
-              showSnackBar('TMCell', 'Soon available', Colors.orange);
+              Get.to(
+                () => AskMoneyPage(
+                  text: 'message',
+                  textSend: 'requestCash'.tr,
+                ),
+              );
             },
           ),
         ],
@@ -107,9 +113,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
       AlertDialog(
         backgroundColor: kPrimaryColorBlack,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Online töleg',
-          style: TextStyle(
+        title:  Text(
+          'online_p'.tr,
+          style:const TextStyle(
             color: Colors.white,
             fontFamily: josefinSansSemiBold,
           ),
@@ -118,7 +124,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomTextField(
-              labelName: 'Möçberi giriziň',
+              labelName: 'add_amount'.tr,
               borderRadius: true,
               controller: amountController,
               focusNode: amountFocusNode,
@@ -127,7 +133,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
             ),
             const SizedBox(height: 20),
             AgreeButton(
-              name: 'Töleg et',
+              name: 'pay_m'.tr,
               onTap: () {
                 if (amountController.text.isEmpty) {
                   showSnackBar('Ýalňyşlyk', 'Möçberi giriziň', Colors.red);

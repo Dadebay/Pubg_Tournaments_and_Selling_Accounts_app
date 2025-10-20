@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:game_app/controllers/show_all_account_controller.dart';
+import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/balance_card.dart';
@@ -45,13 +47,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onRefresh() async {
+    final token = await Auth().getToken();
+    log('Token in HomePage initState: ${token.toString()}');
     setState(() {
       _futureBanners = BannerModel().getBanners();
     });
 
     postsController.clearData();
     await postsController.fetchPosts(DANGEROUS_clearList: true);
-
+    await Get.find<WalletController>().getUserMoney();
     _refreshController.refreshCompleted();
 
     if (postsController.list.length < 10 && postsController.list.isNotEmpty) {

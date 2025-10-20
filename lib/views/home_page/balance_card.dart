@@ -89,9 +89,9 @@ class BalanceCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Text(
-                          'Balans (TMT)',
-                          style: TextStyle(
+                         Text(
+                            'balance'.tr +'(TMT)',
+                          style:const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -191,9 +191,9 @@ class BalanceCard extends StatelessWidget {
                                 size: 20,
                                 color: kAccentColor,
                               ),
-                              label: const Text(
-                                'Doldyrmak',
-                                style: TextStyle(
+                              label:  Text(
+                                'add_monay'.tr,
+                                style:const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
@@ -246,9 +246,9 @@ class BalanceCard extends StatelessWidget {
                                 size: 20,
                                 color: Colors.white,
                               ),
-                              label: const Text(
-                                'Geçirmek',
-                                style: TextStyle(
+                              label:  Text(
+                                'transfer_monay'.tr,
+                                style:const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/home_page/paymant/data/transfer_provider.dart';
+import 'package:provider/provider.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -27,7 +27,7 @@ class _TransferScreenState extends State<TransferScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: false, elevationWhite: true, name: 'Pul Geçirmek'),
+      appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: false, elevationWhite: true, name: 'transfer_monay'),
       body: Container(
         decoration: const BoxDecoration(
           color: kPrimaryColorBlack,
@@ -41,8 +41,19 @@ class _TransferScreenState extends State<TransferScreen> {
                   child: Column(
                     children: [
                       // Phone Number Input
+
+                      Text(
+                        'text_pay'.tr,
+                        style:const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10,),
                       _buildInputCard(
-                        title: 'Geçirjek nomeri',
+                        title: 'pay_num'.tr,
                         child: TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
@@ -80,7 +91,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       const SizedBox(height: 24),
                       // Amount Input
                       _buildInputCard(
-                        title: 'Geçirjek puluň möçberi',
+                        title: 'pay_size'.tr,
                         child: Column(
                           children: [
                             Row(
@@ -133,9 +144,9 @@ class _TransferScreenState extends State<TransferScreen> {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'Maksimum: 500 manat',
-                              style: TextStyle(
+                            Text(
+                              'max_5'.tr,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF6B7280),
                               ),
@@ -157,11 +168,11 @@ class _TransferScreenState extends State<TransferScreen> {
                           padding: const EdgeInsets.all(24),
                           child: Column(
                             children: [
-                              _buildFeeRow('Möçber:', '${amount.toStringAsFixed(2)} TMT', false),
+                              _buildFeeRow('size_p'.tr, '${amount.toStringAsFixed(2)} TMT', false),
                               const SizedBox(height: 12),
-                              _buildFeeRow('Komissiýa:', '+${fee.toStringAsFixed(2)} TMT', true),
+                              _buildFeeRow('commission'.tr, '+${fee.toStringAsFixed(2)} TMT', true),
                               const Divider(height: 32, thickness: 2, color: Color(0xFFFFD4C4)),
-                              _buildFeeRow('Jemi:', '${total.toStringAsFixed(2)} TMT', false, isTotal: true),
+                              _buildFeeRow('sum_p'.tr, '${total.toStringAsFixed(2)} TMT', false, isTotal: true),
                             ],
                           ),
                         ),
@@ -180,25 +191,49 @@ class _TransferScreenState extends State<TransferScreen> {
                             minimumSize: const Size(double.infinity, 0),
                           ),
                           onPressed: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
-                              ? () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Üstünlikli!'),
-                                      content: Text('${total.toStringAsFixed(2)} TMT geçirildi'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Bolýar'),
-                                        ),
-                                      ],
-                                    ),
+                              ? () async {
+                                  final transferProvider = context.read<TransferProvider>();
+
+                                  await transferProvider.sendTransfer(
+                                    phone: _phoneController.text,
+                                    amount: _amountController.text,
                                   );
+
+                                  if (transferProvider.errorMessage != null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Ýalňyşlyk!'),
+                                        content: Text(transferProvider.errorMessage!),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text('Bolýar'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else if (transferProvider.successMessage != null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Üstünlikli!'),
+                                        content: Text(transferProvider.successMessage!),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Bolýar'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
                                 }
                               : null,
+
                           // icon: const Icon(Icons.send_rounded, size: 20),
                           label: Container(
                             decoration: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
@@ -214,13 +249,13 @@ class _TransferScreenState extends State<TransferScreen> {
                                   ),
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             alignment: Alignment.center,
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.send_rounded, size: 20),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Geçirmek',
+                                  'send_p'.tr,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,

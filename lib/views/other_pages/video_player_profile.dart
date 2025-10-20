@@ -19,9 +19,12 @@ class VideoPlayerMine extends StatefulWidget {
 }
 
 class _VideoPlayerMineState extends State<VideoPlayerMine> {
-  FlickManager? flickManager;
+  // FlickManager? flickManager;
   bool isLoading = true;
   String? errorMessage;
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
+  late FlickManager flickManager;
 
   @override
   void initState() {
@@ -32,18 +35,20 @@ class _VideoPlayerMineState extends State<VideoPlayerMine> {
     } else {
       _downloadAndPlayVideo(widget.videoURL!);
     }
+    _controller = VideoPlayerController.network(
+      widget.videoURL!,
+    );
+    _initializeVideoPlayerFuture = _controller.initialize();
   }
 
   Future<void> _downloadAndPlayVideo(String url) async {
     try {
       debugPrint('Downloading video from: $url');
 
-   
       final dir = await getTemporaryDirectory();
       final filePath = '${dir.path}/${url.split('/').last}';
       final file = File(filePath);
 
-     
       if (!await file.exists()) {
         final response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
@@ -56,7 +61,6 @@ class _VideoPlayerMineState extends State<VideoPlayerMine> {
         debugPrint('Video already exists at $filePath');
       }
 
-     
       flickManager = FlickManager(
         videoPlayerController: VideoPlayerController.file(file)
           ..setLooping(true)
@@ -76,8 +80,7 @@ class _VideoPlayerMineState extends State<VideoPlayerMine> {
   }
 
   void _videoListener() {
-    if (flickManager == null) return;
-    final controller = flickManager!.flickVideoManager!.videoPlayerController;
+    final controller = flickManager.flickVideoManager!.videoPlayerController;
     if (controller!.value.hasError) {
       debugPrint('Video Player Error: ${controller.value.errorDescription}');
     }
@@ -88,8 +91,8 @@ class _VideoPlayerMineState extends State<VideoPlayerMine> {
 
   @override
   void dispose() {
-    flickManager?.flickVideoManager!.videoPlayerController?.removeListener(_videoListener);
-    flickManager?.dispose();
+    flickManager.flickVideoManager!.videoPlayerController?.removeListener(_videoListener);
+    flickManager.dispose();
     super.dispose();
   }
 
@@ -120,13 +123,29 @@ class _VideoPlayerMineState extends State<VideoPlayerMine> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Center(
-            child: FlickVideoPlayer(
-              flickManager: flickManager!,
-              flickVideoWithControls: const FlickVideoWithControls(
-                controls: FlickPortraitControls(),
-              ),
-            ),
+          FutureBuilder(
+            future: _initializeVideoPlayerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Center(
+                  child: AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: FlickVideoPlayer(
+                      flickVideoWithControls: FlickVideoWithControls(
+                        controls: FlickPortraitControls(
+                          progressBarSettings: FlickProgressBarSettings(),
+                        ),
+                      ),
+                      flickManager: flickManager,
+                    ),
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
           Positioned(
             top: 50,

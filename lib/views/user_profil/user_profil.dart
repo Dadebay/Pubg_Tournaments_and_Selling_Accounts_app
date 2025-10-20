@@ -6,6 +6,7 @@ import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/constants/profile_button.dart';
+import 'package:game_app/views/home_page/paymant/add_monay.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:game_app/views/user_profil/pages/about_us.dart';
 import 'package:game_app/views/user_profil/pages/add_cash.dart';
@@ -144,10 +145,10 @@ class _UserProfilState extends State<UserProfil> {
           name: 'cashHistory',
           onTap: () {
             Get.to(
-              () => AskMoneyPage(
-                text: 'message',
-                textSend: 'requestCash'.tr,
-              ),
+              () => const TopUpScreen(
+                  // text: 'message',
+                  // textSend: 'requestCash'.tr,
+                  ),
             );
           },
           icon: IconlyLight.wallet,
