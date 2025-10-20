@@ -1,4 +1,6 @@
 // ignore_for_file: file_names
+import 'dart:math';
+
 import 'package:game_app/controllers/tournament_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/tournament_model.dart';
@@ -28,29 +30,32 @@ class _TournamentPageState extends State<TournamentPage> {
   }
 
   TabBar tabbar() {
+    final List<Tab> tabs = [];
+
+    // Always show 'tournament'
+    tabs.add(Tab(text: 'tournament'.tr));
+
+    // Only show 'endTournament' if tournamentType == 2
+    if (widget.tournamentType == 2) {
+      tabs.add(Tab(text: 'endTournament'.tr));
+    } else {
+      tabs.add(const Tab(text: 'Yarym Final'));
+      tabs.add(const Tab(text: 'Final'));
+      tabs.add(const Tab(text: 'Bayraklar'));
+    }
+
     return TabBar(
+      isScrollable: widget.tournamentType == 2 ? false : true,
+      tabAlignment: widget.tournamentType == 2 ? TabAlignment.fill : TabAlignment.start,
       labelStyle: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 20),
       unselectedLabelStyle: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
       labelColor: kPrimaryColor,
       unselectedLabelColor: Colors.grey,
-      labelPadding: const EdgeInsets.only(top: 8, bottom: 4),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: kPrimaryColor,
       indicatorWeight: 2,
-      tabs: [
-        Tab(
-          text: 'tournament'.tr,
-        ),
-        Tab(
-          text: 'endTournament'.tr,
-        ),
-        const Tab(
-          text: 'Pol Final',
-        ),
-        const Tab(
-          text: 'Final',
-        ),
-      ],
+      tabs: tabs,
     );
   }
 
@@ -62,7 +67,12 @@ class _TournamentPageState extends State<TournamentPage> {
       itemCount: length,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        return TournamentCard(index: index, finised: true, tournamentType: widget.tournamentType, tournamentModel: TournamentModel.fromJson(controller.tournamentFinisedList[index]));
+        return TournamentCard(
+          index: index,
+          finised: true,
+          tournamentType: widget.tournamentType,
+          tournamentModel: TournamentModel.fromJson(controller.tournamentFinisedList[index]),
+        );
       },
     );
   }
@@ -74,8 +84,19 @@ class _TournamentPageState extends State<TournamentPage> {
       itemCount: length,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        return TournamentCard(index: index, finised: false, tournamentType: widget.tournamentType, tournamentModel: TournamentModel.fromJson(controller.tournamentList[index]));
+        return TournamentCard(
+          index: index,
+          finised: false,
+          tournamentType: widget.tournamentType,
+          tournamentModel: TournamentModel.fromJson(controller.tournamentList[index]),
+        );
       },
+    );
+  }
+
+  Widget emptyPage() {
+    return Center(
+      child: noData('cannot_find_data_tournament'),
     );
   }
 
@@ -87,10 +108,41 @@ class _TournamentPageState extends State<TournamentPage> {
     _refreshController.refreshCompleted();
   }
 
+  List<Widget> _buildTabViews() {
+    final List<Widget> tabViews = [];
+
+    // Always add active tournaments
+    tabViews.add(
+      controller.tournamentList.isEmpty ? emptyPage() : page1(controller.tournamentList.length),
+    );
+
+    if (widget.tournamentType == 2) {
+      // Add finished tournaments for Squad type
+      tabViews.add(
+        controller.tournamentFinisedList.isEmpty ? emptyPage() : page2(controller.tournamentFinisedList.length),
+      );
+    } else {
+      // Add Yarym Final, Final, and Bayraklar tabs
+      // You'll need to implement these pages based on your data structure
+      tabViews.add(emptyPage()); // Yarym Final placeholder
+      tabViews.add(emptyPage()); // Final placeholder
+      tabViews.add(emptyPage()); // Bayraklar placeholder
+    }
+
+    return tabViews;
+  }
+
   @override
   Widget build(BuildContext context) {
+    int tabLength = 1; // tournament is always there
+    if (widget.tournamentType == 2) {
+      tabLength++; // add endTournament
+    } else {
+      tabLength += 3; // add Yarym Final + Final + Bayraklar
+    }
+
     return DefaultTabController(
-      length: 2,
+      length: tabLength,
       child: SafeArea(
         child: Scaffold(
           appBar: MyAppBar(
@@ -127,10 +179,7 @@ class _TournamentPageState extends State<TournamentPage> {
                   tabbar(),
                   Expanded(
                     child: TabBarView(
-                      children: [
-                        controller.tournamentList.isEmpty ? noData('cannot_find_data_tournament') : page1(controller.tournamentList.length),
-                        controller.tournamentFinisedList.isEmpty ? noData('cannot_find_data_tournament') : page2(controller.tournamentFinisedList.length),
-                      ],
+                      children: _buildTabViews(),
                     ),
                   ),
                 ],

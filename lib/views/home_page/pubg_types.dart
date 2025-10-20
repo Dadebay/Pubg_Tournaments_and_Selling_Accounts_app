@@ -9,13 +9,13 @@ class PubgTypes extends StatelessWidget {
   List names = [
     'accountsForSale',
     'orders',
-    'cashHistory',
+    // 'cashHistory',
     'notification',
   ];
   List images = [
     'assets/image/8.png',
     'assets/image/6.png',
-    'assets/image/5.png',
+    // 'assets/image/5.png',
     'assets/image/7.png',
   ];
 
@@ -34,7 +34,7 @@ class PubgTypes extends StatelessWidget {
       color: kPrimaryColorBlack,
       alignment: Alignment.center,
       child: CarouselSlider.builder(
-        itemCount: 4,
+        itemCount: 3,
         itemBuilder: (context, index, count) {
           return MiniCategoryCard(
             index: index,

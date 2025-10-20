@@ -38,14 +38,16 @@ class MiniCategoryCard extends StatelessWidget {
           } else {
             showSnackBar('loginError', 'add_account_login_error', Colors.red);
           }
-        } else if (index == 2) {
-          await Get.to(
-            () => AskMoneyPage(
-              text: 'message',
-              textSend: 'requestCash'.tr,
-            ),
-          );
-        } else if (index == 3) {
+        }
+        //  else if (index == 2) {
+        //   await Get.to(
+        //     () => AskMoneyPage(
+        //       text: 'message',
+        //       textSend: 'requestCash'.tr,
+        //     ),
+        //   );
+        // } 
+        else if (index == 2) {
           await Get.to(() => NotificationPage());
         }
       },

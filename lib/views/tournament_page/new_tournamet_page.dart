@@ -31,14 +31,24 @@ class _NewTournamentPageState extends State<NewTournamentPage> {
           elevationWhite: true,
         ),
         backgroundColor: kPrimaryColorBlack,
-        body: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemExtent: 220,
-          itemCount: 2,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            return tournamentCard(index);
-          },
+        body: Column(
+          children: [
+            tournamentCard(2),
+            GridView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 2, // same as your ListView
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // number of columns in the grid
+                mainAxisSpacing: 10, // vertical spacing
+                crossAxisSpacing: 0, // horizontal spacing
+                childAspectRatio: 220 / 220, // width/height ratio of each card
+              ),
+              itemBuilder: (context, index) {
+                return tournamentCard(index); // your custom card widget
+              },
+            ),
+          ],
         ),
       ),
     );
