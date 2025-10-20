@@ -1,5 +1,6 @@
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/user_profil/pages/add_cash.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -94,7 +95,12 @@ class _TopUpScreenState extends State<TopUpScreen> {
             color: kAccentColor,
             onTap: () {
               setState(() => selectedMethod = 'tmcell');
-              showSnackBar('TMCell', 'Soon available', Colors.orange);
+              Get.to(
+                () => AskMoneyPage(
+                  text: 'message',
+                  textSend: 'requestCash'.tr,
+                ),
+              );
             },
           ),
         ],

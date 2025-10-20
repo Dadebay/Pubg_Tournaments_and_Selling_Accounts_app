@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:game_app/controllers/show_all_account_controller.dart';
@@ -45,6 +46,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onRefresh() async {
+    final token = await Auth().getToken();
+    log('Token in HomePage initState: ${token.toString()}');
     setState(() {
       _futureBanners = BannerModel().getBanners();
     });

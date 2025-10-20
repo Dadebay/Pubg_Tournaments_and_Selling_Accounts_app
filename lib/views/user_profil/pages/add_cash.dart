@@ -220,87 +220,93 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                     style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, height: 1.3, fontSize: 18),
                   ),
                 ),
-                widget.text != 'message'
-                    ? CustomTextField(
-                        labelName: 'fullName',
-                        borderRadius: true,
-                        controller: nameController,
-                        focusNode: nameFocusNode,
-                        requestfocusNode: phoneFocusNode,
-                        isNumber: false,
-                      )
-                    : const SizedBox.shrink(),
-                widget.text != 'message'
-                    ? PhoneNumber(
-                        mineFocus: phoneFocusNode,
-                        controller: phoneController,
-                        requestFocus: messageFocusNode,
-                        style: false,
-                        disabled: true,
-                      )
-                    : const SizedBox.shrink(),
-                widget.text != 'message'
-                    ? CustomTextField(
-                        maxline: 5,
-                        borderRadius: true,
-                        labelName: widget.text,
-                        controller: messageController,
-                        focusNode: messageFocusNode,
-                        requestfocusNode: nameFocusNode,
-                        isNumber: false,
-                        isLabel: true,
-                      )
-                    : const SizedBox.shrink(),
-                const SizedBox(
-                  height: 20,
-                ),
-                widget.text != 'message'
-                    ? Center(
-                        child: AgreeButton(
-                          name: 'agree',
-                          onTap: () async {
-                            final token = await Auth().getToken();
-                            if (_login.currentState!.validate()) {
-                              if (token != null) {
-                                Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
+                // widget.text != 'message'
+                //     ? CustomTextField(
+                //         labelName: 'fullName',
+                //         borderRadius: true,
+                //         controller: nameController,
+                //         focusNode: nameFocusNode,
+                //         requestfocusNode: phoneFocusNode,
+                //         isNumber: false,
+                //       )
+                //     : const SizedBox.shrink(),
+                // widget.text != 'message'
+                //     ? PhoneNumber(
+                //         mineFocus: phoneFocusNode,
+                //         controller: phoneController,
+                //         requestFocus: messageFocusNode,
+                //         style: false,
+                //         disabled: true,
+                //       )
+                //     : const SizedBox.shrink(),
+                // widget.text != 'message'
+                //     ? CustomTextField(
+                //         maxline: 5,
+                //         borderRadius: true,
+                //         labelName: widget.text,
+                //         controller: messageController,
+                //         focusNode: messageFocusNode,
+                //         requestfocusNode: nameFocusNode,
+                //         isNumber: false,
+                //         isLabel: true,
+                //       )
+                //     : const SizedBox.shrink(),
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // widget.text != 'message'
+                //     ? Center(
+                //         child: AgreeButton(
+                //           name: 'agree',
+                //           onTap: () async {
+                //             final token = await Auth().getToken();
+                //             if (_login.currentState!.validate()) {
+                //               if (token != null) {
+                //                 Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
 
-                                await TransactionHistoryModel()
-                                    .requestCash(
-                                  phone: phoneController.text,
-                                  message: '${messageController.text}  ${widget.textSend}',
-                                  fullname: nameController.text,
-                                )
-                                    .then((value) {
-                                  if (value == 200) {
-                                    Get.back();
+                //                 await TransactionHistoryModel()
+                //                     .requestCash(
+                //                   phone: phoneController.text,
+                //                   message: '${messageController.text}  ${widget.textSend}',
+                //                   fullname: nameController.text,
+                //                 )
+                //                     .then((value) {
+                //                   if (value == 200) {
+                //                     Get.back();
 
-                                    showSnackBar('copySucces', 'smsSuccesfullySent', Colors.green);
-                                    phoneController.clear();
-                                    messageController.clear();
-                                    nameController.clear();
-                                  } else {
-                                    showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
-                                  }
-                                  Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
-                                });
-                              } else {
-                                showSnackBar('loginError', 'loginError1', Colors.red);
-                              }
-                            } else {
-                              showSnackBar('tournamentInfo14', 'errorEmpty', Colors.red);
-                            }
-                          },
-                        ),
-                      )
-                    : ElevatedButton(
+                //                     showSnackBar('copySucces', 'smsSuccesfullySent', Colors.green);
+                //                     phoneController.clear();
+                //                     messageController.clear();
+                //                     nameController.clear();
+                //                   } else {
+                //                     showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
+                //                   }
+                //                   Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
+                //                 });
+                //               } else {
+                //                 showSnackBar('loginError', 'loginError1', Colors.red);
+                //               }
+                //             } else {
+                //               showSnackBar('tournamentInfo14', 'errorEmpty', Colors.red);
+                //             }
+                //           },
+                //         ),
+                //       )
+                // :
+                ...List<Widget>.from(
+                  (snapshot.data!['nomerler'] as List<dynamic>).map(
+                    (number) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: ElevatedButton(
                         onPressed: () async {
-                          // ignore: prefer_interpolation_to_compose_strings
-                          await launch('tel://' + snapshot.data!['phone_three']);
+                          await launch('tel://$number');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: const RoundedRectangleBorder(borderRadius: borderRadius15),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
                         ),
                         child: Text(
                           'popUP1'.tr,
@@ -310,48 +316,51 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                           style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 22),
                         ),
                       ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
                   height: 30,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Text('payCARD'.tr, style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, height: 1.3, fontSize: 18)),
-                ),
-                AgreeButton(
-                  onTap: () {
-                    //fill up your balance write how much you want show dialog
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 15),
+                //   child: Text('payCARD'.tr, style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, height: 1.3, fontSize: 18)),
+                // ),
+                // AgreeButton(
+                //   onTap: () {
+                //     //fill up your balance write how much you want show dialog
 
-                    Get.dialog(
-                      AlertDialog(
-                        title: Text(
-                          'OnlinePayment'.tr,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: josefinSansSemiBold,
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomTextField(labelName: 'OnlinePayment1', borderRadius: true, controller: amountController, focusNode: amountFocusNode, requestfocusNode: amountFocusNode, isNumber: true),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            AgreeButton(
-                              onTap: () {
-                                addMoneyToCARD();
-                              },
-                              name: 'agree',
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                    // addMoneyToCARD
-                  },
-                  name: 'agree'.tr,
-                ),
+                //     Get.dialog(
+                //       AlertDialog(
+                //         title: Text(
+                //           'OnlinePayment'.tr,
+                //           style: const TextStyle(
+                //             color: Colors.white,
+                //             fontFamily: josefinSansSemiBold,
+                //           ),
+                //         ),
+                //         alignment: Alignment.center,
+                //         content: Column(
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             CustomTextField(labelName: 'OnlinePayment1', borderRadius: true, controller: amountController, focusNode: amountFocusNode, requestfocusNode: amountFocusNode, isNumber: true),
+                //             const SizedBox(
+                //               height: 20,
+                //             ),
+                //             AgreeButton(
+                //               onTap: () {
+                //                 addMoneyToCARD();
+                //               },
+                //               name: 'agree',
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     );
+                //     // addMoneyToCARD
+                //   },
+                //   name: 'agree'.tr,
+                // ),
               ],
             ),
           );

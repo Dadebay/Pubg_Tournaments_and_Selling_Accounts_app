@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/home_page/paymant/data/transfer_provider.dart';
+import 'package:provider/provider.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -180,25 +180,49 @@ class _TransferScreenState extends State<TransferScreen> {
                             minimumSize: const Size(double.infinity, 0),
                           ),
                           onPressed: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
-                              ? () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Üstünlikli!'),
-                                      content: Text('${total.toStringAsFixed(2)} TMT geçirildi'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Bolýar'),
-                                        ),
-                                      ],
-                                    ),
+                              ? () async {
+                                  final transferProvider = context.read<TransferProvider>();
+
+                                  await transferProvider.sendTransfer(
+                                    phone: _phoneController.text,
+                                    amount: _amountController.text,
                                   );
+
+                                  if (transferProvider.errorMessage != null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Ýalňyşlyk!'),
+                                        content: Text(transferProvider.errorMessage!),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text('Bolýar'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else if (transferProvider.successMessage != null) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Üstünlikli!'),
+                                        content: Text(transferProvider.successMessage!),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Bolýar'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
                                 }
                               : null,
+
                           // icon: const Icon(Icons.send_rounded, size: 20),
                           label: Container(
                             decoration: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
