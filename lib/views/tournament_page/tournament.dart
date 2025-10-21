@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:game_app/controllers/tournament_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/team_member.dart';
+import 'package:game_app/models/team_winers.dart';
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/cards/new_tornament_card.dart';
@@ -133,7 +134,7 @@ class _TournamentPageState extends State<TournamentPage> {
       return Center(child: Text('Error: ${teamProvider.errorMessage}'));
     }
 
-    final winners = teamProvider.teamMembers;
+    final winners = teamProvider.teamMembersWin;
     final tournament = provider.tournaments;
 
     if (winners.isEmpty) {
@@ -385,7 +386,7 @@ class _TournamentPageState extends State<TournamentPage> {
     );
   }
 
-  Widget _buildWinnerCard(TeamMember team, int index) {
+  Widget _buildWinnerCard(TeamMemberWin team, int index) {
     final rankColors = [
       [const Color(0xFFFFD700), const Color(0xFFFFA500)], // Gold
       [const Color(0xFFC0C0C0), const Color(0xFF808080)], // Silver
@@ -533,7 +534,7 @@ class _TournamentPageState extends State<TournamentPage> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'SQUAD MEMBERS',
+                              'MEMBERS',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -575,7 +576,7 @@ class _TournamentPageState extends State<TournamentPage> {
                       children: [
                         _buildStatItem(
                           'QUARTER',
-                          team.quartturnir ?? '-',
+                          team.quartturnir!.name ?? '-',
                           Icons.filter_1,
                         ),
                         _buildStatDivider(),
@@ -587,7 +588,7 @@ class _TournamentPageState extends State<TournamentPage> {
                         _buildStatDivider(),
                         _buildStatItem(
                           'FINAL',
-                          team.finalturnir?.toString() ?? '-',
+                          team.finalturnir?.name.toString() ?? '-',
                           Icons.emoji_events,
                         ),
                       ],

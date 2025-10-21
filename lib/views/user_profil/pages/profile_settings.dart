@@ -379,7 +379,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    team.quartturnir ?? '',
+                                    team.quartturnir?.name ?? '',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,

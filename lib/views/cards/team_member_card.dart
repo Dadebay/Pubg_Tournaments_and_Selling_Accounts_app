@@ -80,7 +80,7 @@ class TeamMemberCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  member.quartturnir,
+                  member.quartturnir?.name ?? '',
                   style: TextStyle(
                     color: member.quartturnir == 'A1' ? Colors.orange : Colors.green,
                     fontWeight: FontWeight.bold,

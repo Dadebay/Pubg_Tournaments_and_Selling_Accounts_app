@@ -323,6 +323,11 @@ class MyTranslations extends Translations {
           'cancel': 'Ýatyr',
           'Dowam etmek üçin balansy dolduryň': 'Dowam etmek üçin balansy dolduryň',
           'Bos': 'Boş',
+          'Registered Team': 'Bellige alnan topar',
+          'View your team information':'Toparyňyzyň maglumatlaryny görüň',
+          'Team successfully registered for tournament' :'Topar ýaryş üçin üstünlikli hasaba alyndy'
+
+
         },
         'ru': {
           'qarterFinals': 'Четверть финал',
@@ -333,7 +338,9 @@ class MyTranslations extends Translations {
           'Final Team Members': 'Финал топар агзалары',
           'Team Members': 'Члены команды',
           'No team members found': 'Члены команды не найдены',
-
+          'Registered Team': 'Зарегистрированная команда',
+          'View your team information':'Просмотр информации о вашей команде',
+          'Team successfully registered for tournament' : 'Команда успешно зарегистрирована на турнир',
           'Success': 'Успешно',
           'Team registered successfully!': 'Команда успешно зарегистрирована!',
           'Error': 'Ошибка',

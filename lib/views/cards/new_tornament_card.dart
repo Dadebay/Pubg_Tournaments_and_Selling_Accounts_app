@@ -112,27 +112,27 @@ class NewTournamentCard extends StatelessWidget {
                         fontSize: 28,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Text(
-                        _formatDate(tournament.startDate),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontFamily: josefinSansSemiBold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      _formatTime(tournament.startDate),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontFamily: josefinSansSemiBold,
-                        fontSize: 18,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 6),
+                    //   child: Text(
+                    //     _formatDate(tournament.startDate),
+                    //     textAlign: TextAlign.center,
+                    //     style: TextStyle(
+                    //       color: Colors.white.withOpacity(0.8),
+                    //       fontFamily: josefinSansSemiBold,
+                    //       fontSize: 18,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Text(
+                    //   _formatTime(tournament.startDate),
+                    //   textAlign: TextAlign.center,
+                    //   style: TextStyle(
+                    //     color: Colors.white.withOpacity(0.8),
+                    //     fontFamily: josefinSansSemiBold,
+                    //     fontSize: 18,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

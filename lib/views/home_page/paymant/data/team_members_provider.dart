@@ -3,17 +3,20 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:flutter/foundation.dart';
+import 'package:game_app/models/team_winers.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 
 class TeamMembersProvider with ChangeNotifier {
   final Dio _dio = Dio(BaseOptions(baseUrl: 'http://216.250.11.240'));
 
   List<TeamMember> _teamMembers = [];
+  List<TeamMemberWin>  _teamMembersWin = [];
   bool _isLoading = false;
   bool _isRegistering = false;
   String? _errorMessage;
 
   List<TeamMember> get teamMembers => _teamMembers;
+   List<TeamMemberWin> get teamMembersWin => _teamMembersWin;
   bool get isLoading => _isLoading;
   bool get isRegistering => _isRegistering;
   String? get errorMessage => _errorMessage;
@@ -136,8 +139,8 @@ class TeamMembersProvider with ChangeNotifier {
 
       if (response.statusCode == 200 && response.data is List) {
         final List data = response.data;
-        _teamMembers = data.map((e) => TeamMember.fromJson(e)).toList();
-        print('Fetched ${_teamMembers.length} team members');
+        _teamMembersWin = data.map((e) => TeamMemberWin.fromJson(e)).toList();
+        print('Fetched ${_teamMembersWin.length} team members');
       } else {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }

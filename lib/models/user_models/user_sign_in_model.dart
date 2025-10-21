@@ -142,6 +142,38 @@ class UserSignInModel {
   }
 }
 
+class QuartTurnir {
+  final String? name;
+  final String? startDate;
+  final String? finishDate;
+  final String? lobbiId;
+
+  QuartTurnir({
+    this.name,
+    this.startDate,
+    this.finishDate,
+    this.lobbiId,
+  });
+
+  factory QuartTurnir.fromJson(Map<String, dynamic> json) {
+    return QuartTurnir(
+      name: json['name'],
+      startDate: json['start_date'],
+      finishDate: json['finish_date'],
+      lobbiId: json['lobbi_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'start_date': startDate,
+      'finish_date': finishDate,
+      'lobbi_id': lobbiId,
+    };
+  }
+}
+
 class UserTeam {
   final int id;
   final String? name;
@@ -149,10 +181,10 @@ class UserTeam {
   final String? user1;
   final String? user2;
   final String? user3;
-  final String? quartturnir;
-  final String? halfturnir;
-  final int? finalturnir;
-  final int? winnerturnir;
+  final QuartTurnir? quartturnir;
+  final dynamic halfturnir;
+  final dynamic finalturnir;
+  final dynamic winnerturnir;
 
   UserTeam({
     required this.id,
@@ -175,7 +207,9 @@ class UserTeam {
       user1: json['user_1'],
       user2: json['user_2'],
       user3: json['user_3'],
-      quartturnir: json['quartturnir'],
+      quartturnir: json['quartturnir'] != null
+          ? QuartTurnir.fromJson(json['quartturnir'])
+          : null,
       halfturnir: json['halfturnir'],
       finalturnir: json['finalturnir'],
       winnerturnir: json['winnerturnir'],
@@ -190,7 +224,7 @@ class UserTeam {
       'user_1': user1,
       'user_2': user2,
       'user_3': user3,
-      'quartturnir': quartturnir,
+      'quartturnir': quartturnir?.toJson(),
       'halfturnir': halfturnir,
       'finalturnir': finalturnir,
       'winnerturnir': winnerturnir,
@@ -282,31 +316,7 @@ class GetMeModel {
     );
   }
 
-  // Map<String, dynamic> toJson() => {
-  //       'id': id,
-  //       'pubgType': pubgType,
-  //       'lastName': lastName,
-  //       'verified': verified,
-  //       'forSale': forSale,
-  //       'bgImage': bgImage,
-  //       'bio': bio,
-  //       'createdDate': createdDate,
-  //       'email': email,
-  //       'vip': vip,
-  //       'user': user,
-  //       'location': location,
-  //       'firstName': firstName,
-  //       'image': image,
-  //       'nickname': nickname,
-  //       'phone': phone,
-  //       'points': points,
-  //       'used_ref_code': used_ref_code,
-  //       'ref_code': ref_code,
-  //       'pointsFromTurnir': pointsFromTurnir,
-  //       'price': price,
-  //       'pubgId': pubgId,
-  //       'updatedDate': updatedDate,
-  //     };
+  
 
   Future<GetMeModel> getMe() async {
     final token = await Auth().getToken();

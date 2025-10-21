@@ -18,9 +18,9 @@ final List names = [
 ];
 
 final List images = [
-  'assets/image/1.png',
-  'assets/image/3.png',
-  'assets/image/image_best.png',
+  'assets/image/img1.jpg',
+  'assets/image/img2.jpg',
+  'assets/image/img3.jpg',
 ];
 // 'Duo',
 // 'assets/image/2.png',

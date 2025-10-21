@@ -5,6 +5,7 @@ import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/cards/team_member_card.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
+import 'package:game_app/views/tournament_page/register_show_page.dart';
 import 'package:game_app/views/tournament_page/team_registration_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,9 @@ class TournamentDetailPage extends StatefulWidget {
   final String? filter;
   final String groupName;
   final Tournament tournament;
+  final TeamMember members;
 
-  const TournamentDetailPage({required this.filter, required this.groupName, required this.tournament, super.key});
+  const TournamentDetailPage({required this.filter, required this.groupName, required this.tournament, required this.members, super.key});
 
   @override
   State<TournamentDetailPage> createState() => _TournamentDetailPageState();
@@ -102,7 +104,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                           const Icon(Icons.event, color: kPrimaryColor, size: 20),
                           const SizedBox(width: 8),
                           Text(
-                            '${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.tournament.startDate.toString()))} - ${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.tournament.finishDate.toString()))}',
+                            '${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.startDate.toString()))} - ${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.finishDate.toString()))}',
                             style: TextStyle(color: Colors.grey[400], fontSize: 14),
                           ),
                         ],
@@ -193,6 +195,13 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                                 if (member.user1.isEmpty && member.user2.isEmpty && member.user3.isEmpty) {
                                   Get.to(
                                     () => TeamRegistrationScreen(
+                                      tournamentId: widget.tournament.id,
+                                      teamMember: member,
+                                    ),
+                                  );
+                                } else {
+                                  Get.to(
+                                    () => TeamRegistrationScreenDetail(
                                       tournamentId: widget.tournament.id,
                                       teamMember: member,
                                     ),
