@@ -287,7 +287,8 @@ class MyTranslations extends Translations {
           'commission': 'Komissiýa:',
           'sum_p': 'Jemi:',
           'send_p': 'Geçirmek',
-          'text_pay': 'Siz öz dostuňyza ýa-da tanyşyňyza öz hasabyňyzdan pul geçirip bilersiňiz!'
+          'text_pay': 'Siz öz dostuňyza ýa-da tanyşyňyza öz hasabyňyzdan pul geçirip bilersiňiz!',
+          'not_monay':'Sizin balansyňyz ýeterlik däl!',
         },
         'ru': {
           'deleteAccount': 'Удалить аккаунт',

@@ -4,6 +4,7 @@ import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/uc_models.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/views/home_page/paymant/add_monay.dart';
 
 import '../cards/order_card.dart';
 import '../constants/index.dart';
@@ -86,7 +87,7 @@ class _OrderPageState extends State<OrderPage> {
               ),
               Expanded(
                 child: AgreeButton(
-                  name: 'Balance',
+                  name: 'balance'.tr,
                   showIcon: true,
                   onTap: () async {
                     final token = await Auth().getToken();
@@ -118,6 +119,96 @@ class _OrderPageState extends State<OrderPage> {
                             showSnackBar('money_error_title', 'money_error_subtitle', Colors.red);
                           } else {
                             showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                  contentPadding: const EdgeInsets.all(24),
+                                  title: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange.shade50,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.account_balance_wallet_outlined,
+                                          size: 48,
+                                          color: Colors.orange.shade400,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                       Text(
+                                        'not_monay'.tr,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  content: Text(
+                                    'Dowam etmek üçin balansy dolduryň',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                                  actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: kAccentColor,
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const TopUpScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'add_monay'.tr,
+                                        style: const TextStyle(fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                         });
                         settingsController.agreeButton.value = !settingsController.agreeButton.value;
