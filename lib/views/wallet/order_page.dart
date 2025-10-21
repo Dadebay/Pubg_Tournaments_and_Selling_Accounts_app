@@ -153,7 +153,7 @@ class _OrderPageState extends State<OrderPage> {
                                     ],
                                   ),
                                   content: Text(
-                                    'Dowam etmek üçin balansy dolduryň',
+                                    'Dowam etmek üçin balansy dolduryň'.tr,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
@@ -163,22 +163,23 @@ class _OrderPageState extends State<OrderPage> {
                                   actionsAlignment: MainAxisAlignment.spaceBetween,
                                   actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                                   actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: kAccentColor,
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                       ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        
+                                      },
                                       child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        'cancel'.tr,
+                                        style: const TextStyle(fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                     ElevatedButton(

@@ -1,4 +1,4 @@
-class Turnir {
+class Tournament {
   final int id;
   final String nameTm;
   final String nameRu;
@@ -12,8 +12,9 @@ class Turnir {
   final String price;
   final String code;
   final String lobbId;
+  final String? bayrak; // 👈 new field (nullable)
 
-  Turnir({
+  Tournament({
     required this.id,
     required this.nameTm,
     required this.nameRu,
@@ -27,10 +28,11 @@ class Turnir {
     required this.price,
     required this.code,
     required this.lobbId,
+    this.bayrak, // 👈 add to constructor
   });
 
-  factory Turnir.fromJson(Map<String, dynamic> json) {
-    return Turnir(
+  factory Tournament.fromJson(Map<String, dynamic> json) {
+    return Tournament(
       id: json['id'],
       nameTm: json['name_tm'] ?? '',
       nameRu: json['name_ru'] ?? '',
@@ -44,6 +46,27 @@ class Turnir {
       price: json['price'] ?? '',
       code: json['code'] ?? '',
       lobbId: json['lobb_id'] ?? '',
+      bayrak: json['bayrak'], // 👈 parse safely (nullable)
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name_tm': nameTm,
+      'name_ru': nameRu,
+      'description_tm': descriptionTm,
+      'description_ru': descriptionRu,
+      'mode': mode,
+      'map': map,
+      'start_date': startDate.toIso8601String(),
+      'finish_date': finishDate.toIso8601String(),
+      'image': image,
+      'price': price,
+      'code': code,
+      'lobb_id': lobbId,
+      'bayrak': bayrak, // 👈 include in serialization
+    };
+  }
 }
+

@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:game_app/provider/getkonkur.dart';
 import 'package:game_app/views/constants/notification_service.dart';
+import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
+import 'package:game_app/views/home_page/paymant/data/tournament_provider.dart';
 import 'package:game_app/views/home_page/paymant/data/transfer_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +57,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => getConcursByIDProvider()),
         ChangeNotifierProvider(create: (_) => postPaymentProvider()),
         ChangeNotifierProvider(create: (_) => TransferProvider()),
+        ChangeNotifierProvider(create: (_) => TournamentProvider()),
+        ChangeNotifierProvider(create: (_) => TeamMembersProvider()),
       ],
       child: const MyAppRun(),
     ),

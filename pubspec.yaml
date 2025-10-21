@@ -40,6 +40,7 @@ dependencies:
   change_app_package_name: ^1.1.0
   path_provider: ^2.1.5
   package_info_plus: ^8.3.0
+  flutter_image_compress: ^2.4.0
  
 
   flutter:

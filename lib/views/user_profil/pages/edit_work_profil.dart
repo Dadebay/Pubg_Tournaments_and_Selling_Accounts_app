@@ -54,7 +54,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
   }
 
   dynamic changeData() async {
-    userNameController.text = widget.model.nickname.toString();
+    userNameController.text = widget.model.firstName.toString();
     pubgIDController.text = widget.model.pubgId.toString();
     fisrtNameController.text = widget.model.firstName.toString();
     lastNameController.text = widget.model.lastName.toString();

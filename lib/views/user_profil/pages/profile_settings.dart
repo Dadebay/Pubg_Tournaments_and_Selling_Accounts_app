@@ -6,19 +6,22 @@ import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:game_app/controllers/settings_controller.dart';
+import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
-
 import '../../../models/user_models/auth_model.dart';
 import '../../constants/index.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileSettings extends StatefulWidget {
-  const ProfileSettings({required this.image, super.key});
+  const ProfileSettings({required this.image, required this.medata, super.key});
   final String image;
+  final GetMeModel medata;
   @override
   State<ProfileSettings> createState() => _ProfileSettingsState();
 }
@@ -43,18 +46,68 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   void initState() {
     super.initState();
     Get.find<SettingsController>().agreeButton.value = false;
+    getData();
+  }
+
+  dynamic getData() async {
+    int a = 0;
+    GetMeModel().getMe();
+    await AboutUsModel().getAboutUs().then((value) {
+      print(value);
+      for (var element in value) {
+        if (element.pageShow == true) {
+          a++;
+        }
+      }
+    });
+    if (a == 3) {}
+    setState(() {});
+  }
+
+  // Compress image before uploading
+  Future<File?> compressImage(File file) async {
+    try {
+      final dir = await getTemporaryDirectory();
+      final targetPath = '${dir.path}/${DateTime.now().millisecondsSinceEpoch}_compressed.jpg';
+
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 70, // Adjust quality (0-100), lower = smaller size
+        minWidth: 1024, // Max width
+        minHeight: 1024, // Max height
+        format: CompressFormat.jpeg,
+      );
+
+      if (result != null) {
+        return File(result.path);
+      }
+      return null;
+    } catch (e) {
+      print('Compression error: $e');
+      return file; // Return original if compression fails
+    }
   }
 
   Future pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 50);
+      final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+      );
       if (image == null) {
         return;
       }
+
       final imageTemporary = File(image.path);
+
+      // Compress the image
+      final compressedImage = await compressImage(imageTemporary);
+
       setState(() {
-        selectedImage = imageTemporary;
+        selectedImage = compressedImage ?? imageTemporary;
       });
+
       onTapp();
     } catch (error) {
       showSnackBar('noConnection3', '$error', Colors.red);
@@ -89,10 +142,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
       if (response.statusCode == 200) {
         showSnackBar('copySucces', 'changedData', Colors.green);
+        getData();
         pubgNameController.clear();
         pubgIDController.clear();
-
-        // await Get.to(() => const VideoUploadPage());
       } else {
         showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
       }
@@ -114,7 +166,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           } else if (snapshot.data == null) {
             return const Center(child: Text('Empty'));
           }
-          changeData(snapshot.data!.nickname!, snapshot.data!.phone!, snapshot.data!.pubgId!);
+          changeData(snapshot.data!.firstName!, snapshot.data!.phone!, snapshot.data!.pubgId!);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -142,10 +194,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                     elevation: 3,
                                     child: CachedNetworkImage(
                                       fadeInCurve: Curves.ease,
-                                      // imageUrl: '$serverURL${widget.image}',
-                                      imageUrl: 'http://216.250.11.240/media/bg-images/2024/10/31/scaled_original-48b015795807f5bf56924d69731931c3.png',
-                                      // imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SRRmhH4X5N2e4QalcoxVbzYsD44C-sQv-w&s',
-
+                                      imageUrl: '$serverURL${widget.image}',
                                       imageBuilder: (context, imageProvider) => Container(
                                         width: Get.size.width,
                                         decoration: BoxDecoration(
@@ -240,9 +289,113 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     disabled: false,
                   ),
                   const SizedBox(
+                    height: 15,
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(1),
+                    itemCount: widget.medata.teams!.length,
+                    itemBuilder: (context, index) {
+                      final team = widget.medata.teams![index];
+                      final teamName = team.name ?? 'Team ${team.id}';
+                      final users = [
+                        team.user1,
+                        team.user2,
+                        team.user3,
+                      ].where((u) => u != null && u.isNotEmpty).toList();
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withOpacity(0.15),
+                                Colors.white.withOpacity(0.05),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      teamName,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      users.join(', '),
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.8),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              if (team.quartturnir != null && team.quartturnir.toString().isNotEmpty)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    team.quartturnir ?? '',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(
                     height: 25,
                   ),
-                  // Image.network('$serverURL/' + snapshot.data!.image.toString()),
                   Center(
                     child: AgreeButton(
                       name: 'agree',

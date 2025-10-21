@@ -62,7 +62,7 @@ dynamic tournamentCard(int index) {
             alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.only(left: 15),
-              child: Text(names[index], textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 50)),
+              child: Text(names[index], textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 40)),
             ),
           ),
         ],

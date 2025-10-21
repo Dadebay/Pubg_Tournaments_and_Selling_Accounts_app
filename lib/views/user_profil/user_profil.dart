@@ -80,9 +80,12 @@ class _UserProfilState extends State<UserProfil> {
                     ? ProfilButton(
                         name: 'profil',
                         onTap: () {
+                          final data = snapshot.data;
+                          if (data == null) return;
                           Get.to(
                             () => ProfileSettings(
-                              image: snapshot.data!.bgImage!,
+                              medata: data,
+                              image: data.bgImage ?? '', // ✅ Safe null check
                             ),
                           );
                         },
