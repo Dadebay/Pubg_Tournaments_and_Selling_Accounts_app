@@ -166,7 +166,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           } else if (snapshot.data == null) {
             return const Center(child: Text('Empty'));
           }
-          changeData(snapshot.data!.firstName!, snapshot.data!.phone!, snapshot.data!.pubgId!);
+          changeData(snapshot.data!.nickname!, snapshot.data!.phone!, snapshot.data!.pubgId!);
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -300,6 +300,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       final team = widget.medata.teams![index];
                       final teamName = team.name ?? 'Team ${team.id}';
                       final users = [
+                        team.account,
                         team.user1,
                         team.user2,
                         team.user3,
