@@ -199,7 +199,7 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
       backgroundColor: kPrimaryColorBlack,
       appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: false, elevationWhite: true, name: 'cashHistory'),
       body: FutureBuilder<dynamic>(
-        future: AddAccountModel().getConsts(),
+        future: AddAccountModel().getConstsNum(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: spinKit());

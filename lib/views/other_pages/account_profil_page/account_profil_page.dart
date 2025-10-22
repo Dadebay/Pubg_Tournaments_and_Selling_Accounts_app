@@ -52,7 +52,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
                       child: Text(
                         'accountsForSale'.tr,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontFamily: josefinSansSemiBold),
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: josefinSansSemiBold),
                       ),
                     ),
                     const Icon(IconlyLight.infoSquare, color: kPrimaryColor, size: 30),

@@ -21,6 +21,7 @@ class TeamRegistrationScreen extends StatefulWidget {
 
 class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _userController = TextEditingController();
   final _accountController = TextEditingController();
   final _user1Controller = TextEditingController();
   final _user2Controller = TextEditingController();
@@ -32,6 +33,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     // Pre-fill if editing existing team member
     if (widget.teamMember != null) {
       _accountController.text = widget.teamMember!.account;
+      // _userController.text = widget.teamMember!.extra_name;
       _user1Controller.text = widget.teamMember!.user1;
       _user2Controller.text = widget.teamMember!.user2;
       _user3Controller.text = widget.teamMember!.user3;
@@ -44,6 +46,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     _user1Controller.dispose();
     _user2Controller.dispose();
     _user3Controller.dispose();
+    _userController.dispose();
     super.dispose();
   }
 
@@ -54,6 +57,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
       final success = await provider.registerTeam(
         tournamentId: widget.teamMember?.id ?? 0,
         account: _accountController.text.trim(),
+        extra_name: _userController.text.trim(),
         user1: _user1Controller.text.trim(),
         user2: _user2Controller.text.trim(),
         user3: _user3Controller.text.trim(),
@@ -89,6 +93,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     }
   }
 
+  bool _isVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,9 +105,9 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
-        title:  Text(
+        title: Text(
           'Register Team'.tr,
-          style:const TextStyle(
+          style: const TextStyle(
             fontFamily: josefinSansSemiBold,
             fontSize: 20,
             color: Colors.white,
@@ -147,13 +152,13 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                       ),
                     ),
                     const SizedBox(width: 16),
-                     Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Topar hasaba alyş'.tr,
-                            style:const TextStyle(
+                            style: const TextStyle(
                               fontFamily: josefinSansSemiBold,
                               fontSize: 20,
                               color: Colors.white,
@@ -162,7 +167,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                           const SizedBox(height: 4),
                           Text(
                             'Topary bir gezek hasaba alyp bolýar, dostlaryňyzy ýa-da tanyşlaryňyzy çagyryň'.tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
                             ),
@@ -202,9 +207,9 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                   Text(
+                  Text(
                     'Team Players'.tr,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: josefinSansSemiBold,
                       fontSize: 18,
                       color: Colors.white,
@@ -257,6 +262,22 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
+
+              // User 3
+              _buildTextField(
+                controller: _userController,
+                label: 'Player 4'.tr,
+                hint: 'Foths player username'.tr,
+                icon: Icons.person_outline,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter player 4 username'.tr;
+                  }
+                  return null;
+                },
+              ),
+
               const SizedBox(height: 32),
 
               // Submit Button
@@ -293,9 +314,9 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                                   size: 24,
                                 ),
                                 const SizedBox(width: 12),
-                                 Text(
+                                Text(
                                   'Register Team'.tr,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.black,
                                     fontFamily: josefinSansSemiBold,
                                     fontSize: 18,
@@ -309,6 +330,37 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               ),
               const SizedBox(height: 20),
 
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kAccentColor, // button color
+                      foregroundColor: Colors.black, // text color
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isVisible = !_isVisible;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  if (_isVisible)
+                    Text(
+                      widget.teamMember?.quartturnir?.code ?? 'Unknown Code',
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 20),
               // Info Card
               Container(
                 padding: const EdgeInsets.all(16),

@@ -159,6 +159,7 @@ class TeamMembersProvider with ChangeNotifier {
   Future<bool> registerTeam({
     required int tournamentId,
     required String account,
+    required String extra_name,
     required String user1,
     required String user2,
     required String user3,
@@ -172,6 +173,7 @@ class TeamMembersProvider with ChangeNotifier {
 
       final formData = FormData.fromMap({
         'account': account,
+        'extra_name':extra_name,
         'user_1': user1,
         'user_2': user2,
         'user_3': user3,

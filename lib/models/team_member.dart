@@ -61,12 +61,14 @@ class QuartTurnir {
   final DateTime? startDate;
   final DateTime? finishDate;
   final dynamic lobbiId;
+  final dynamic code; // Placeholder for any additional fields
 
   QuartTurnir({
     required this.name,
     this.startDate,
     this.finishDate,
     this.lobbiId,
+    this.code,
   });
 
   factory QuartTurnir.fromJson(Map<String, dynamic> json) {
@@ -88,6 +90,7 @@ class QuartTurnir {
       startDate: parseDate(json['start_date']),
       finishDate: parseDate(json['finish_date']),
       lobbiId: json['lobbi_id'],
+      code: json['code'],
     );
   }
 
@@ -97,6 +100,7 @@ class QuartTurnir {
       'start_date': startDate?.toIso8601String(),
       'finish_date': finishDate?.toIso8601String(),
       'lobbi_id': lobbiId,
+      'code': code,
     };
   }
 }

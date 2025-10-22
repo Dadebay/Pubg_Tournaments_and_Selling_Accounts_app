@@ -4,7 +4,7 @@ import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
 
-class TeamRegistrationScreenDetail extends StatelessWidget {
+class TeamRegistrationScreenDetail extends StatefulWidget {
   final TeamMember teamMember;
   final int tournamentId;
 
@@ -14,6 +14,12 @@ class TeamRegistrationScreenDetail extends StatelessWidget {
     super.key,
   });
 
+  @override
+  State<TeamRegistrationScreenDetail> createState() => _TeamRegistrationScreenDetailState();
+}
+
+class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDetail> {
+  bool _isVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +32,7 @@ class TeamRegistrationScreenDetail extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          teamMember.name ?? '',
+          widget.teamMember.name ?? '',
           style: const TextStyle(
             fontFamily: josefinSansSemiBold,
             fontSize: 20,
@@ -35,7 +41,7 @@ class TeamRegistrationScreenDetail extends StatelessWidget {
         ),
       ),
       body: FutureBuilder<GetMeModel>(
-        future: GetMeModel().getMe(), // call your API here
+        future: GetMeModel().getMe(), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While loading, show a loader
@@ -104,36 +110,45 @@ class TeamRegistrationScreenDetail extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               'View your team information'.tr,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
                               ),
                             ),
                             Row(
                               children: [
-
-                                Text(
-                              'LobbiID: ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-if(user.teams?.first.account == teamMember.account && user.teams?.first.user1 == teamMember.user1 &&
-                               user.teams?.first.user2 == teamMember.user2 && user.teams?.first.user3 == teamMember.user3)
-                            Text(
-                              teamMember.quartturnir?.lobbiId.toString() ?? '',
-                              style: TextStyle(
-                                fontSize: 16,
-                                
-                                  color: Colors.green,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
+                                const Text(
+                                  'LobbiID: ',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (user.teams != null &&
+                                    user.teams!.isNotEmpty &&
+                                    user.teams!.first.account?.isNotEmpty == true &&
+                                    user.teams!.first.user1?.isNotEmpty == true &&
+                                    user.teams!.first.user2?.isNotEmpty == true &&
+                                    user.teams!.first.user3?.isNotEmpty == true &&
+                                    widget.teamMember.account.isNotEmpty == true &&
+                                    widget.teamMember.user1.isNotEmpty == true &&
+                                    widget.teamMember.user2.isNotEmpty == true &&
+                                    widget.teamMember.user3.isNotEmpty == true &&
+                                    user.teams!.first.account == widget.teamMember.account &&
+                                    user.teams!.first.user1 == widget.teamMember.user1 &&
+                                    user.teams!.first.user2 == widget.teamMember.user2 &&
+                                    user.teams!.first.user3 == widget.teamMember.user3)
+                                  Text(
+                                    widget.teamMember.quartturnir?.lobbiId?.toString() ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                               ],
-                            )
-                            
+                            ),
                           ],
                         ),
                       ),
@@ -145,7 +160,7 @@ if(user.teams?.first.account == teamMember.account && user.teams?.first.user1 ==
                 // Account Info
                 _buildInfoCard(
                   label: 'Account Name'.tr,
-                  value: teamMember.account,
+                  value: widget.teamMember.name ?? '',
                   icon: Icons.account_circle,
                 ),
                 const SizedBox(height: 20),
@@ -177,7 +192,7 @@ if(user.teams?.first.account == teamMember.account && user.teams?.first.user1 ==
                 // Player 1
                 _buildInfoCard(
                   label: 'Player 1'.tr,
-                  value: teamMember.user1,
+                  value: widget.teamMember.user1,
                   icon: Icons.person,
                 ),
                 const SizedBox(height: 20),
@@ -185,7 +200,7 @@ if(user.teams?.first.account == teamMember.account && user.teams?.first.user1 ==
                 // Player 2
                 _buildInfoCard(
                   label: 'Player 2'.tr,
-                  value: teamMember.user2,
+                  value: widget.teamMember.user2,
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 20),
@@ -193,12 +208,51 @@ if(user.teams?.first.account == teamMember.account && user.teams?.first.user1 ==
                 // Player 3
                 _buildInfoCard(
                   label: 'Player 3'.tr,
-                  value: teamMember.user3,
+                  value: widget.teamMember.user3,
                   icon: Icons.person_outline,
                 ),
+                const SizedBox(height: 20),
+
+                // Player 3
+                _buildInfoCard(
+                  label: 'Player 4'.tr,
+                  value: widget.teamMember.account,
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kAccentColor, // button color
+                        foregroundColor: Colors.black, // text color
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isVisible = !_isVisible;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    if (_isVisible)
+                      Text(
+                        widget.teamMember.quartturnir?.code ?? 'Unknown Code',
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                  ],
+                ),
+
                 const SizedBox(height: 32),
 
-                // Info Card
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(

@@ -13,7 +13,7 @@ import '../constants/index.dart';
 
 final List names = [
   'Turnir',
-  'Squad',
+  'Lobbi',
   'bestPlayers2'.tr,
 ];
 

@@ -123,10 +123,11 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 1,
                           itemBuilder: (context, index) {
-                            final teams = ['B1', 'B2'];
-                            final groupName = teams[index];
+                            // final teams = ['B1', 'B2'];
+                            // final groupName = teams[index];
 
-                            return QuarterGroupCard(filter: widget.filter, groupName: 'F1', teamCount: 25, tournament: widget.tournament, members: provider.teamMembers[index]);
+                            return QuarterGroupCard(filter: widget.filter, groupName: 'F1', teamCount: 25, 
+                            tournament: widget.tournament, members: provider.teamMembers[index]);
                           },
                         ),
                       if (widget.filter == 'yarym_final')

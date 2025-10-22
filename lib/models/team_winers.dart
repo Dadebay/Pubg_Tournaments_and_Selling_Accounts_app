@@ -4,12 +4,14 @@ class TournamentStage {
   final String? startDate;
   final String? finishDate;
   final String? lobbiId;
+  final String? code; // Placeholder for any additional fields
 
   TournamentStage({
     this.name,
     this.startDate,
     this.finishDate,
     this.lobbiId,
+    this.code,
   });
 
   factory TournamentStage.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class TournamentStage {
       startDate: json['start_date'] as String?,
       finishDate: json['finish_date'] as String?,
       lobbiId: json['lobbi_id'] as String?,
+      code: json['code'] as String?,
     );
   }
 
@@ -27,6 +30,7 @@ class TournamentStage {
       'start_date': startDate,
       'finish_date': finishDate,
       'lobbi_id': lobbiId,
+      'code': code,
     };
   }
 }
