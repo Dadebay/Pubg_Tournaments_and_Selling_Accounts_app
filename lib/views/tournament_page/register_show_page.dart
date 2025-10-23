@@ -223,7 +223,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
 
                 // Player 3
                 _buildInfoCard(
-                  label: 'Owner'.tr,
+                   label: 'Player 1'.tr,
                   value: widget.teamMember.account,
                   icon: Icons.person_outline,
                 ),
@@ -231,7 +231,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
 
                 // Player 1
                 _buildInfoCard(
-                  label: 'Player 1'.tr,
+                  label: 'Player 2'.tr,
                   value: widget.teamMember.user1,
                   icon: Icons.person,
                 ),
@@ -239,7 +239,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
 
                 // Player 2
                 _buildInfoCard(
-                  label: 'Player 2'.tr,
+                   label: 'Player 3'.tr,
                   value: widget.teamMember.user2,
                   icon: Icons.person_outline,
                 ),
@@ -247,7 +247,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
 
                 // Player 3
                 _buildInfoCard(
-                  label: 'Player 3'.tr,
+                  label: 'Player 4'.tr,
                   value: widget.teamMember.user3,
                   icon: Icons.person_outline,
                 ),

@@ -50,7 +50,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  MyAppBar(
+      appBar: MyAppBar(
         backArrow: true,
         fontSize: 0.0,
         iconRemove: false,
@@ -113,9 +113,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
       AlertDialog(
         backgroundColor: kPrimaryColorBlack,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title:  Text(
+        title: Text(
           'online_p'.tr,
-          style:const TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontFamily: josefinSansSemiBold,
           ),

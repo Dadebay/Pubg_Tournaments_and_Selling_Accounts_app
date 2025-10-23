@@ -82,11 +82,11 @@ class _OnlineAddMoneyToWalletState extends State<OnlineAddMoneyToWallet> {
                       ),
                     );
                   }
-                } else {
-                  showSnackBar('tournamentInfo1', 'tournamentInfo14', Colors.red);
-                }
+                } else {}
                 // ignore: empty_catches
-              } catch (e) {}
+              } catch (e) {
+                // showSnackBar('tournamentInfo1', 'tournamentInfo14', Colors.red);
+              }
             });
           },
         ),

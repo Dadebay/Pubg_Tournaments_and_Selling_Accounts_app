@@ -14,19 +14,41 @@ class TransferHistoryScreen extends StatefulWidget {
 }
 
 class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
+  String? currentUserId;
+  bool isUserLoading = true;
+  String? userError;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TransferProvider>().fetchTransfers();
     });
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    try {
+      // 1️⃣ Fetch user info first
+      final user = await GetMeModel().getMe();
+
+      setState(() {
+        currentUserId = user.phone;
+        isUserLoading = false;
+        log('Current User Phone: $currentUserId');
+      });
+    } catch (e) {
+      setState(() {
+        userError = e.toString();
+        isUserLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Transfer History'.tr),
+        title: Text('Transfer History'.tr),
         elevation: 2,
       ),
       body: Consumer<TransferProvider>(
@@ -101,42 +123,39 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             // Sender Info
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.red.shade100,
-                                  child: const Icon(Icons.arrow_upward, color: Colors.red),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '+993${transfer.sender}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                            currentUserId == transfer.sender.toString()
+                                ? Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Colors.red.shade100,
+                                        child: const Icon(Icons.arrow_upward, color: Colors.red),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        '+993${transfer.receiver}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Colors.green.shade100,
+                                        child: const Icon(Icons.arrow_downward, color: Colors.green),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        '+993${transfer.sender}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            const Icon(Icons.swap_horiz, size: 28, color: Colors.grey),
-
-                            // Receiver Info
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.green.shade100,
-                                  child: const Icon(Icons.arrow_downward, color: Colors.green),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '+993${transfer.receiver}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
 
@@ -148,10 +167,10 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'TMT ${transfer.amount.toStringAsFixed(2)}',
-                              style: const TextStyle(
+                              currentUserId != transfer.sender.toString() ? 'TMT +${transfer.amount.toStringAsFixed(2)}' : 'TMT -${transfer.amount.toStringAsFixed(2)}',
+                              style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.green,
+                                color: currentUserId != transfer.sender.toString() ? Colors.green : Colors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

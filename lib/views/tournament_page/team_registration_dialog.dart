@@ -273,7 +273,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               const SizedBox(height: 20),
 
               _buildInfoCard(
-                label: 'Owner'.tr,
+                label: 'Player 1'.tr,
                 value: currentUserId ?? 'Owner name'.tr,
                 icon: Icons.person,
               ),
@@ -281,8 +281,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // User 1
               _buildTextField(
                 controller: _user1Controller,
-                label: 'Player 1'.tr,
-                hint: 'First player username'.tr,
+                  label: 'Player 2'.tr,
+                hint: 'Second player username'.tr,
                 icon: Icons.person,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -296,8 +296,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // User 2
               _buildTextField(
                 controller: _user2Controller,
-                label: 'Player 2'.tr,
-                hint: 'Second player username'.tr,
+                    label: 'Player 3'.tr,
+                hint: 'Third player username'.tr,
                 icon: Icons.person_outline,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -311,8 +311,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // User 3
               _buildTextField(
                 controller: _user3Controller,
-                label: 'Player 3'.tr,
-                hint: 'Third player username'.tr,
+                label: 'Player 4'.tr,
+                hint: 'Foths player username'.tr,
                 icon: Icons.person_outline,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -326,8 +326,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // // User 3
               // _buildTextField(
               //   controller: _userController,
-              //   label: 'Player 4'.tr,
-              //   hint: 'Foths player username'.tr,
+                // label: 'Player 4'.tr,
+                // hint: 'Foths player username'.tr,
               //   icon: Icons.person_outline,
               //   validator: (value) {
               //     if (value == null || value.trim().isEmpty) {
