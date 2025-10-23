@@ -26,7 +26,7 @@ class ConCatigoryProvider with ChangeNotifier {
 
     try {
       final response = await dio.get(
-        'http://216.250.11.240/api/category/',
+        '$serverURL/api/category/',
       );
       print(response.data);
       if (response.statusCode == 200) {
@@ -66,7 +66,7 @@ class getGiftsProvider with ChangeNotifier {
 
     try {
       final response = await dio.get(
-        'http://216.250.11.240/api/category/getGifts/',
+        '$serverURL/api/category/getGifts/',
       );
       print(response.data);
       if (response.statusCode == 200) {
@@ -96,7 +96,7 @@ class getGiftsProvider with ChangeNotifier {
 
     try {
       final response = await dio.get(
-        'http://216.250.11.240/api/category/getText/7/',
+        '$serverURL/api/category/getText/7/',
       );
       print(response.data);
       print(response.statusCode);
@@ -133,7 +133,7 @@ class getConcursProvider with ChangeNotifier {
 
     try {
       final response = await dio.get(
-        'http://216.250.11.240/api/category/getkonkurs/',
+        '$serverURL/api/category/getkonkurs/',
       );
 
       if (response.statusCode == 200) {
@@ -171,7 +171,7 @@ class getConcursByIDProvider with ChangeNotifier {
 
     try {
       final response = await dio.get(
-        'http://216.250.11.240/api/category/getkonkurs/$id/',
+        '$serverURL/api/category/getkonkurs/$id/',
       );
 
       if (response.statusCode == 200) {
@@ -214,7 +214,7 @@ class postPaymentProvider with ChangeNotifier {
 
     try {
       final response = await dio.post(
-        'http://216.250.11.240/api/carts/pay/',
+        '$serverURL/api/carts/pay/',
         data: jsonEncode({
           'amount': amount,
         }),

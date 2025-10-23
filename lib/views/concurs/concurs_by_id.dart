@@ -117,7 +117,7 @@ class _ConcursByIDState extends State<ConcursByID> {
           child: ClipRRect(
             borderRadius: borderRadius20,
             child: CachedNetworkImage(
-              imageUrl: 'http://216.250.11.240${concurs.concursCartById?.image}',
+              imageUrl: '$serverURL${concurs.concursCartById?.image}',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, downloadProgress) => const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Icon(Icons.error),

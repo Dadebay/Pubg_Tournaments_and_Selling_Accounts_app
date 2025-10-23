@@ -116,7 +116,7 @@ class _ConcursCardState extends State<ConcursCard> {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(15), topLeft: Radius.circular(15)),
                   child: CachedNetworkImage(
-                    imageUrl: 'http://216.250.11.240${widget.imageUrl}',
+                    imageUrl: '$serverURL${widget.imageUrl}',
                     fit: BoxFit.cover,
                     height: Get.size.height,
                     progressIndicatorBuilder: (context, url, downloadProgress) => const Center(child: CircularProgressIndicator()),

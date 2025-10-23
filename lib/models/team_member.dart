@@ -2,6 +2,7 @@ class TeamMember {
   final int id;
   final String? name;
   final String account;
+  final String extraName;
   final String user1;
   final String user2;
   final String user3;
@@ -14,6 +15,7 @@ class TeamMember {
     required this.id,
     this.name,
     required this.account,
+    required this.extraName,
     required this.user1,
     required this.user2,
     required this.user3,
@@ -28,12 +30,11 @@ class TeamMember {
       id: json['id'] ?? 0,
       name: json['name'],
       account: json['account'] ?? '',
+      extraName: json['extra_name'] ?? '',
       user1: json['user_1'] ?? '',
       user2: json['user_2'] ?? '',
       user3: json['user_3'] ?? '',
-      quartturnir: (json['quartturnir'] != null && json['quartturnir'] is Map)
-          ? QuartTurnir.fromJson(json['quartturnir'])
-          : null,
+      quartturnir: (json['quartturnir'] != null && json['quartturnir'] is Map) ? QuartTurnir.fromJson(json['quartturnir']) : null,
       halfturnir: json['halfturnir'],
       finalturnir: json['finalturnir'],
       winnerturnir: json['winnerturnir'],
@@ -45,6 +46,7 @@ class TeamMember {
       'id': id,
       'name': name,
       'account': account,
+      'extra_name': extraName,
       'user_1': user1,
       'user_2': user2,
       'user_3': user3,
@@ -104,4 +106,3 @@ class QuartTurnir {
     };
   }
 }
-

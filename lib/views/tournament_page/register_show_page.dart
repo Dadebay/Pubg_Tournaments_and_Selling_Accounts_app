@@ -41,7 +41,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
         ),
       ),
       body: FutureBuilder<GetMeModel>(
-        future: GetMeModel().getMe(), 
+        future: GetMeModel().getMe(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While loading, show a loader
@@ -149,6 +149,37 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                                   ),
                               ],
                             ),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: kAccentColor, // button color
+                                    foregroundColor: Colors.black, // text color
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isVisible = !_isVisible;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                if (_isVisible)
+                                  Text(
+                                    widget.teamMember.quartturnir?.code ?? 'Unknown Code',
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -187,6 +218,15 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 20),
+
+                // Player 3
+                _buildInfoCard(
+                  label: 'Owner'.tr,
+                  value: widget.teamMember.account,
+                  icon: Icons.person_outline,
+                ),
                 const SizedBox(height: 20),
 
                 // Player 1
@@ -210,45 +250,6 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                   label: 'Player 3'.tr,
                   value: widget.teamMember.user3,
                   icon: Icons.person_outline,
-                ),
-                const SizedBox(height: 20),
-
-                // Player 3
-                _buildInfoCard(
-                  label: 'Player 4'.tr,
-                  value: widget.teamMember.account,
-                  icon: Icons.person_outline,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kAccentColor, // button color
-                        foregroundColor: Colors.black, // text color
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isVisible = !_isVisible;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    if (_isVisible)
-                      Text(
-                        widget.teamMember.quartturnir?.code ?? 'Unknown Code',
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                  ],
                 ),
 
                 const SizedBox(height: 32),

@@ -20,7 +20,7 @@ class VideoCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          () => VideoPlayerMine(
+          () => VideoPLayerMine(
             videoURL: videoPath,
           ),
         );

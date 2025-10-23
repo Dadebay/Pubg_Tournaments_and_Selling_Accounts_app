@@ -47,7 +47,7 @@ class TeamMemberCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      member.name ?? '${'Team'.tr} ${member.id}',
+                      member.name ?? 'Team',
                       style: const TextStyle(
                         fontFamily: josefinSansSemiBold,
                         fontSize: 16,
@@ -58,7 +58,8 @@ class TeamMemberCard extends StatelessWidget {
                       Text(
                         'Bos'.tr,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                           color: Colors.red[400],
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:game_app/models/transfer.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:dio/dio.dart';
 
@@ -8,6 +9,8 @@ class TransferProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
+  final Dio _dio = Dio();
+  List<Transfer> _transfers = [];
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -74,6 +77,48 @@ class TransferProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  List<Transfer> get transfers => _transfers;
+
+  String? get error => _errorMessage;
+
+  Future<void> fetchTransfers() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      // Get the token from Auth
+      final token = await Auth().getToken();
+
+      final response = await _dio.get(
+        'http://ucdayy.com.tm/api/sendpoint/',
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.acceptHeader: 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data is List) {
+          _transfers = data.map((json) => Transfer.fromJson(json)).toList();
+        } else if (data is Map && data['data'] != null) {
+          _transfers = (data['data'] as List).map((json) => Transfer.fromJson(json)).toList();
+        } else {
+          // Mock data for demo purposes
+        }
+      } else {}
+    } catch (e) {
+      _errorMessage = 'Failed to load transfers: ${e.toString()}';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void clearMessages() {

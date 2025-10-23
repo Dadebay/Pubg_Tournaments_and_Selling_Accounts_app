@@ -172,7 +172,7 @@ class TeamMembersProvider with ChangeNotifier {
       final token = await Auth().getToken();
 
       final formData = FormData.fromMap({
-        'account': account,
+        'name': account,
         'extra_name':extra_name,
         'user_1': user1,
         'user_2': user2,

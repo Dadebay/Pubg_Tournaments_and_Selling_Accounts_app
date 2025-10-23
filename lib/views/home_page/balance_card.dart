@@ -1,6 +1,7 @@
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/paymant/add_monay.dart';
+import 'package:game_app/views/home_page/paymant/transfer_history.dart';
 import 'package:game_app/views/home_page/paymant/transfer_monay.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -25,19 +26,6 @@ class BalanceCard extends StatelessWidget {
               ],
             ),
             borderRadius: BorderRadius.circular(28),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: kPrimaryColor.withOpacity(0.4),
-            //     blurRadius: 0,
-            //     spreadRadius: 0,
-            //     offset: const Offset(0, 8),
-            //   ),
-            //   BoxShadow(
-            //     color: Colors.black.withOpacity(0.1),
-            //     blurRadius: 15,
-            //     offset: const Offset(0, 4),
-            //   ),
-            // ],
           ),
           child: Stack(
             children: [
@@ -66,6 +54,50 @@ class BalanceCard extends StatelessWidget {
                   ),
                 ),
               ),
+              // Transaction History Button (Top Right)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TransferHistoryScreen(),
+                          ),
+                        );
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Icon(
+                          Icons.history_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               // Main content
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -89,9 +121,9 @@ class BalanceCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                         Text(
-                            'balance'.tr +'(TMT)',
-                          style:const TextStyle(
+                        Text(
+                          '${'balance'.tr}(TMT)',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -191,9 +223,9 @@ class BalanceCard extends StatelessWidget {
                                 size: 20,
                                 color: kAccentColor,
                               ),
-                              label:  Text(
+                              label: Text(
                                 'add_monay'.tr,
-                                style:const TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,
@@ -246,9 +278,9 @@ class BalanceCard extends StatelessWidget {
                                 size: 20,
                                 color: Colors.white,
                               ),
-                              label:  Text(
+                              label: Text(
                                 'transfer_monay'.tr,
-                                style:const TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.3,

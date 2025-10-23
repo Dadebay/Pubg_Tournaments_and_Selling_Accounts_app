@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_app/models/team_member.dart';
+import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,9 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   final _user1Controller = TextEditingController();
   final _user2Controller = TextEditingController();
   final _user3Controller = TextEditingController();
+  String? currentUserId;
+  bool isUserLoading = true;
+  String? userError;
 
   @override
   void initState() {
@@ -37,6 +41,24 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
       _user1Controller.text = widget.teamMember!.user1;
       _user2Controller.text = widget.teamMember!.user2;
       _user3Controller.text = widget.teamMember!.user3;
+    }
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    try {
+      // 1️⃣ Fetch user info first
+      final user = await GetMeModel().getMe();
+
+      setState(() {
+        currentUserId = user.nickname;
+        isUserLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        userError = e.toString();
+        isUserLoading = false;
+      });
     }
   }
 
@@ -172,6 +194,37 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                               color: Colors.grey,
                             ),
                           ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: kAccentColor, // button color
+                                  foregroundColor: Colors.black, // text color
+                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isVisible = !_isVisible;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              if (_isVisible)
+                                Text(
+                                  widget.teamMember?.quartturnir?.code ?? 'Unknown Code',
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -219,6 +272,12 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               ),
               const SizedBox(height: 20),
 
+              _buildInfoCard(
+                label: 'Owner'.tr,
+                value: currentUserId ?? 'Owner name'.tr,
+                icon: Icons.person,
+              ),
+              const SizedBox(height: 20),
               // User 1
               _buildTextField(
                 controller: _user1Controller,
@@ -262,21 +321,21 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
 
-              // User 3
-              _buildTextField(
-                controller: _userController,
-                label: 'Player 4'.tr,
-                hint: 'Foths player username'.tr,
-                icon: Icons.person_outline,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter player 4 username'.tr;
-                  }
-                  return null;
-                },
-              ),
+              // // User 3
+              // _buildTextField(
+              //   controller: _userController,
+              //   label: 'Player 4'.tr,
+              //   hint: 'Foths player username'.tr,
+              //   icon: Icons.person_outline,
+              //   validator: (value) {
+              //     if (value == null || value.trim().isEmpty) {
+              //       return 'Please enter player 4 username'.tr;
+              //     }
+              //     return null;
+              //   },
+              // ),
 
               const SizedBox(height: 32),
 
@@ -328,38 +387,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 20),
 
-              Row(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kAccentColor, // button color
-                      foregroundColor: Colors.black, // text color
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isVisible = !_isVisible;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  if (_isVisible)
-                    Text(
-                      widget.teamMember?.quartturnir?.code ?? 'Unknown Code',
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                ],
-              ),
               const SizedBox(height: 20),
               // Info Card
               Container(
@@ -389,6 +417,52 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String label,
+    required String value,
+    required IconData icon,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            fontFamily: josefinSansMedium,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.grey[800]!, width: 1),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: kPrimaryColor, size: 22),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

@@ -101,11 +101,26 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.event, color: kPrimaryColor, size: 20),
-                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.calendar_today, // 📅 Date icon
+                            size: 18,
+                            color: kAccentColor,
+                          ),
+                          const SizedBox(width: 4),
                           Text(
                             '${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.startDate.toString()))} - ${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.finishDate.toString()))}',
-                            style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                          const SizedBox(width: 10),
+                          const Icon(
+                            Icons.access_time, // ⏰ Clock icon
+                            size: 18,
+                            color: kAccentColor,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${DateFormat('HH:mm').format(DateTime.parse(widget.members.quartturnir!.startDate.toString()))} - ${DateFormat('HH:mm').format(DateTime.parse(widget.members.quartturnir!.finishDate.toString()))}',
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ],
                       ),
