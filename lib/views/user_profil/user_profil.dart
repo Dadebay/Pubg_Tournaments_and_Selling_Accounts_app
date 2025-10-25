@@ -144,18 +144,20 @@ class _UserProfilState extends State<UserProfil> {
     return Column(
       children: [
         divider(),
-        ProfilButton(
-          name: 'cashHistory',
-          onTap: () {
-            Get.to(
-              () => const TopUpScreen(
-                  // text: 'message',
-                  // textSend: 'requestCash'.tr,
-                  ),
-            );
-          },
-          icon: IconlyLight.wallet,
-        ),
+        showPage == false
+            ? ProfilButton(
+                name: 'cashHistory',
+                onTap: () {
+                  Get.to(
+                    () => const TopUpScreen(
+                        // text: 'message',
+                        // textSend: 'requestCash'.tr,
+                        ),
+                  );
+                },
+                icon: IconlyLight.wallet,
+              )
+            : const SizedBox(),
         forSale
             ? ProfilButton(
                 name: 'editProfil',

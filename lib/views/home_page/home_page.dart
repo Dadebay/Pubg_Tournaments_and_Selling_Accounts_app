@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
+import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/balance_card.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   late Future<List<BannerModel>> _futureBanners;
+  bool showPage = false;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _HomePageState extends State<HomePage> {
 
     postsController.clearData();
     postsController.fetchPosts(DANGEROUS_clearList: true);
+    getData();
   }
 
   @override
@@ -77,6 +80,22 @@ class _HomePageState extends State<HomePage> {
     } else {
       _refreshController.loadNoData();
     }
+  }
+
+  dynamic getData() async {
+    int a = 0;
+    await AboutUsModel().getAboutUs().then((value) {
+      print(value);
+      for (var element in value) {
+        if (element.pageShow == true) {
+          a++;
+        }
+      }
+    });
+    if (a == 3) {
+      showPage = true;
+    }
+    setState(() {});
   }
 
   Future<GetMeModel?> getMe() async {
@@ -185,7 +204,7 @@ class _HomePageState extends State<HomePage> {
               //     return Banners(future: _futureBanners);
               //   },
               // ),
-              const BalanceCard(),
+              showPage == false ? const BalanceCard() : const SizedBox(),
               listViewName('pubgTypes'.tr, false, size),
               PubgTypes(),
               listViewName('accountsForSale'.tr, true, size),
