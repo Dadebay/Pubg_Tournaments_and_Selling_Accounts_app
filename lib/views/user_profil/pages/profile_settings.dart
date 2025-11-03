@@ -51,6 +51,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   dynamic getData() async {
     int a = 0;
+    
     GetMeModel().getMe();
     await AboutUsModel().getAboutUs().then((value) {
       print(value);
@@ -115,41 +116,74 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   dynamic onTapp() async {
-    if (selectedImage == null) {
-      showSnackBar('noImage', 'noImageBanner', Colors.red);
-      await Vibration.vibrate();
+  if (selectedImage == null) {
+    showSnackBar('noImage', 'noImageBanner', Colors.red);
+    await Vibration.vibrate();
+  } else {
+    final settingsController = Get.find<SettingsController>();
+    settingsController.agreeButton.value = !settingsController.agreeButton.value;
+
+    final token = await Auth().getToken();
+    final headers = {'Authorization': 'Bearer $token'};
+
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$serverURL/api/accounts/short-update/'),
+    );
+
+    request.fields.addAll({
+      'pubg_username': pubgNameController.text,
+      'pubg_id': pubgIDController.text,
+    });
+
+    request.headers.addAll(headers);
+
+    final String fileName = selectedImage!.path.split('/').last;
+    final stream = http.ByteStream(DelegatingStream.typed(selectedImage!.openRead()));
+    final length = await selectedImage!.length();
+    final mimeTypeData = lookupMimeType(
+      selectedImage!.path,
+      headerBytes: [0xFF, 0xD8],
+    )!.split('/');
+
+    // ✅ Send same file twice, under two different field names
+    final multipartFileBg = http.MultipartFile(
+      'bg_image',
+      stream,
+      length,
+      filename: fileName,
+      contentType: MediaType(mimeTypeData.first, mimeTypeData[1]),
+    );
+
+    // Create a new stream for the second upload (cannot reuse the same one)
+    final secondStream = http.ByteStream(DelegatingStream.typed(selectedImage!.openRead()));
+    final multipartFileImage = http.MultipartFile(
+      'image',
+      secondStream,
+      length,
+      filename: fileName,
+      contentType: MediaType(mimeTypeData.first, mimeTypeData[1]),
+    );
+
+    request.files.addAll([multipartFileBg, multipartFileImage]);
+
+    final http.StreamedResponse response = await request.send();
+    settingsController.agreeButton.value = false;
+
+    if (response.statusCode == 200) {
+        setState(() {
+           getData();
+        });
+      showSnackBar('copySucces', 'changedData', Colors.green);
+      getData();
+      pubgNameController.clear();
+      pubgIDController.clear();
     } else {
-      Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
-      final token = await Auth().getToken();
-      final headers = {'Authorization': 'Bearer $token'};
-      final request = http.MultipartRequest('POST', Uri.parse('$serverURL/api/accounts/short-update/'));
-      request.fields.addAll({
-        'pubg_username': pubgNameController.text,
-        'pubg_id': pubgIDController.text,
-      });
-      request.headers.addAll(headers);
-
-      final String fileName = selectedImage!.path.split('/').last;
-      final stream = http.ByteStream(DelegatingStream.typed(selectedImage!.openRead()));
-      final length = await selectedImage!.length();
-      final mimeTypeData = lookupMimeType(selectedImage!.path, headerBytes: [0xFF, 0xD8])!.split('/');
-      final multipartFileSign = http.MultipartFile('bg_image', stream, length, filename: fileName, contentType: MediaType(mimeTypeData.first, mimeTypeData[1]));
-      request.files.add(multipartFileSign);
-
-      final http.StreamedResponse response = await request.send();
-      Get.find<SettingsController>().agreeButton.value = false;
-      Get.find<SettingsController>().agreeButton.value = false;
-
-      if (response.statusCode == 200) {
-        showSnackBar('copySucces', 'changedData', Colors.green);
-        getData();
-        pubgNameController.clear();
-        pubgIDController.clear();
-      } else {
-        showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
-      }
+      showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -408,7 +442,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
                           GetMeModel().shortUpdate(pubgUserId: pubgIDController.text, pubgUserName: pubgNameController.text).then((value) {
                             if (value == 200) {
+                              getData();
                               Get.back();
+                              
                               showSnackBar('copySucces', 'changedData', Colors.green);
                               pubgNameController.clear();
                               pubgIDController.clear();

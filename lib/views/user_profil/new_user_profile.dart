@@ -12,20 +12,21 @@ import 'package:game_app/views/user_profil/pages/about_us.dart';
 import 'package:game_app/views/user_profil/pages/add_cash.dart';
 import 'package:game_app/views/user_profil/pages/bought_things.dart';
 import 'package:game_app/views/user_profil/pages/edit_work_profil.dart';
+import 'package:game_app/views/user_profil/pages/new_notification_page.dart';
 import 'package:game_app/views/user_profil/pages/profile_settings.dart';
 import 'package:game_app/views/user_profil/pages/settings.dart' as page;
 
 import '../../controllers/wallet_controller.dart';
 import 'pages/notification.dart';
 
-class UserProfil extends StatefulWidget {
-  const UserProfil({super.key});
+class NewUserProfil extends StatefulWidget {
+  const NewUserProfil({super.key});
 
   @override
-  State<UserProfil> createState() => _UserProfilState();
+  State<NewUserProfil> createState() => _NewUserProfilState();
 }
 
-class _UserProfilState extends State<UserProfil> {
+class _NewUserProfilState extends State<NewUserProfil> {
   bool showPage = false;
   final SettingsController settingsController = Get.put(SettingsController());
   @override
@@ -55,11 +56,11 @@ class _UserProfilState extends State<UserProfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         backArrow: false,
         fontSize: 0.0,
         iconRemove: false,
-        icon: showPage == false ? userAppBarMoney() : const SizedBox(),
+        icon: SizedBox(),
         name: 'profil',
         elevationWhite: true,
       ),
@@ -102,12 +103,10 @@ class _UserProfilState extends State<UserProfil> {
                 ProfilButton(
                   name: 'notification',
                   onTap: () {
-                    Get.to(() => NotificationPage());
+                    Get.to(() => NewNotificationPage());
                   },
                   icon: IconlyLight.notification,
                 ),
-                settingsController.loginUser.value ? whenUserLogin(snapshot.data!.forSale!, snapshot.data!) : const SizedBox.shrink(),
-                // settingsController.loginUser.value ? whenUserLogin(true, snapshot.data!) : const SizedBox.shrink(),
                 ProfilButton(
                   name: 'aboutUs',
                   onTap: () {
@@ -137,51 +136,6 @@ class _UserProfilState extends State<UserProfil> {
         }
       },
       icon: IconlyLight.login,
-    );
-  }
-
-  Column whenUserLogin(bool forSale, GetMeModel model) {
-    return Column(
-      children: [
-        divider(),
-        showPage == false
-            ? ProfilButton(
-                name: 'cashHistory',
-                onTap: () {
-                  Get.to(
-                    () => const TopUpScreen(
-                        // text: 'message',
-                        // textSend: 'requestCash'.tr,
-                        ),
-                  );
-                },
-                icon: IconlyLight.wallet,
-              )
-            : const SizedBox(),
-        forSale
-            ? ProfilButton(
-                name: 'editProfil',
-                onTap: () {
-                  Get.to(
-                    () => EditWorkProfile(
-                      model: model,
-                    ),
-                  );
-                },
-                icon: IconlyLight.category,
-              )
-            : const SizedBox.shrink(),
-        showPage
-            ? const SizedBox.shrink()
-            : ProfilButton(
-                name: 'orders',
-                onTap: () {
-                  Get.to(() => const BoughtThings());
-                },
-                icon: IconlyLight.document,
-              ),
-        divider(),
-      ],
     );
   }
 }

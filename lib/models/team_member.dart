@@ -7,18 +7,18 @@ class TeamMember {
   final String user2;
   final String user3;
   final QuartTurnir? quartturnir; // nullable
-  final dynamic halfturnir;
-  final dynamic finalturnir;
+  final QuartTurnir? halfturnir;
+  final QuartTurnir? finalturnir;
   final dynamic winnerturnir;
 
   TeamMember({
     required this.id,
-    this.name,
     required this.account,
     required this.extraName,
     required this.user1,
     required this.user2,
     required this.user3,
+    this.name,
     this.quartturnir,
     this.halfturnir,
     this.finalturnir,
@@ -35,8 +35,8 @@ class TeamMember {
       user2: json['user_2'] ?? '',
       user3: json['user_3'] ?? '',
       quartturnir: (json['quartturnir'] != null && json['quartturnir'] is Map) ? QuartTurnir.fromJson(json['quartturnir']) : null,
-      halfturnir: json['halfturnir'],
-      finalturnir: json['finalturnir'],
+      halfturnir: (json['halfturnir'] != null && json['halfturnir'] is Map) ? QuartTurnir.fromJson(json['halfturnir']) : null,
+      finalturnir: (json['finalturnir'] != null && json['finalturnir'] is Map) ? QuartTurnir.fromJson(json['finalturnir']) : null,
       winnerturnir: json['winnerturnir'],
     );
   }
@@ -51,8 +51,8 @@ class TeamMember {
       'user_2': user2,
       'user_3': user3,
       'quartturnir': quartturnir?.toJson(),
-      'halfturnir': halfturnir,
-      'finalturnir': finalturnir,
+      'halfturnir': halfturnir?.toJson(),
+      'finalturnir': finalturnir?.toJson(),
       'winnerturnir': winnerturnir,
     };
   }
@@ -60,8 +60,8 @@ class TeamMember {
 
 class QuartTurnir {
   final String name;
-  final DateTime? startDate;
-  final DateTime? finishDate;
+  final String? startDate;
+  final String? finishDate;
   final dynamic lobbiId;
   final dynamic code; // Placeholder for any additional fields
 
@@ -74,23 +74,10 @@ class QuartTurnir {
   });
 
   factory QuartTurnir.fromJson(Map<String, dynamic> json) {
-    DateTime? parseDate(dynamic value) {
-      if (value == null) return null;
-      if (value is DateTime) return value;
-      if (value is String) {
-        try {
-          return DateTime.parse(value);
-        } catch (_) {
-          return null;
-        }
-      }
-      return null;
-    }
-
     return QuartTurnir(
       name: json['name'] ?? '',
-      startDate: parseDate(json['start_date']),
-      finishDate: parseDate(json['finish_date']),
+      startDate: json['start_date'],
+      finishDate: json['finish_date'],
       lobbiId: json['lobbi_id'],
       code: json['code'],
     );
@@ -99,8 +86,8 @@ class QuartTurnir {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'start_date': startDate?.toIso8601String(),
-      'finish_date': finishDate?.toIso8601String(),
+      'start_date': startDate,
+      'finish_date': finishDate,
       'lobbi_id': lobbiId,
       'code': code,
     };

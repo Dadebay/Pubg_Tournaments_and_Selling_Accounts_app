@@ -5,8 +5,7 @@ import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/constants/widgets.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/tournament_page/qartar_groups_screen.dart';
-import 'package:game_app/views/tournament_page/tournament_detail_page.dart';
-import 'package:game_app/views/tournament_page/tournament_profil_page.dart';
+import 'package:game_app/views/tournament_page/winners_screen.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -32,13 +31,24 @@ class NewTournamentCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Get.to(
+
+        if (filter == 'winners'){
+           Get.to(
+          () => WinnersScreen(filter:filter , tournament:  tournament,),
+            
+          
+        );
+        }else{
+           Get.to(
           () => ChangeNotifierProvider(
             create: (_) => TeamMembersProvider(),
             child: QuarterGroupsScreen(filter: filter, tournament: tournament),
             // TournamentDetailPage(filter: filter, tournament: tournament),
           ),
         );
+        }
+
+        
       },
       child: Container(
         width: Get.size.width,

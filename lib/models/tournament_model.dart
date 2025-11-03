@@ -57,10 +57,10 @@ class TournamentModel {
     final response = await http.get(
       Uri.parse(
         type == 1
-            ? '$serverURL/api/turnirs/by-type/solo/'
+            ? '$serverURL/api/turnirs/by-type/squad/'
             : type == 2
-                ? '$serverURL/api/turnirs/by-type/duo/'
-                : '$serverURL/api/turnirs/by-type/squad/',
+                ?'$serverURL/api/turnirs/by-type/squad/' 
+                : '$serverURL/api/turnirs/by-type/duo/',
       ).replace(
         queryParameters: {
           'page': '1',

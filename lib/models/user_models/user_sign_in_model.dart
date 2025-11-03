@@ -365,6 +365,8 @@ class GetMeModel {
     required String pubgUserName,
     required String pubgUserId,
   }) async {
+
+    
     final token = await Auth().getToken();
     final response = await http.post(
       Uri.parse('$serverURL/api/accounts/short-update/'),

@@ -48,13 +48,13 @@ class TeamMembersProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchTeamGroup(String groupId) async {
+  Future<void> fetchTeamGroup(String groupId, int id) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final response = await _dio.get('/api/turnirs/getteammembers/1/?quartturnir=$groupId');
+      final response = await _dio.get('/api/turnirs/getteammembers/$id/?quartturnir=$groupId');
 
       if (response.statusCode == 200 && response.data is List) {
         final List data = response.data;
@@ -75,13 +75,13 @@ class TeamMembersProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchTeamHalf(String groupId) async {
+  Future<void> fetchTeamHalf(String groupId, int id) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final response = await _dio.get('/api/turnirs/getteammembers/1/?halfturnir=$groupId');
+      final response = await _dio.get('/api/turnirs/getteammembers/$id/?halfturnir=$groupId');
 
       if (response.statusCode == 200 && response.data is List) {
         final List data = response.data;
@@ -102,13 +102,13 @@ class TeamMembersProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchTeamFinal() async {
+  Future<void> fetchTeamFinal(int id) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final response = await _dio.get('/api/turnirs/getteammembers/1/?finalturnir=True');
+      final response = await _dio.get('/api/turnirs/getteammembers/$id/?finalturnir=True');
 
       if (response.statusCode == 200 && response.data is List) {
         final List data = response.data;
@@ -129,13 +129,13 @@ class TeamMembersProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchTeamWinner() async {
+  Future<void> fetchTeamWinner(int id) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final response = await _dio.get('/api/turnirs/getteammembers/1/?winnerturnir=True');
+      final response = await _dio.get('/api/turnirs/getteammembers/$id/?winnerturnir=True');
 
       if (response.statusCode == 200 && response.data is List) {
         final List data = response.data;

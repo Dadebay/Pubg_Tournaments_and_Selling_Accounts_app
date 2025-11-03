@@ -66,7 +66,7 @@ class _SellctTeamState extends State<SellctTeam> {
         children: [
           Column(
             children: List.generate(widget.turnir.type == 'squad' ? 3 : 1, (index) {
-              return CustomTextField(labelName: '${index + 1} - ${'buySQUAD4'.tr}', borderRadius: true, controller: controllers[index], focusNode: focusNode[index], requestfocusNode: focusNode[index + 1], isNumber: false);
+              return CustomTextField(labelName: '${index + 2} - ${'buySQUAD4'.tr}', borderRadius: true, controller: controllers[index], focusNode: focusNode[index], requestfocusNode: focusNode[index + 1], isNumber: false);
             }),
           ),
           const SizedBox(
@@ -108,33 +108,33 @@ class _SellctTeamState extends State<SellctTeam> {
       appBar: const MyAppBar(fontSize: 18, backArrow: true, iconRemove: false, name: 'Teams', elevationWhite: true),
       floatingActionButton: GestureDetector(
         onTap: () {
-          selectedTeam == 0
-              ? showSnackBar('Üns beriň!', 'Team Saýlaň!', Colors.red)
-              : Get.defaultDialog(
-                  backgroundColor: kPrimaryColorBlack,
-                  title: 'buySQUAD'.tr,
-                  titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 23),
-                  content: Column(
-                    children: [
-                      AgreeButton(
-                        onTap: () {
-                          // Uri.parse('$serverURL/api/turnirs/participate/'),
-                          TournamentModel().participateTournamentPost(teamId: selectedTeam).then((value) {
-                            // ignore: unnecessary_statements
-                            value == 200 ? backTurnir() : null;
-                          });
-                        },
-                        name: 'buySQUAD1',
-                      ),
-                      AgreeButton(
-                        onTap: () {
-                          enterSQUADIDS();
-                        },
-                        name: widget.turnir.type == 'squad' ? 'buySQUAD2' : 'buySQUAD22',
-                      ),
-                    ],
-                  ),
-                );
+          selectedTeam == 0 ? showSnackBar('Üns beriň!', 'Team Saýlaň!', Colors.red) : enterSQUADIDS();
+
+          // Get.defaultDialog(
+          //   backgroundColor: kPrimaryColorBlack,
+          //   title: 'buySQUAD'.tr,
+          //   titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 23),
+          //   content: Column(
+          //     children: [
+          //       // AgreeButton(
+          //       //   onTap: () {
+          //       //     // Uri.parse('$serverURL/api/turnirs/participate/'),
+          //       //     TournamentModel().participateTournamentPost(teamId: selectedTeam).then((value) {
+          //       //       // ignore: unnecessary_statements
+          //       //       value == 200 ? backTurnir() : null;
+          //       //     });
+          //       //   },
+          //       //   name: 'buySQUAD1',
+          //       // ),
+          //       AgreeButton(
+          //         onTap: () {
+          //           enterSQUADIDS();
+          //         },
+          //         name: widget.turnir.type == 'squad' ? 'buySQUAD2' : 'buySQUAD22',
+          //       ),
+          //     ],
+          //   ),
+          // );
         },
         child: SizedBox(
           width: double.infinity,
@@ -156,7 +156,7 @@ class _SellctTeamState extends State<SellctTeam> {
           return Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: CardTeansAll(
+            child: CardTeamsAll(
               teams: widget.turnir.teams![index],
               selectedTeam: selectedTeam,
               selectTeam: (int id) {

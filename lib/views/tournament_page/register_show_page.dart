@@ -4,6 +4,8 @@ import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
 
+import 'package:flutter/services.dart';
+
 class TeamRegistrationScreenDetail extends StatefulWidget {
   final TeamMember teamMember;
   final int tournamentId;
@@ -139,19 +141,27 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                                     user.teams!.first.user1 == widget.teamMember.user1 &&
                                     user.teams!.first.user2 == widget.teamMember.user2 &&
                                     user.teams!.first.user3 == widget.teamMember.user3)
-                                  Text(
-                                    widget.teamMember.quartturnir?.lobbiId?.toString() ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  CopyableText(lobbiId: widget.teamMember.quartturnir?.lobbiId),
+
                               ],
                             ),
                             const SizedBox(height: 20),
                             Row(
                               children: [
+                                if (user.teams != null &&
+                                    user.teams!.isNotEmpty &&
+                                    user.teams!.first.account?.isNotEmpty == true &&
+                                    user.teams!.first.user1?.isNotEmpty == true &&
+                                    user.teams!.first.user2?.isNotEmpty == true &&
+                                    user.teams!.first.user3?.isNotEmpty == true &&
+                                    widget.teamMember.account.isNotEmpty == true &&
+                                    widget.teamMember.user1.isNotEmpty == true &&
+                                    widget.teamMember.user2.isNotEmpty == true &&
+                                    widget.teamMember.user3.isNotEmpty == true &&
+                                    user.teams!.first.account == widget.teamMember.account &&
+                                    user.teams!.first.user1 == widget.teamMember.user1 &&
+                                    user.teams!.first.user2 == widget.teamMember.user2 &&
+                                    user.teams!.first.user3 == widget.teamMember.user3)
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: kAccentColor, // button color
@@ -170,6 +180,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                                 ),
                                 const SizedBox(width: 10),
                                 if (_isVisible)
+                                
                                   Text(
                                     widget.teamMember.quartturnir?.code ?? 'Unknown Code',
                                     style: const TextStyle(
@@ -326,6 +337,48 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+}
+
+
+
+class CopyableText extends StatelessWidget {
+  final String? lobbiId;
+
+  const CopyableText({super.key, this.lobbiId});
+
+  @override
+  Widget build(BuildContext context) {
+    final textToCopy = lobbiId?.toString() ?? '';
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          textToCopy,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(width: 6),
+        IconButton(
+          icon: const Icon(Icons.copy, size: 20, color: Colors.grey),
+          onPressed: () {
+            if (textToCopy.isNotEmpty) {
+              Clipboard.setData(ClipboardData(text: textToCopy));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Copied to clipboard'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            }
+          },
         ),
       ],
     );

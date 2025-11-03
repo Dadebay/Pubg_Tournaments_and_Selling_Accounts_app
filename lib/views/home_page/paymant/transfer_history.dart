@@ -65,10 +65,16 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                   Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
                   const SizedBox(height: 16),
                   Text(
-                    'Error: ${provider.error}',
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
+                    'No transfers yet',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey.shade600,
+                    )),
+                  // Text(
+                  //   'Error: ${provider.error}',
+                  //   style: const TextStyle(fontSize: 16),
+                  //   textAlign: TextAlign.center,
+                  // ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () => provider.fetchTransfers(),

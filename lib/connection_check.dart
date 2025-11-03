@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:game_app/models/user_models/abous_us_model.dart';
+import 'package:game_app/new_bottom_nav.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:lottie/lottie.dart';
@@ -23,11 +24,13 @@ class ConnectionCheck extends StatefulWidget {
 class _ConnectionCheckState extends State<ConnectionCheck> {
   String firsttime = 'false';
   String token = 'false';
+  bool showPage = false;
 
   @override
   void initState() {
     super.initState();
     checkConnection();
+    getData();
     Get.find<WalletController>().getUserMoney();
   }
 
@@ -51,7 +54,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return BottomNavBar(showPages: showPage);
+                return showPage == false ? BottomNavBar(showPages: showPage) : NewBottomNavBar(showPages: showPage);
               },
             ),
           );
@@ -69,6 +72,22 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
     } on SocketException catch (_) {
       _showDialog();
     }
+  }
+
+  dynamic getData() async {
+    int a = 0;
+    await AboutUsModel().getAboutUs().then((value) {
+      print(value);
+      for (var element in value) {
+        if (element.pageShow == true) {
+          a++;
+        }
+      }
+    });
+    if (a == 3) {
+      showPage = true;
+    }
+    setState(() {});
   }
 
   void _showDialog() {

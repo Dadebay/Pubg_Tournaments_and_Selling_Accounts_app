@@ -9,14 +9,24 @@ import 'package:game_app/views/tournament_page/register_show_page.dart';
 import 'package:game_app/views/tournament_page/team_registration_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class TournamentDetailPage extends StatefulWidget {
   final String? filter;
   final String groupName;
   final Tournament tournament;
   final TeamMember members;
+  final String static_g;
 
-  const TournamentDetailPage({required this.filter, required this.groupName, required this.tournament, required this.members, super.key});
+  const TournamentDetailPage({
+    required this.filter,
+    required this.groupName,
+    required this.tournament,
+    required this.members,
+    required this.static_g,
+    super.key,
+  });
 
   @override
   State<TournamentDetailPage> createState() => _TournamentDetailPageState();
@@ -26,29 +36,48 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
   @override
   void initState() {
     super.initState();
-    log('Fetching team members for tournament ID: ${widget.filter}');
 
-    widget.filter == 'yarym_final'
-        ? Future.microtask(() {
-            Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamHalf(widget.groupName == 'B2' ? 'ikinji' : 'birinji');
-          })
-        : widget.filter == 'final'
-            ? Future.microtask(() {
-                Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamFinal();
-              })
-            : Future.microtask(() {
-                Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamGroup(widget.groupName);
-              });
+    log('Fetching team members for tournament ID: ${widget.tournament.id}');
+
+    if (widget.filter == 'yarym_final') {
+      Future.microtask(() {
+        Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamHalf(
+          widget.static_g == 'B2' ? 'ikinji' : 'birinji',
+          widget.tournament.id,
+        );
+      });
+    } else if (widget.filter == 'final') {
+      Future.microtask(() {
+        Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamFinal(widget.tournament.id);
+      });
+    } else {
+      Future.microtask(() {
+        Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamGroup(widget.groupName, widget.tournament.id);
+      });
+    }
   }
 
-  // void _showRegisterDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => TeamRegistrationDialog(
-  //       tournamentId: widget.tournament.id,
-  //     ),
-  //   );
-  // }
+  // Helper to format date as dd.MM.yyyy
+  String formatDate(String? dateTimeString) {
+    if (dateTimeString == null) return '—';
+    try {
+      final dt = DateTime.parse(dateTimeString).toLocal();
+      return DateFormat('dd.MM.yyyy').format(dt);
+    } catch (_) {
+      return '—';
+    }
+  }
+
+  // Helper to format time as HH:mm
+  String formatTime(String? dateTimeString) {
+    if (dateTimeString == null) return '—';
+    try {
+      final dt = DateTime.parse(dateTimeString).toLocal();
+      return DateFormat('HH:mm').format(dt);
+    } catch (_) {
+      return '—';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +107,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Tournament Header
+                // Tournament Image
                 Image.network(
                   imageUrl,
                   height: 200,
@@ -88,7 +117,11 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                     return Container(
                       height: 200,
                       color: Colors.grey[800],
-                      child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     );
                   },
                 ),
@@ -99,32 +132,43 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Date & Time Row
                       Row(
                         children: [
                           const Icon(
-                            Icons.calendar_today, // 📅 Date icon
+                            Icons.calendar_today,
                             size: 18,
                             color: kAccentColor,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.startDate.toString()))} - ${DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.members.quartturnir!.finishDate.toString()))}',
+                            widget.filter == 'yarym_final'
+                                ? formatDate(widget.members.halfturnir?.startDate)
+                                : widget.filter == 'final'
+                                    ? formatDate(widget.members.finalturnir?.startDate)
+                                    : formatDate(widget.members.quartturnir?.startDate),
                             style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                           const SizedBox(width: 10),
                           const Icon(
-                            Icons.access_time, // ⏰ Clock icon
+                            Icons.access_time,
                             size: 18,
                             color: kAccentColor,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${DateFormat('HH:mm').format(DateTime.parse(widget.members.quartturnir!.startDate.toString()))} - ${DateFormat('HH:mm').format(DateTime.parse(widget.members.quartturnir!.finishDate.toString()))}',
+                            widget.filter == 'yarym_final'
+                                ? '${formatTime(widget.members.halfturnir?.startDate)} - ${formatTime(widget.members.halfturnir?.finishDate)}'
+                                : widget.filter == 'final'
+                                    ? '${formatTime(widget.members.finalturnir?.startDate)} - ${formatTime(widget.members.finalturnir?.finishDate)}'
+                                    : '${formatTime(widget.members.quartturnir?.startDate)} - ${formatTime(widget.members.quartturnir?.finishDate)}',
                             style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ],
                       ),
                       const SizedBox(height: 12),
+
+                      // Map & Price Row
                       Row(
                         children: [
                           const Icon(Icons.map, color: kPrimaryColor, size: 20),
@@ -135,7 +179,10 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                           ),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.circular(12),
@@ -153,7 +200,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Team Members Section
+                      // Team Members Title
                       Text(
                         widget.filter == 'yarym_final'
                             ? 'Pol Final Team Members'.tr
@@ -168,7 +215,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Loading / Error / Data
+                      // Team Members List
                       if (provider.isLoading)
                         const Center(
                           child: Padding(
@@ -223,7 +270,10 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                                   );
                                 }
                               },
-                              child: TeamMemberCard(member: member, index: index),
+                              child: TeamMemberCard(
+                                member: member,
+                                index: index,
+                              ),
                             );
                           },
                         ),

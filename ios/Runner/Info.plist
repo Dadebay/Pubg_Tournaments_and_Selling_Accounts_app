@@ -26,6 +26,11 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>To allow users to take a photo and set it as their profile picture within the app, you need to request camera permissions because users will need to capture their own photos. This feature will help users find their friends more easily and participate in tournaments together.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -44,17 +49,6 @@
 	<string>Main</string>
 	<key>UIStatusBarStyle</key>
 	<string></string>
-
-	<key>NSAppTransportSecurity</key>
-    <dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-    </dict>
-
-
-	
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -62,5 +56,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

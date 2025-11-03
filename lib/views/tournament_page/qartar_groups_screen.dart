@@ -22,11 +22,9 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
   @override
   void initState() {
     super.initState();
-    // widget.filter == 'tournament'
-         Future.microtask(() {
-            Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamMembers(widget.tournament.id);
-          });
-        // : null;
+    Future.microtask(() {
+      Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamMembers(widget.tournament.id);
+    });
   }
 
   @override
@@ -43,7 +41,11 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'qarterFinals'.tr,
+          widget.filter == 'final'
+              ? 'final_tournament'.tr
+              : widget.filter == 'yarym_final'
+                  ? 'pol_final'.tr
+                  : 'qarterFinals'.tr,
           style: const TextStyle(
             fontFamily: josefinSansSemiBold,
             fontSize: 20,
@@ -68,13 +70,10 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
             );
           }
 
-          // Group teams by quartturnir
-          // Group teams by quartturnir name
+          // Group members by quartturnir name
           final Map<String, List<TeamMember>> groupedTeams = {};
-
           for (var member in provider.teamMembers) {
             final groupName = member.quartturnir?.name ?? '';
-
             if (groupName.isNotEmpty) {
               groupedTeams.putIfAbsent(groupName, () => []);
               groupedTeams[groupName]!.add(member);
@@ -97,7 +96,11 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                     return Container(
                       height: 150,
                       color: Colors.grey[800],
-                      child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                      child: const Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     );
                   },
                 ),
@@ -117,35 +120,49 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                       ),
                       const SizedBox(height: 24),
 
+                      // Filters
                       if (widget.filter == 'final')
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 1,
                           itemBuilder: (context, index) {
-                            // final teams = ['B1', 'B2'];
-                            // final groupName = teams[index];
-
-                            return QuarterGroupCard(filter: widget.filter, groupName: 'F1', teamCount: 25, 
-                            tournament: widget.tournament, members: provider.teamMembers[index]);
+                            final groupName = sortedGroups[index];
+                            final members = groupedTeams[groupName]!;
+                            return QuarterGroupCard(
+                              filter: widget.filter,
+                              groupName: groupName,
+                              teamCount: 25,
+                              tournament: widget.tournament,
+                              member: members.first,
+                              static_g: '',
+                            );
                           },
                         ),
+
                       if (widget.filter == 'yarym_final')
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 2,
                           itemBuilder: (context, index) {
-                            final teams = ['B1', 'B2'];
-                            final groupName = teams[index];
+                            final groupName = sortedGroups[index];
+                            final members = groupedTeams[groupName]!;
+                            // final teams = ['B1', 'B2'];
+                            // final groupName = teams[index];
+                            // final member = provider.teamMembers[index];
 
-                            return QuarterGroupCard(filter: widget.filter, groupName: groupName, 
-                            teamCount: 25, tournament: widget.tournament,
-                             members: provider.teamMembers[index]);
+                            return QuarterGroupCard(
+                              filter: widget.filter,
+                              groupName: groupName,
+                              teamCount: 25,
+                              tournament: widget.tournament,
+                              member: members.first,
+                              static_g: index == 0 ? '' : 'B2',
+                            );
                           },
                         ),
 
-                      // Groups Grid
                       if (widget.filter == 'tournament')
                         if (sortedGroups.isEmpty)
                           Center(
@@ -164,12 +181,16 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                             itemCount: sortedGroups.length,
                             itemBuilder: (context, index) {
                               final groupName = sortedGroups[index];
-                              final teams = groupedTeams[groupName]!;
+                              final members = groupedTeams[groupName]!;
 
-                              return QuarterGroupCard(filter: widget.filter, 
-                              groupName: groupName, teamCount: teams.length,
-                               tournament: widget.tournament,
-                                members: provider.teamMembers[index]);
+                              return QuarterGroupCard(
+                                filter: widget.filter,
+                                groupName: groupName,
+                                teamCount: members.length,
+                                tournament: widget.tournament,
+                                member: members.first,
+                                static_g: '', // take first member
+                              );
                             },
                           ),
                     ],
@@ -184,26 +205,47 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
   }
 }
 
-// ============ QUARTER GROUP CARD ============
 class QuarterGroupCard extends StatelessWidget {
   final String? filter;
   final String groupName;
   final int teamCount;
   final Tournament tournament;
-  final TeamMember members;
+  final TeamMember member;
+  final String static_g;
 
   const QuarterGroupCard({
     required this.filter,
     required this.groupName,
     required this.teamCount,
     required this.tournament,
-    required this.members,
+    required this.member,
+    required this.static_g,
     super.key,
   });
 
+  // Only show HH:mm
+  String formatTime(String? dateTimeString) {
+    if (dateTimeString == null) return '—';
+    try {
+      final dt = DateTime.parse(dateTimeString);
+      return DateFormat('HH:mm').format(dt.toLocal());
+    } catch (_) {
+      return '—';
+    }
+  }
+
+  String formatDate(String? dateTimeString) {
+    if (dateTimeString == null) return '—';
+    try {
+      final dt = DateTime.parse(dateTimeString).toLocal();
+      return DateFormat('dd.MM.yyyy').format(dt);
+    } catch (_) {
+      return '—';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Different colors for different groups
     final colors = [
       filter == 'final' ? Colors.green : Colors.orange,
       Colors.blue,
@@ -215,14 +257,25 @@ class QuarterGroupCard extends StatelessWidget {
       Colors.amber,
     ];
 
-    final colorIndex = int.tryParse(groupName.replaceAll('A', '')) ?? 0;
+    final colorIndex = int.tryParse(groupName.replaceAll(RegExp(r'\D'), '')) ?? 0;
     final color = colors[colorIndex % colors.length];
+    final String start;
+    final String finish;
+    final String dataDay;
 
-    // Format dates
-    final startDateFormat = DateFormat('dd MMM yyyy');
-    final startTimeFormat = DateFormat('HH:mm');
-    final endDateFormat = DateFormat('dd MMM yyyy');
-    final endTimeFormat = DateFormat('HH:mm');
+    if (filter == 'yarym_final') {
+      start = formatTime(member.halfturnir?.startDate);
+      finish = formatTime(member.halfturnir?.finishDate);
+      dataDay = formatDate(member.halfturnir?.startDate);
+    } else if (filter == 'final') {
+      start = formatTime(member.finalturnir?.startDate);
+      finish = formatTime(member.finalturnir?.finishDate);
+      dataDay = formatDate(member.finalturnir?.startDate);
+    } else {
+      start = formatTime(member.quartturnir?.startDate);
+      finish = formatTime(member.quartturnir?.finishDate);
+      dataDay = formatDate(member.quartturnir?.startDate);
+    }
 
     return GestureDetector(
       onTap: () {
@@ -231,7 +284,8 @@ class QuarterGroupCard extends StatelessWidget {
             filter: filter,
             tournament: tournament,
             groupName: groupName,
-            members: members
+            members: member,
+            static_g: static_g,
           ),
         );
       },
@@ -252,7 +306,7 @@ class QuarterGroupCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Group Icon/Badge
+            // Group Circle
             Container(
               width: 70,
               height: 70,
@@ -274,7 +328,7 @@ class QuarterGroupCard extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // Group Info
+            // Info Section
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,56 +348,49 @@ class QuarterGroupCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Text(
                         '$teamCount ${teamCount == 1 ? 'Team'.tr : 'Team'.tr}',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
 
-                  // Start Date & Time
+                  // Start Time
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 14, color: Colors.grey[400]),
+                      Icon(Icons.calendar_month, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
                       Text(
-                        members.quartturnir?.startDate != null ? startDateFormat.format(members.quartturnir!.startDate!) : '—',
+                        dataDay,
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.access_time, size: 14, color: Colors.grey[400]),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.play_arrow, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
                       Text(
-                        members.quartturnir?.startDate != null ? startTimeFormat.format(members.quartturnir!.startDate!) : '—',
+                        'Açyldy: $start',
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
 
-                  // End Date & Time
+                  // Finish Time
                   Row(
                     children: [
-                      Icon(Icons.event_available, size: 14, color: Colors.grey[400]),
+                      Icon(Icons.flag, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
                       Text(
-                        members.quartturnir?.finishDate != null ? endDateFormat.format(members.quartturnir!.finishDate!) : '—',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.schedule, size: 14, color: Colors.grey[400]),
-                      const SizedBox(width: 4),
-                      Text(
-                        members.quartturnir?.finishDate != null ? endTimeFormat.format(members.quartturnir!.finishDate!) : '—',
+                        'Başlanýar: $finish',
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 8),
 
+                  // Stage Label
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
@@ -376,11 +423,7 @@ class QuarterGroupCard extends StatelessWidget {
                 color: color.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: color,
-                size: 18,
-              ),
+              child: Icon(Icons.arrow_forward_ios, color: color, size: 18),
             ),
           ],
         ),

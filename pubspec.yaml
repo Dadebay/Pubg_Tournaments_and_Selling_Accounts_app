@@ -41,8 +41,8 @@ dependencies:
   path_provider: ^2.1.5
   package_info_plus: ^8.3.0
   flutter_image_compress: ^2.4.0
-  media_kit: ^1.1.10
-  media_kit_video: ^1.1.10
+  # media_kit: ^1.1.10
+  # media_kit_video: ^1.1.10
   video_player: ^2.10.0
   chewie: ^1.8.5
 
@@ -52,20 +52,6 @@ dependencies:
     sdk: flutter
   async: ^2.11.0
 
-# flutter_launcher_icons:
-#   android: "launcher_icon"
-#   ios: true
-#   remove_alpha_ios: true
-#   image_path: "assets/image/logo.png"
-#   min_sdk_android: 21
-#   adaptive_icon_background: "assets/image/logo.png" 
-#   adaptive_icon_foreground: "assets/image/logo.png"
-# flutter_icons:
-#   android: true
-#   ios: true
-#   image_path: "assets/image/logo.png"
-#   adaptive_icon_background: "assets/image/logo.png" 
-#   adaptive_icon_foreground: "assets/image/logo.png"
 
 dev_dependencies:
   flutter_lints: ^4.0.0
