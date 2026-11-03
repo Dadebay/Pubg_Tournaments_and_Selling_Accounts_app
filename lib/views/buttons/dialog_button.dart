@@ -17,15 +17,17 @@ class DialogButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTapp,
         style: ElevatedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: borderRadius20,
-          ),
+          shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
           backgroundColor: color ? kPrimaryColor : kPrimaryColorBlack1,
           padding: const EdgeInsets.symmetric(vertical: 14),
         ),
         child: Text(
           name.tr,
-          style: TextStyle(color: color ? kPrimaryColorBlack1 : kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 20),
+          style: TextStyle(
+            color: color ? kPrimaryColorBlack1 : kPrimaryColor,
+            fontFamily: gilroySemiBold,
+            fontSize: 20,
+          ),
         ),
       ),
     );

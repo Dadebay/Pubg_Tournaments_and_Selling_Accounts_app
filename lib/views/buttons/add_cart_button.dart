@@ -51,7 +51,9 @@ class _AddCartButtonState extends State<AddCartButton> {
 
   Widget numPart() {
     return Row(
-      mainAxisAlignment: widget.productProfil ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: widget.productProfil
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
           onTap: () {
@@ -82,16 +84,28 @@ class _AddCartButtonState extends State<AddCartButton> {
           ),
         ),
         Padding(
-          padding: widget.productProfil ? const EdgeInsets.symmetric(horizontal: 15) : EdgeInsets.zero,
+          padding: widget.productProfil
+              ? const EdgeInsets.symmetric(horizontal: 15)
+              : EdgeInsets.zero,
           child: Text(
             number.toString(),
-            style: TextStyle(color: kPrimaryColor, fontSize: widget.productProfil ? 22 : 20, fontFamily: josefinSansBold),
+            style: TextStyle(
+              color: kPrimaryColor,
+              fontSize: widget.productProfil ? 22 : 20,
+              fontFamily: gilroyBold,
+            ),
           ),
         ),
         GestureDetector(
           onTap: () {
             number++;
-            walletController.addCart(id: widget.id, image: widget.image, price: widget.price, title: widget.title, status: widget.status);
+            walletController.addCart(
+              id: widget.id,
+              image: widget.image,
+              price: widget.price,
+              title: widget.title,
+              status: widget.status,
+            );
             setState(() {
               final double b = double.parse(widget.price);
               walletController.finalCount.value = number.toDouble();
@@ -136,17 +150,39 @@ class _AddCartButtonState extends State<AddCartButton> {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: widget.productProfil
             ? value
-                ? numPart()
-                : Text(
-                    'addCart'.tr,
-                    style: TextStyle(color: Colors.white, fontSize: widget.productProfil ? 22 : 16, fontFamily: josefinSansSemiBold),
-                  )
+                  ? numPart()
+                  : Text(
+                      'addCart'.tr,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: widget.productProfil ? 22 : 16,
+                        fontFamily: gilroySemiBold,
+                      ),
+                    )
             : ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColorBlack, padding: EdgeInsets.symmetric(vertical: widget.productProfil ? 14 : 0, horizontal: value ? 15 : 0), elevation: 0, shape: RoundedRectangleBorder(borderRadius: widget.productProfil ? borderRadius20 : borderRadius15)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kPrimaryColorBlack,
+                  padding: EdgeInsets.symmetric(
+                    vertical: widget.productProfil ? 14 : 0,
+                    horizontal: value ? 15 : 0,
+                  ),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: widget.productProfil
+                        ? borderRadius20
+                        : borderRadius15,
+                  ),
+                ),
                 onPressed: () {
                   setState(() {
                     if (value == false) {
-                      walletController.addCart(id: widget.id, image: widget.image, price: widget.price, title: widget.title, status: widget.status);
+                      walletController.addCart(
+                        id: widget.id,
+                        image: widget.image,
+                        price: widget.price,
+                        title: widget.title,
+                        status: widget.status,
+                      );
 
                       value = !value;
                     }
@@ -156,7 +192,11 @@ class _AddCartButtonState extends State<AddCartButton> {
                     ? numPart()
                     : Text(
                         'addCart'.tr,
-                        style: TextStyle(color: Colors.white, fontSize: widget.productProfil ? 22 : 16, fontFamily: josefinSansSemiBold),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: widget.productProfil ? 22 : 16,
+                          fontFamily: gilroySemiBold,
+                        ),
                       ),
               ),
       );

@@ -28,7 +28,7 @@ class TabPage2 extends StatelessWidget {
                 flex: 1,
                 child: Text(
                   ' ${index + 1}.',
-                  style: const TextStyle(color: Colors.white, fontSize: 20, fontFamily: josefinSansSemiBold),
+                  style: const TextStyle(color: Colors.white, fontSize: 20, fontFamily: gilroySemiBold),
                 ),
               ),
               Expanded(
@@ -38,11 +38,11 @@ class TabPage2 extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: model.awards![index].award.toString().substring(0, model.awards![index].award!.length - 3),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontFamily: josefinSansSemiBold),
+                        style: const TextStyle(color: Colors.white, fontSize: 24, fontFamily: gilroySemiBold),
                       ),
                       const TextSpan(
                         text: '  TMT',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansRegular),
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroyRegular),
                       ),
                     ],
                   ),

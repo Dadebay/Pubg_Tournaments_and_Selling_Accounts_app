@@ -16,14 +16,7 @@ class NewTournamentCard extends StatelessWidget {
   final int tournamentType;
   final Tournament tournament;
 
-  const NewTournamentCard({
-    required this.filter,
-    required this.index,
-    required this.tournament,
-    required this.finised,
-    required this.tournamentType,
-    super.key,
-  });
+  const NewTournamentCard({required this.filter, required this.index, required this.tournament, required this.finised, required this.tournamentType, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,33 +24,21 @@ class NewTournamentCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-
-        if (filter == 'winners'){
-           Get.to(
-          () => WinnersScreen(filter:filter , tournament:  tournament,),
-            
-          
-        );
-        }else{
-           Get.to(
-          () => ChangeNotifierProvider(
-            create: (_) => TeamMembersProvider(),
-            child: QuarterGroupsScreen(filter: filter, tournament: tournament),
-            // TournamentDetailPage(filter: filter, tournament: tournament),
-          ),
-        );
+        if (filter == 'winners') {
+          Get.to(() => WinnersScreen(filter: filter, tournament: tournament));
+        } else {
+          Get.to(
+            () => ChangeNotifierProvider(
+              create: (_) => TeamMembersProvider(),
+              child: QuarterGroupsScreen(filter: filter, tournament: tournament),
+              // TournamentDetailPage(filter: filter, tournament: tournament),
+            ),
+          );
         }
-
-        
       },
       child: Container(
         width: Get.size.width,
-        margin: EdgeInsets.only(
-          top: index == 0 ? 15 : 0,
-          bottom: 18,
-          right: 12,
-          left: 12,
-        ),
+        margin: EdgeInsets.only(top: index == 0 ? 15 : 0, bottom: 18, right: 12, left: 12),
         decoration: BoxDecoration(
           color: kPrimaryColorBlack,
           borderRadius: borderRadius30,
@@ -77,18 +58,11 @@ class NewTournamentCard extends StatelessWidget {
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
                         borderRadius: borderRadius30,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
+                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                       ),
                     ),
                     placeholder: (context, url) => Center(child: spinKit()),
-                    errorWidget: (context, url, error) => const Icon(
-                      Icons.broken_image,
-                      color: Colors.grey,
-                      size: 50,
-                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.broken_image, color: Colors.grey, size: 50),
                   ),
                 ),
               ),
@@ -98,10 +72,7 @@ class NewTournamentCard extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius30,
-                  color: Colors.black.withOpacity(0.4),
-                ),
+                decoration: BoxDecoration(borderRadius: borderRadius30, color: Colors.black.withValues(alpha: 0.4)),
               ),
             ),
 
@@ -116,11 +87,7 @@ class NewTournamentCard extends StatelessWidget {
                     Text(
                       finised ? 'endTournament'.tr : tournament.nameTm,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: josefinSansBold,
-                        fontSize: 28,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 28),
                     ),
                     // Padding(
                     //   padding: const EdgeInsets.symmetric(vertical: 6),
@@ -129,7 +96,7 @@ class NewTournamentCard extends StatelessWidget {
                     //     textAlign: TextAlign.center,
                     //     style: TextStyle(
                     //       color: Colors.white.withOpacity(0.8),
-                    //       fontFamily: josefinSansSemiBold,
+                    //       fontFamily: gilroySemiBold,
                     //       fontSize: 18,
                     //     ),
                     //   ),
@@ -139,7 +106,7 @@ class NewTournamentCard extends StatelessWidget {
                     //   textAlign: TextAlign.center,
                     //   style: TextStyle(
                     //     color: Colors.white.withOpacity(0.8),
-                    //     fontFamily: josefinSansSemiBold,
+                    //     fontFamily: gilroySemiBold,
                     //     fontSize: 18,
                     //   ),
                     // ),

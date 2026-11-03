@@ -119,10 +119,7 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
   bool _hasError = false;
 
   String _convertVideoUrl(String originalUrl) {
-    return originalUrl.replaceAll(
-      'http://216.250.11.240',
-      'http://ucdayy.com.tm',
-    );
+    return originalUrl.replaceAll('http://216.250.11.240', 'http://ucdayy.com.tm');
   }
 
   @override
@@ -136,9 +133,7 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
       final convertedUrl = _convertVideoUrl(widget.videoURL!);
       debugPrint('Loading video: $convertedUrl');
 
-      _videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.parse(convertedUrl),
-      );
+      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(convertedUrl));
 
       await _videoPlayerController.initialize();
 
@@ -149,12 +144,7 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
         allowFullScreen: true,
         allowMuting: true,
         showControls: true,
-        materialProgressColors: ChewieProgressColors(
-          playedColor: Colors.red,
-          handleColor: Colors.redAccent,
-          backgroundColor: Colors.grey,
-          bufferedColor: Colors.grey[300]!,
-        ),
+        materialProgressColors: ChewieProgressColors(playedColor: Colors.red, handleColor: Colors.redAccent, backgroundColor: Colors.grey, bufferedColor: Colors.grey[300]!),
         autoInitialize: true,
       );
 
@@ -184,9 +174,7 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
       body: Stack(
         children: [
           if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            )
+            const Center(child: CircularProgressIndicator(color: Colors.white))
           else if (_hasError)
             Center(
               child: Column(
@@ -194,22 +182,14 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.red, size: 60),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Ошибка воспроизведения видео',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                  const Text('Ошибка воспроизведения видео', style: TextStyle(color: Colors.white, fontSize: 18)),
                   const SizedBox(height: 10),
-                  Text(
-                    'Попробуйте другое видео',
-                    style: TextStyle(color: Colors.grey[400], fontSize: 14),
-                  ),
+                  Text('Попробуйте другое видео', style: TextStyle(color: Colors.grey[400], fontSize: 14)),
                 ],
               ),
             )
           else if (_chewieController != null)
-            Center(
-              child: Chewie(controller: _chewieController!),
-            ),
+            Center(child: Chewie(controller: _chewieController!)),
           Positioned(
             top: 50,
             left: 20,
@@ -218,15 +198,8 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
                 onTap: () => Navigator.of(context).pop(),
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    IconlyLight.arrowLeftCircle,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), shape: BoxShape.circle),
+                  child: const Icon(IconlyLight.arrowLeftCircle, color: Colors.white, size: 30),
                 ),
               ),
             ),

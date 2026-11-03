@@ -24,7 +24,7 @@ class _KonkursScreenState extends State<KonkursScreen> {
     fetchData();
   }
 
-  fetchData() async {
+  Future<void> fetchData() async {
     await Provider.of<ConCatigoryProvider>(context, listen: false).getConCatigory(context);
   }
 
@@ -32,33 +32,19 @@ class _KonkursScreenState extends State<KonkursScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBarNew(
-        fontSize: 0,
-        backArrow: false,
-        iconRemove: false,
-        name: 'Gifts & Konkurs',
-        elevationWhite: true,
-      ),
+      appBar: const MyAppBarNew(fontSize: 0, backArrow: false, iconRemove: false, name: 'Gifts & Konkurs', elevationWhite: true),
       body: Consumer<ConCatigoryProvider>(
-        builder: (_, concurs, __) {
+        builder: (_, concurs, _) {
           if (concurs.isLoading == true) {
             return Center(child: spinKit());
           } else {
             final List<ConCatigory> newList = [];
 
-            newList.addAll(
-              concurs.conCatigory.where((element) => element.nameTm.toLowerCase() == 'konkurs'),
-            );
+            newList.addAll(concurs.conCatigory.where((element) => element.nameTm.toLowerCase() == 'konkurs'));
 
-            newList.addAll(
-              concurs.conCatigory.where((element) => element.nameTm.toLowerCase() == 'sowgat kartlary'),
-            );
+            newList.addAll(concurs.conCatigory.where((element) => element.nameTm.toLowerCase() == 'sowgat kartlary'));
 
-            newList.addAll(
-              concurs.conCatigory.where(
-                (element) => element.nameTm.toLowerCase() != 'konkurs' && element.nameTm.toLowerCase() != 'sowgat kartlary',
-              ),
-            );
+            newList.addAll(concurs.conCatigory.where((element) => element.nameTm.toLowerCase() != 'konkurs' && element.nameTm.toLowerCase() != 'sowgat kartlary'));
             return ListView.builder(
               itemCount: newList.length,
               itemBuilder: (BuildContext context, int index) {
@@ -71,10 +57,7 @@ class _KonkursScreenState extends State<KonkursScreen> {
                     } else {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OtherConcursScreen(
-                            pageName: newList[index].nameTm,
-                            sellingID: newList[index].id,
-                          ),
+                          builder: (context) => OtherConcursScreen(pageName: newList[index].nameTm, sellingID: newList[index].id),
                         ),
                       );
                     }
@@ -85,15 +68,7 @@ class _KonkursScreenState extends State<KonkursScreen> {
                       color: kPrimaryColorBlack1,
                       borderRadius: borderRadius15,
                       border: Border.all(color: kPrimaryColor.withOpacity(0.4)),
-                      boxShadow: newList[index].nameTm.toLowerCase() == 'konkurs'
-                          ? [
-                              BoxShadow(
-                                color: kPrimaryColor.withOpacity(0.4),
-                                blurRadius: 3,
-                                spreadRadius: 3,
-                              ),
-                            ]
-                          : [],
+                      boxShadow: newList[index].nameTm.toLowerCase() == 'konkurs' ? [BoxShadow(color: kPrimaryColor.withOpacity(0.4), blurRadius: 3, spreadRadius: 3)] : [],
                     ),
                     child: Row(
                       children: [
@@ -114,7 +89,7 @@ class _KonkursScreenState extends State<KonkursScreen> {
                           padding: const EdgeInsets.all(15.0),
                           child: Text(
                             newList[index].nameTm,
-                            style: const TextStyle(fontSize: 24, fontFamily: josefinSansBold, color: kPrimaryColor),
+                            style: const TextStyle(fontSize: 24, fontFamily: gilroyBold, color: kPrimaryColor),
                           ),
                         ),
                       ],

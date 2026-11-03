@@ -19,7 +19,7 @@ class PhoneNumber extends StatelessWidget {
       padding: const EdgeInsets.only(top: 15),
       child: TextFormField(
         enabled: disabled ?? true,
-        style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansMedium),
+        style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroyMedium),
         cursorColor: Colors.white,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.number,
@@ -43,12 +43,12 @@ class PhoneNumber extends StatelessWidget {
         autocorrect: false,
         decoration: InputDecoration(
           errorMaxLines: 2,
-          errorStyle: const TextStyle(fontFamily: josefinSansMedium),
+          errorStyle: const TextStyle(fontFamily: gilroyMedium),
           prefixIcon: const Padding(
             padding: EdgeInsets.only(left: 15, bottom: 2),
             child: Text(
               '+ 993',
-              style: TextStyle(color: Colors.grey, fontSize: 18, fontFamily: josefinSansMedium),
+              style: TextStyle(color: Colors.grey, fontSize: 18, fontFamily: gilroyMedium),
             ),
           ),
           contentPadding: const EdgeInsets.only(left: 25, top: 18, bottom: 18),
@@ -57,7 +57,7 @@ class PhoneNumber extends StatelessWidget {
           filled: style,
           fillColor: backgroundColor,
           alignLabelWithHint: true,
-          hintStyle: const TextStyle(color: Colors.grey, fontFamily: josefinSansMedium),
+          hintStyle: const TextStyle(color: Colors.grey, fontFamily: gilroyMedium),
           border: OutlineInputBorder(
             borderRadius: style ? borderRadius10 : borderRadius20,
             borderSide: BorderSide(color: style ? backgroundColor : Colors.grey, width: 2),

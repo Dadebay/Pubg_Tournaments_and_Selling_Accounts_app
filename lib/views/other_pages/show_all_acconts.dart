@@ -83,7 +83,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                     },
                     title: Text(
                       "${sortData[index]["name"]}".tr,
-                      style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium),
                     ),
                   );
                 },
@@ -146,13 +146,13 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 25, bottom: 20),
-            child: Text('priceRange'.tr, style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 19, color: Colors.white)),
+            child: Text('priceRange'.tr, style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 19, color: Colors.white)),
           ),
           Row(
             children: [
               Expanded(
                 child: TextFormField(
-                  style: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
+                  style: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
                   cursorColor: kPrimaryColor,
                   controller: controller1,
                   textInputAction: TextInputAction.next,
@@ -164,12 +164,12 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   decoration: InputDecoration(
                     suffixIcon: const Padding(
                       padding: EdgeInsets.only(right: 8),
-                      child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: josefinSansSemiBold, fontSize: 14, color: Colors.grey)),
+                      child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey)),
                     ),
                     suffixIconConstraints: const BoxConstraints(minHeight: 15),
                     isDense: true,
                     hintText: 'minPrice'.tr,
-                    hintStyle: const TextStyle(fontFamily: josefinSansMedium, fontSize: 16, color: Colors.white),
+                    hintStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 16, color: Colors.white),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: borderRadius15,
                       borderSide: BorderSide(color: kPrimaryColor, width: 2),
@@ -189,7 +189,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
               ),
               Expanded(
                 child: TextFormField(
-                  style: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
+                  style: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
                   cursorColor: kPrimaryColor,
                   controller: controller2,
                   textInputAction: TextInputAction.done,
@@ -199,11 +199,11 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                     LengthLimitingTextInputFormatter(9),
                   ],
                   decoration: InputDecoration(
-                    suffixIcon: const Padding(padding: EdgeInsets.only(right: 8), child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: josefinSansSemiBold, fontSize: 14, color: Colors.grey))),
+                    suffixIcon: const Padding(padding: EdgeInsets.only(right: 8), child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey))),
                     suffixIconConstraints: const BoxConstraints(minHeight: 15),
                     isDense: true,
                     hintText: 'maxPrice'.tr,
-                    hintStyle: const TextStyle(fontFamily: josefinSansMedium, fontSize: 16, color: Colors.white),
+                    hintStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 16, color: Colors.white),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: borderRadius15,
                       borderSide: BorderSide(color: kPrimaryColor, width: 2),
@@ -230,8 +230,8 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('selectCityTitle'.tr, style: const TextStyle(color: Colors.grey, fontFamily: josefinSansSemiBold, fontSize: 14)),
-            Text(name.tr, style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18)),
+            Text('selectCityTitle'.tr, style: const TextStyle(color: Colors.grey, fontFamily: gilroySemiBold, fontSize: 14)),
+            Text(name.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18)),
           ],
         ),
         leading: const Icon(
@@ -242,7 +242,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         onTap: () {
           Get.defaultDialog(
             title: 'selectCityTitle'.tr,
-            titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+            titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
             radius: 5,
             backgroundColor: kPrimaryColorBlack,
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -284,7 +284,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                           child: Text(
                             Get.locale?.languageCode == 'tr' ? snapshot.data![index].name_tm.toString() : snapshot.data![index].name_ru.toString(),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 16),
+                            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
                           ),
                         ),
                       ],

@@ -66,7 +66,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: josefinSansSemiBold,
+              fontFamily: gilroySemiBold,
               fontSize: fontSize == 0.0
                   ? sizeWidth > 800
                       ? 35
@@ -143,7 +143,7 @@ class MyAppBarNew extends StatelessWidget implements PreferredSize {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: josefinSansSemiBold,
+              fontFamily: gilroySemiBold,
               fontSize: fontSize == 0.0
                   ? sizeWidth > 800
                       ? 35

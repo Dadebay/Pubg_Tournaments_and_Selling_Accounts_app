@@ -106,12 +106,12 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 15),
         shape: const RoundedRectangleBorder(borderRadius: borderRadius20, side: BorderSide(color: Colors.white, width: 2)),
-        title: Text(locationName, style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18)),
+        title: Text(locationName, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18)),
         trailing: const Icon(IconlyLight.arrowRightCircle),
         onTap: () {
           Get.defaultDialog(
             title: 'selectCityTitle'.tr,
-            titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+            titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
             radius: 5,
             backgroundColor: kPrimaryColorBlack,
             titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -148,7 +148,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                           child: Text(
                             Get.locale?.languageCode == 'tr' ? snapshot.data![index].name_tm.toString() : snapshot.data![index].name_ru.toString(),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 16),
+                            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
                           ),
                         ),
                       ],
@@ -169,12 +169,12 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
   //     child: ListTile(
   //       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
   //       shape: const RoundedRectangleBorder(borderRadius: borderRadius20, side: BorderSide(color: Colors.white, width: 2)),
-  //       title: Text(pubgName, style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18)),
+  //       title: Text(pubgName, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18)),
   //       trailing: const Icon(IconlyLight.arrowRightCircle),
   //       onTap: () {
   //         Get.defaultDialog(
   //           title: 'pubgTypes'.tr,
-  //           titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+  //           titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
   //           radius: 5,
   //           backgroundColor: kPrimaryColorBlack,
   //           titlePadding: const EdgeInsets.symmetric(vertical: 20),
@@ -210,7 +210,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
   //                         child: Text(
   //                           snapshot.data![index].title.toString(),
   //                           textAlign: TextAlign.center,
-  //                           style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 16),
+  //                           style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
   //                         ),
   //                       ),
   //                     ],
@@ -232,7 +232,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
           padding: const EdgeInsets.only(top: 30, left: 20),
           child: Text(
             'select_user_image'.tr,
-            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
         ),
         if (widget.model.image != null && selectedImage == null)
@@ -299,11 +299,11 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                       height: 120,
                       margin: const EdgeInsets.only(top: 25),
                       child: DottedBorder(
-                        borderType: BorderType.Oval,
-                        radius: const Radius.circular(12),
-                        padding: const EdgeInsets.all(6),
-                        strokeWidth: 2,
-                        color: kPrimaryColor,
+                        options: OvalDottedBorderOptions(
+ padding: const EdgeInsets.all(6),
+ strokeWidth: 2,
+ color: kPrimaryColor,
+ ),
                         child: const Center(
                           child: Icon(
                             Icons.add_circle_outline_sharp,
@@ -326,7 +326,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
           padding: const EdgeInsets.only(top: 40, left: 20, bottom: 20),
           child: Text(
             'select_user_bg_image'.tr,
-            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
         ),
         if (selectedImage1 == null)
@@ -398,11 +398,12 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                     height: 150,
                     width: double.infinity,
                     child: DottedBorder(
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(12),
-                      padding: const EdgeInsets.all(6),
-                      strokeWidth: 2,
-                      color: kPrimaryColor,
+                      options: RoundedRectDottedBorderOptions(
+ radius: const Radius.circular(12),
+ padding: const EdgeInsets.all(6),
+ strokeWidth: 2,
+ color: kPrimaryColor,
+ ),
                       child: const Center(
                         child: Icon(
                           Icons.add,
@@ -424,7 +425,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
         name.tr,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: const TextStyle(fontSize: 18, fontFamily: josefinSansMedium),
+        style: const TextStyle(fontSize: 18, fontFamily: gilroyMedium),
       ),
     );
   }
@@ -540,7 +541,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                 },
                 child: Text(
                   'editVideo'.tr,
-                  style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansMedium),
+                  style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyMedium),
                 ),
               ),
               TextButton(
@@ -551,7 +552,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                 },
                 child: Text(
                   'videoUpload'.tr,
-                  style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansMedium),
+                  style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyMedium),
                 ),
               ),
             ],

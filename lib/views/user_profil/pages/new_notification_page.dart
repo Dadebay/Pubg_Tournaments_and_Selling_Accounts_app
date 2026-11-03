@@ -307,7 +307,7 @@ class _NewNotificationPageState extends State<NewNotificationPage> {
                               getTitle(notification),
                               style: TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansSemiBold,
+                                fontFamily: gilroySemiBold,
                                 fontSize: 16,
                                 fontWeight: notification['isNew'] ? FontWeight.bold : FontWeight.normal,
                               ),
@@ -351,7 +351,7 @@ class _NewNotificationPageState extends State<NewNotificationPage> {
                                     Text(
                                       getContent(notification),
                                       style: const TextStyle(
-                                        fontFamily: josefinSansMedium,
+                                        fontFamily: gilroyMedium,
                                         fontSize: 15,
                                         color: Colors.white,
                                         height: 1.5,

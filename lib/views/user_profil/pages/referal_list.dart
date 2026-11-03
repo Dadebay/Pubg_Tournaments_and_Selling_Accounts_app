@@ -23,7 +23,7 @@
 //             child: Text(
 //               ' ${index + 1}.',
 //               textAlign: TextAlign.center,
-//               style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 20),
+//               style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
 //             ),
 //           ),
 //           Expanded(
@@ -52,7 +52,7 @@
 //                       child: Text(
 //                         'Surat ýok',
 //                         textAlign: TextAlign.center,
-//                         style: TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+//                         style: TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
 //                       ),
 //                     ),
 //                   ),
@@ -69,7 +69,7 @@
 //               getMeModel.pubg_username,
 //               overflow: TextOverflow.ellipsis,
 //               maxLines: 1,
-//               style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 20),
+//               style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
 //             ),
 //           ),
 //           Expanded(
@@ -84,7 +84,7 @@
 //                   style: const TextStyle(
 //                     color: Colors.white,
 //                     fontSize: 18,
-//                     fontFamily: josefinSansSemiBold,
+//                     fontFamily: gilroySemiBold,
 //                   ),
 //                 ),
 //                 const Text(
@@ -92,7 +92,7 @@
 //                   style: TextStyle(
 //                     color: Colors.white,
 //                     fontSize: 13,
-//                     fontFamily: josefinSansSemiBold,
+//                     fontFamily: gilroySemiBold,
 //                   ),
 //                 ),
 //               ],

@@ -15,15 +15,7 @@ class OrderCard extends StatefulWidget {
   final String image;
   final String status;
   final String price;
-  const OrderCard({
-    required this.id,
-    required this.count,
-    required this.title,
-    required this.status,
-    required this.image,
-    required this.price,
-    super.key,
-  });
+  const OrderCard({required this.id, required this.count, required this.title, required this.status, required this.image, required this.price, super.key});
 
   @override
   State<OrderCard> createState() => _OrderCardState();
@@ -45,7 +37,7 @@ class _OrderCardState extends State<OrderCard> {
     return Container(
       margin: const EdgeInsets.only(top: 15, left: 15, right: 15),
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.3), borderRadius: borderRadius20),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.3), borderRadius: borderRadius20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,18 +52,12 @@ class _OrderCardState extends State<OrderCard> {
                   width: Get.size.width,
                   decoration: BoxDecoration(
                     borderRadius: borderRadius20,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
                 placeholder: (context, url) => Center(child: spinKit()),
                 errorWidget: (context, url, error) => const Center(
-                  child: Text(
-                    'No Image',
-                    style: TextStyle(fontFamily: josefinSansSemiBold),
-                  ),
+                  child: Text('No Image', style: TextStyle(fontFamily: gilroySemiBold)),
                 ),
               ),
             ),
@@ -92,7 +78,7 @@ class _OrderCardState extends State<OrderCard> {
                           widget.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 17),
+                          style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 17),
                         ),
                       ),
                       GestureDetector(
@@ -108,15 +94,7 @@ class _OrderCardState extends State<OrderCard> {
                             }
                           });
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                            left: 15,
-                          ),
-                          child: Icon(
-                            CupertinoIcons.xmark_circle,
-                            size: 26,
-                          ),
-                        ),
+                        child: const Padding(padding: EdgeInsets.only(left: 15), child: Icon(CupertinoIcons.xmark_circle, size: 26)),
                       ),
                     ],
                   ),
@@ -124,17 +102,10 @@ class _OrderCardState extends State<OrderCard> {
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Text(
                       '${widget.price} TMT',
-                      style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansBold, fontSize: 18),
+                      style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 18),
                     ),
                   ),
-                  AddCartButton(
-                    productProfil: true,
-                    id: widget.id,
-                    price: widget.price,
-                    title: widget.title,
-                    image: widget.image,
-                    status: widget.status,
-                  ),
+                  AddCartButton(productProfil: true, id: widget.id, price: widget.price, title: widget.title, image: widget.image, status: widget.status),
                 ],
               ),
             ),

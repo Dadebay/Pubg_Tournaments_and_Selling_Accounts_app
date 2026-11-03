@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:game_app/models/get_concurs_model.dart';
 import 'package:game_app/models/get_gifts_model.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
@@ -25,9 +24,7 @@ class ConCatigoryProvider with ChangeNotifier {
     conCatigory = [];
 
     try {
-      final response = await dio.get(
-        '$serverURL/api/category/',
-      );
+      final response = await dio.get('$serverURL/api/category/');
       print(response.data);
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -65,9 +62,7 @@ class getGiftsProvider with ChangeNotifier {
     giftsCart = [];
 
     try {
-      final response = await dio.get(
-        '$serverURL/api/category/getGifts/',
-      );
+      final response = await dio.get('$serverURL/api/category/getGifts/');
       print(response.data);
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -95,9 +90,7 @@ class getGiftsProvider with ChangeNotifier {
     isLoading = true;
 
     try {
-      final response = await dio.get(
-        '$serverURL/api/category/getText/7/',
-      );
+      final response = await dio.get('$serverURL/api/category/getText/7/');
       print(response.data);
       print(response.statusCode);
       if (response.statusCode == 200) {
@@ -132,9 +125,7 @@ class getConcursProvider with ChangeNotifier {
     concursCart = [];
 
     try {
-      final response = await dio.get(
-        '$serverURL/api/category/getkonkurs/',
-      );
+      final response = await dio.get('$serverURL/api/category/getkonkurs/');
 
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -170,9 +161,7 @@ class getConcursByIDProvider with ChangeNotifier {
     isLoading = true;
 
     try {
-      final response = await dio.get(
-        '$serverURL/api/category/getkonkurs/$id/',
-      );
+      final response = await dio.get('$serverURL/api/category/getkonkurs/$id/');
 
       if (response.statusCode == 200) {
         if (response.data != null) {
@@ -207,17 +196,12 @@ class postPaymentProvider with ChangeNotifier {
 
     final token = await Auth().getToken();
 
-    final headers = {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    };
+    final headers = {'Authorization': 'Bearer $token', 'Accept': 'application/json'};
 
     try {
       final response = await dio.post(
         '$serverURL/api/carts/pay/',
-        data: jsonEncode({
-          'amount': amount,
-        }),
+        data: jsonEncode({'amount': amount}),
         options: Options(headers: headers),
       );
 

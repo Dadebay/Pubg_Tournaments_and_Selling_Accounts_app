@@ -1,23 +1,19 @@
 // ignore_for_file: file_names
 
 import 'package:game_app/controllers/settings_controller.dart';
+import 'package:game_app/views/user_profil/pages/my_posts_page.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/constants/profile_button.dart';
-import 'package:game_app/views/home_page/paymant/add_monay.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:game_app/views/user_profil/pages/about_us.dart';
-import 'package:game_app/views/user_profil/pages/add_cash.dart';
-import 'package:game_app/views/user_profil/pages/bought_things.dart';
-import 'package:game_app/views/user_profil/pages/edit_work_profil.dart';
-import 'package:game_app/views/user_profil/pages/new_notification_page.dart';
+import 'package:game_app/views/user_profil/pages/notification.dart';
 import 'package:game_app/views/user_profil/pages/profile_settings.dart';
 import 'package:game_app/views/user_profil/pages/settings.dart' as page;
 
 import '../../controllers/wallet_controller.dart';
-import 'pages/notification.dart';
 
 class NewUserProfil extends StatefulWidget {
   const NewUserProfil({super.key});
@@ -56,14 +52,7 @@ class _NewUserProfilState extends State<NewUserProfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBar(
-        backArrow: false,
-        fontSize: 0.0,
-        iconRemove: false,
-        icon: SizedBox(),
-        name: 'profil',
-        elevationWhite: true,
-      ),
+      appBar: const MyAppBar(backArrow: false, fontSize: 0.0, iconRemove: true, name: 'profil', elevationWhite: true),
       body: FutureBuilder<GetMeModel>(
         future: GetMeModel().getMe(),
         builder: (context, snapshot) {
@@ -93,6 +82,15 @@ class _NewUserProfilState extends State<NewUserProfil> {
                         icon: IconlyLight.profile,
                       )
                     : const SizedBox.shrink(),
+                settingsController.loginUser.value
+                    ? ProfilButton(
+                        name: 'myPosts',
+                        onTap: () {
+                          Get.to(() => const MyPostsPage());
+                        },
+                        icon: IconlyLight.paper,
+                      )
+                    : const SizedBox.shrink(),
                 ProfilButton(
                   name: 'settings',
                   onTap: () {
@@ -103,7 +101,7 @@ class _NewUserProfilState extends State<NewUserProfil> {
                 ProfilButton(
                   name: 'notification',
                   onTap: () {
-                    Get.to(() => NewNotificationPage());
+                    Get.to(() => NotificationPage());
                   },
                   icon: IconlyLight.notification,
                 ),
@@ -128,9 +126,7 @@ class _NewUserProfilState extends State<NewUserProfil> {
       name: settingsController.loginUser.value ? 'log_out' : 'signUp',
       onTap: () {
         if (settingsController.loginUser.value == false) {
-          Get.to(
-            () => const TabBarViewPage(),
-          );
+          Get.to(() => const TabBarViewPage());
         } else {
           logOut(context);
         }

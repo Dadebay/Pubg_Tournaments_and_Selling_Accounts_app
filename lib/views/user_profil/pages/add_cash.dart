@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/history_order_model.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
@@ -45,20 +44,19 @@ class _AddCashState extends State<AddCash> {
                         await Get.find<WalletController>().getUserMoney();
                         final double a = double.parse(Get.find<WalletController>().userMoney.toString());
                         if (a >= 100.0) {
-                          await Get.to(
-                            () => AskMoneyPage(
-                              text: 'message1',
-                              textSend: 'requestCash1'.tr,
-                            ),
-                          );
+                          await Get.to(() => AskMoneyPage(text: 'message1', textSend: 'requestCash1'.tr));
                         } else {
                           showSnackBar('money_error_title', 'request_money_error_subtitle', Colors.red);
                         }
                       },
-                      style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor, padding: const EdgeInsets.all(15), shape: const RoundedRectangleBorder(borderRadius: borderRadius20)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        padding: const EdgeInsets.all(15),
+                        shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
+                      ),
                       child: Text(
                         'requestCash1'.tr,
-                        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                       ),
                     ),
                   ),
@@ -66,17 +64,16 @@ class _AddCashState extends State<AddCash> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.to(
-                        () => AskMoneyPage(
-                          text: 'message',
-                          textSend: 'requestCash'.tr,
-                        ),
-                      );
+                      Get.to(() => AskMoneyPage(text: 'message', textSend: 'requestCash'.tr));
                     },
-                    style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor, padding: const EdgeInsets.all(15), shape: const RoundedRectangleBorder(borderRadius: borderRadius20)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kPrimaryColor,
+                      padding: const EdgeInsets.all(15),
+                      shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
+                    ),
                     child: Text(
                       'requestCash'.tr,
-                      style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                     ),
                   ),
                 ),
@@ -114,21 +111,19 @@ class _AddCashState extends State<AddCash> {
                     child: Text(
                       '${'cash'.tr} ${snapshot.data!.length - index}',
                       textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: josefinSansMedium,
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 18),
                     ),
                   ),
                   Expanded(
                     child: Text(
                       snapshot.data![index].created_date!.substring(0, 10),
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.grey, fontFamily: josefinSansRegular),
+                      style: const TextStyle(color: Colors.grey, fontFamily: gilroyRegular),
                     ),
                   ),
-                  Expanded(child: Price(showDiscountedPrice: true, textColor: Colors.white, selectedIndex: 0, price: a.toStringAsFixed(0))),
+                  Expanded(
+                    child: Price(showDiscountedPrice: true, textColor: Colors.white, selectedIndex: 0, price: a.toStringAsFixed(0)),
+                  ),
                 ],
               ),
               iconColor: Colors.white,
@@ -143,11 +138,7 @@ class _AddCashState extends State<AddCash> {
 class AskMoneyPage extends StatefulWidget {
   final String text;
   final String textSend;
-  const AskMoneyPage({
-    required this.text,
-    required this.textSend,
-    super.key,
-  });
+  const AskMoneyPage({required this.text, required this.textSend, super.key});
 
   @override
   State<AskMoneyPage> createState() => _AskMoneyPageState();
@@ -169,25 +160,11 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
   final _login = GlobalKey<FormState>();
   Future addMoneyToCARD() async {
     final String? token = await Auth().getToken();
-    final response = await http.post(
-      Uri.parse('$serverURL/api/paymentToPoint/'),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-      body: jsonEncode({
-        'amount': amountController.text,
-      }),
-    );
+    final response = await http.post(Uri.parse('$serverURL/api/paymentToPoint/'), headers: <String, String>{HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', HttpHeaders.authorizationHeader: 'Bearer $token'}, body: jsonEncode({'amount': amountController.text}));
 
     print(response.body);
     print(response.statusCode);
-    await Get.to(
-      () => OnlineAddMoneyToWallet(
-        url: jsonDecode(response.body)['formUrl'],
-        amount: amountController.text,
-      ),
-    );
+    await Get.to(() => OnlineAddMoneyToWallet(url: jsonDecode(response.body)['formUrl'], amount: amountController.text));
   }
 
   TextEditingController amountController = TextEditingController();
@@ -217,7 +194,7 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   child: Text(
                     'work_time'.tr,
-                    style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, height: 1.3, fontSize: 18),
+                    style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, height: 1.3, fontSize: 18),
                   ),
                 ),
                 // widget.text != 'message'
@@ -304,27 +281,23 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                          ),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                         ),
                         child: Text(
                           'popUP1'.tr,
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 22),
+                          style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold, fontSize: 22),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 // Padding(
                 //   padding: const EdgeInsets.symmetric(vertical: 15),
-                //   child: Text('payCARD'.tr, style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, height: 1.3, fontSize: 18)),
+                //   child: Text('payCARD'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, height: 1.3, fontSize: 18)),
                 // ),
                 // AgreeButton(
                 //   onTap: () {
@@ -336,7 +309,7 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                 //           'OnlinePayment'.tr,
                 //           style: const TextStyle(
                 //             color: Colors.white,
-                //             fontFamily: josefinSansSemiBold,
+                //             fontFamily: gilroySemiBold,
                 //           ),
                 //         ),
                 //         alignment: Alignment.center,

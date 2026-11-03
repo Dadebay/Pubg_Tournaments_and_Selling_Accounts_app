@@ -1,7 +1,6 @@
 plugins {
     id "com.android.application"
     id 'com.google.gms.google-services'
-    id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
     
 }
@@ -43,7 +42,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.gurbanov.ucdayy"
-    compileSdkVersion 36
+    compileSdkVersion 37
     ndkVersion = "29.0.14033849"
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -51,9 +50,6 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
    lintOptions {
         disable 'InvalidPackage'
         checkReleaseBuilds false //<- add this line
@@ -61,10 +57,6 @@ android {
 //    kotlinOptions {
 //        jvmTarget = '1.8'
 //    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 
 //    defaultConfig {
 //        applicationId = "com.gurbanov.ucdayy"
@@ -77,7 +69,7 @@ android {
 
     defaultConfig {
         applicationId = "com.gurbanov.ucdayy"
-        minSdkVersion 23
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -51,7 +51,7 @@ class TabPage1 extends StatelessWidget {
                     model.title.toString(),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontFamily: josefinSansSemiBold,
+                      fontFamily: gilroySemiBold,
                       fontSize: 26,
                     ),
                   ),
@@ -65,7 +65,7 @@ class TabPage1 extends StatelessWidget {
                   data: Get.locale?.languageCode == 'tr' ? model.description_tm ?? '' : model.description_ru ?? '',
                   style: {
                     'body': Style(
-                      fontFamily: josefinSansRegular,
+                      fontFamily: gilroyRegular,
                       fontSize: FontSize(18.0),
                       color: Colors.white70,
                       textAlign: TextAlign.left,
@@ -127,7 +127,7 @@ class TabPage1 extends StatelessWidget {
         style: const TextStyle(
           color: Colors.white70,
           fontSize: 18,
-          fontFamily: josefinSansRegular,
+          fontFamily: gilroyRegular,
         ),
       ),
     );
@@ -146,7 +146,7 @@ class TabPage1 extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 18,
-                fontFamily: josefinSansRegular,
+                fontFamily: gilroyRegular,
               ),
             ),
           ),
@@ -159,7 +159,7 @@ class TabPage1 extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
-                fontFamily: josefinSansSemiBold,
+                fontFamily: gilroySemiBold,
               ),
             ),
           ),

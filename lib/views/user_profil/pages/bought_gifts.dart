@@ -22,7 +22,7 @@ class BoughtGifts extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -31,7 +31,7 @@ class BoughtGifts extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -40,7 +40,7 @@ class BoughtGifts extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
               ],
@@ -94,7 +94,7 @@ class BoughtGifts extends StatelessWidget {
                                   textAlign: TextAlign.start,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontFamily: josefinSansMedium,
+                                    fontFamily: gilroyMedium,
                                     fontSize: 17,
                                   ),
                                 ),
@@ -110,7 +110,7 @@ class BoughtGifts extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                   color: Colors.grey,
-                                  fontFamily: josefinSansRegular,
+                                  fontFamily: gilroyRegular,
                                   fontSize: 14,
                                 ),
                               ),
@@ -122,7 +122,7 @@ class BoughtGifts extends StatelessWidget {
                               textAlign: TextAlign.end,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 16,
                               ),
                             ),

@@ -24,7 +24,7 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
 
     Get.defaultDialog(
       title: 'buySQUAD3'.tr,
-      titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+      titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -111,7 +111,7 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
         ),
         Text(
           widget.teamUsers.user!.nickname.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: josefinSansSemiBold),
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: gilroySemiBold),
         ),
       ],
     );

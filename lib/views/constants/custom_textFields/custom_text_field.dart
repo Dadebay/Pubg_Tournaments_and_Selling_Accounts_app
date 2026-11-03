@@ -32,7 +32,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: TextFormField(
-        style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium),
         cursorColor: Colors.white,
         controller: controller,
         validator: (value) {
@@ -50,18 +50,18 @@ class CustomTextField extends StatelessWidget {
         enabled: disabled ?? true,
         decoration: InputDecoration(
           errorMaxLines: 2,
-          errorStyle: const TextStyle(fontFamily: josefinSansMedium),
+          errorStyle: const TextStyle(fontFamily: gilroyMedium),
           hintMaxLines: 5,
           helperMaxLines: 5,
           hintText: isLabel! ? labelName.tr : '',
-          hintStyle: TextStyle(color: Colors.grey.shade500, fontFamily: josefinSansMedium),
+          hintStyle: TextStyle(color: Colors.grey.shade500, fontFamily: gilroyMedium),
           label: isLabel!
               ? null
               : Text(
                   labelName.tr,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.grey.shade500, fontFamily: josefinSansMedium),
+                  style: TextStyle(color: Colors.grey.shade500, fontFamily: gilroyMedium),
                 ),
           contentPadding: const EdgeInsets.only(left: 25, top: 20, bottom: 20, right: 10),
           border: OutlineInputBorder(

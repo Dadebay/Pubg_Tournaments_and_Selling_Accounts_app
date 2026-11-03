@@ -45,7 +45,7 @@ class _OrderPageState extends State<OrderPage> {
             padding: const EdgeInsets.only(top: 10, bottom: 8),
             child: Text(
               'info'.tr,
-              style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+              style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
             ),
           ),
           Padding(
@@ -57,18 +57,18 @@ class _OrderPageState extends State<OrderPage> {
             children: [
               Text(
                 'orderPage3'.tr,
-                style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
               ),
               Obx(() {
                 if (walletController.finalPRice > 0) {
                   return Text(
                     '${walletController.finalPRice} TMT',
-                    style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansBold, fontSize: 20),
+                    style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 20),
                   );
                 }
                 return const Text(
                   '0 TMT',
-                  style: TextStyle(color: kPrimaryColor, fontFamily: josefinSansBold, fontSize: 20),
+                  style: TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 20),
                 );
               }),
             ],
@@ -286,11 +286,11 @@ class _OrderPageState extends State<OrderPage> {
       children: [
         Text(
           text1.tr,
-          style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+          style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
         ),
         Text(
           text2.tr,
-          style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 20),
+          style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
         ),
       ],
     );

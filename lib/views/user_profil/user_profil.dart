@@ -9,7 +9,6 @@ import 'package:game_app/views/constants/profile_button.dart';
 import 'package:game_app/views/home_page/paymant/add_monay.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:game_app/views/user_profil/pages/about_us.dart';
-import 'package:game_app/views/user_profil/pages/add_cash.dart';
 import 'package:game_app/views/user_profil/pages/bought_things.dart';
 import 'package:game_app/views/user_profil/pages/edit_work_profil.dart';
 import 'package:game_app/views/user_profil/pages/profile_settings.dart';
@@ -55,14 +54,7 @@ class _UserProfilState extends State<UserProfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: MyAppBar(
-        backArrow: false,
-        fontSize: 0.0,
-        iconRemove: false,
-        icon: showPage == false ? userAppBarMoney() : const SizedBox(),
-        name: 'profil',
-        elevationWhite: true,
-      ),
+      appBar: MyAppBar(backArrow: false, fontSize: 0.0, iconRemove: true, name: 'profil', elevationWhite: true),
       body: FutureBuilder<GetMeModel>(
         future: GetMeModel().getMe(),
         builder: (context, snapshot) {
@@ -129,9 +121,7 @@ class _UserProfilState extends State<UserProfil> {
       name: settingsController.loginUser.value ? 'log_out' : 'signUp',
       onTap: () {
         if (settingsController.loginUser.value == false) {
-          Get.to(
-            () => const TabBarViewPage(),
-          );
+          Get.to(() => const TabBarViewPage());
         } else {
           logOut(context);
         }
@@ -150,9 +140,9 @@ class _UserProfilState extends State<UserProfil> {
                 onTap: () {
                   Get.to(
                     () => const TopUpScreen(
-                        // text: 'message',
-                        // textSend: 'requestCash'.tr,
-                        ),
+                      // text: 'message',
+                      // textSend: 'requestCash'.tr,
+                    ),
                   );
                 },
                 icon: IconlyLight.wallet,
@@ -162,11 +152,7 @@ class _UserProfilState extends State<UserProfil> {
             ? ProfilButton(
                 name: 'editProfil',
                 onTap: () {
-                  Get.to(
-                    () => EditWorkProfile(
-                      model: model,
-                    ),
-                  );
+                  Get.to(() => EditWorkProfile(model: model));
                 },
                 icon: IconlyLight.category,
               )

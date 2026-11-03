@@ -43,7 +43,7 @@
 //             padding: const EdgeInsets.only(top: 12, left: 10),
 //             child: Text(
 //               'referalKod1'.tr,
-//               style: TextStyle(color: Colors.grey, fontSize: size.width >= 800 ? 30 : 22, fontFamily: josefinSansSemiBold),
+//               style: TextStyle(color: Colors.grey, fontSize: size.width >= 800 ? 30 : 22, fontFamily: gilroySemiBold),
 //             ),
 //           ),
 //           Container(
@@ -53,7 +53,7 @@
 //               children: [
 //                 Text(
 //                   referalcode!,
-//                   style: const TextStyle(fontFamily: josefinSansBold, fontSize: 24),
+//                   style: const TextStyle(fontFamily: gilroyBold, fontSize: 24),
 //                 ),
 //                 IconButton(
 //                   onPressed: () {
@@ -77,7 +77,7 @@
 //             padding: const EdgeInsets.only(top: 12, left: 10, bottom: 25),
 //             child: Text(
 //               'referalKodUsedUser'.tr,
-//               style: TextStyle(color: Colors.grey, fontSize: size.width >= 800 ? 30 : 22, fontFamily: josefinSansSemiBold),
+//               style: TextStyle(color: Colors.grey, fontSize: size.width >= 800 ? 30 : 22, fontFamily: gilroySemiBold),
 //             ),
 //           ),
 //           FutureBuilder<List<ReferalModel>>(

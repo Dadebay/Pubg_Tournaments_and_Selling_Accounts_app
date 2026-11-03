@@ -1,12 +1,8 @@
 // ignore_for_file: file_names
-import 'dart:math';
 
 import 'package:game_app/controllers/tournament_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
-import 'package:game_app/models/team_member.dart';
-import 'package:game_app/models/team_winers.dart';
 import 'package:game_app/models/tournament_model.dart';
-import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/cards/new_tornament_card.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
@@ -34,9 +30,7 @@ class _TournamentPageState extends State<TournamentPage> {
   void initState() {
     super.initState();
     if (widget.tournamentType == 1) {
-      Future.microtask(
-        () => Provider.of<TournamentProvider>(context, listen: false).fetchTournaments(),
-      );
+      Future.microtask(() => Provider.of<TournamentProvider>(context, listen: false).fetchTournaments());
       Get.find<WalletController>().getUserMoney();
     } else {
       TournamentModel().getTournaments(type: widget.tournamentType);
@@ -86,8 +80,8 @@ class _TournamentPageState extends State<TournamentPage> {
     return TabBar(
       isScrollable: widget.tournamentType == 2 ? false : true,
       tabAlignment: widget.tournamentType == 2 ? TabAlignment.fill : TabAlignment.start,
-      labelStyle: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 20),
-      unselectedLabelStyle: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
+      labelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20),
+      unselectedLabelStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
       labelColor: kPrimaryColor,
       unselectedLabelColor: Colors.grey,
       labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -106,12 +100,7 @@ class _TournamentPageState extends State<TournamentPage> {
       itemCount: length,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        return TournamentCard(
-          index: index,
-          finised: true,
-          tournamentType: widget.tournamentType,
-          tournamentModel: TournamentModel.fromJson(controller.tournamentFinisedList[index]),
-        );
+        return TournamentCard(index: index, finised: true, tournamentType: widget.tournamentType, tournamentModel: TournamentModel.fromJson(controller.tournamentFinisedList[index]));
       },
     );
   }
@@ -132,18 +121,10 @@ class _TournamentPageState extends State<TournamentPage> {
       itemCount: provider.tournaments.length,
       itemBuilder: (context, index) {
         final t = provider.tournaments[index];
-        return NewTournamentCard(
-          filter: filter,
-          index: index,
-          finised: false,
-          tournamentType: widget.tournamentType,
-          tournament: t,
-        );
+        return NewTournamentCard(filter: filter, index: index, finised: false, tournamentType: widget.tournamentType, tournament: t);
       },
     );
   }
-
-
 
   Widget page1(int length) {
     return ListView.builder(
@@ -151,20 +132,13 @@ class _TournamentPageState extends State<TournamentPage> {
       itemExtent: 220,
       itemCount: length,
       itemBuilder: (context, index) {
-        return TournamentCard(
-          index: index,
-          finised: false,
-          tournamentType: widget.tournamentType,
-          tournamentModel: TournamentModel.fromJson(controller.tournamentList[index]),
-        );
+        return TournamentCard(index: index, finised: false, tournamentType: widget.tournamentType, tournamentModel: TournamentModel.fromJson(controller.tournamentList[index]));
       },
     );
   }
 
   Widget emptyPage() {
-    return Center(
-      child: noData('cannot_find_data_tournament'),
-    );
+    return Center(child: noData('cannot_find_data_tournament'));
   }
 
   void _onRefresh() async {
@@ -191,17 +165,11 @@ class _TournamentPageState extends State<TournamentPage> {
       tabViews.add(pageTornamend('winners'));
     } else if (widget.tournamentType == 2) {
       // For tournamentType == 2, show active and finished tournaments
-      tabViews.add(
-        controller.tournamentList.isEmpty ? emptyPage() : page1(controller.tournamentList.length),
-      );
-      tabViews.add(
-        controller.tournamentFinisedList.isEmpty ? emptyPage() : page2(controller.tournamentFinisedList.length),
-      );
+      tabViews.add(controller.tournamentList.isEmpty ? emptyPage() : page1(controller.tournamentList.length));
+      tabViews.add(controller.tournamentFinisedList.isEmpty ? emptyPage() : page2(controller.tournamentFinisedList.length));
     } else {
       // For other types, show only active tournaments
-      tabViews.add(
-        controller.tournamentList.isEmpty ? emptyPage() : page1(controller.tournamentList.length),
-      );
+      tabViews.add(controller.tournamentList.isEmpty ? emptyPage() : page1(controller.tournamentList.length));
     }
 
     return tabViews;
@@ -220,14 +188,7 @@ class _TournamentPageState extends State<TournamentPage> {
       length: tabLength,
       child: SafeArea(
         child: Scaffold(
-          appBar: MyAppBar(
-            fontSize: 22.0,
-            backArrow: true,
-            iconRemove: false,
-            icon: userAppBarMoney(),
-            name: 'tournament',
-            elevationWhite: true,
-          ),
+          appBar: MyAppBar(fontSize: 22.0, backArrow: true, iconRemove: false, icon: userAppBarMoney(), name: 'tournament', elevationWhite: true),
           backgroundColor: kPrimaryColorBlack,
           body: SmartRefresher(
             footer: footer(),
@@ -235,9 +196,7 @@ class _TournamentPageState extends State<TournamentPage> {
             onRefresh: _onRefresh,
             enablePullDown: true,
             enablePullUp: false,
-            header: const MaterialClassicHeader(
-              color: kPrimaryColor,
-            ),
+            header: const MaterialClassicHeader(color: kPrimaryColor),
             child: widget.tournamentType == 1 ? _buildProviderBody() : _buildGetXBody(),
           ),
         ),
@@ -256,20 +215,14 @@ class _TournamentPageState extends State<TournamentPage> {
 
     // Show error if there's an error message
     if (provider.errorMessage != null) {
-      return Center(
-        child: Text(provider.errorMessage ?? 'cannot_find_data_tournament'),
-      );
+      return Center(child: Text(provider.errorMessage ?? 'cannot_find_data_tournament'));
     }
 
     // Show tabs once data is loaded
     return Column(
       children: [
         tabbar(),
-        Expanded(
-          child: TabBarView(
-            children: _buildTabViews(),
-          ),
-        ),
+        Expanded(child: TabBarView(children: _buildTabViews())),
       ],
     );
   }
@@ -278,23 +231,15 @@ class _TournamentPageState extends State<TournamentPage> {
   Widget _buildGetXBody() {
     return Obx(() {
       if (controller.tournamentLoading.value == 0) {
-        return Center(
-          child: spinKit(),
-        );
+        return Center(child: spinKit());
       } else if (controller.tournamentLoading.value == 1) {
-        return const Center(
-          child: Text('cannot_find_data_tournament'),
-        );
+        return const Center(child: Text('cannot_find_data_tournament'));
       }
 
       return Column(
         children: [
           tabbar(),
-          Expanded(
-            child: TabBarView(
-              children: _buildTabViews(),
-            ),
-          ),
+          Expanded(child: TabBarView(children: _buildTabViews())),
         ],
       );
     });

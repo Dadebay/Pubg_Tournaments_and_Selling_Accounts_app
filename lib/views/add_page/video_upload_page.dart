@@ -42,9 +42,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
         final bytes = imageTemporary.readAsBytesSync().lengthInBytes;
         final kb = bytes / 1024;
         final mb = kb / 1024;
-        final VideoPlayerController testLengthController = VideoPlayerController.file(
-          File(video.path),
-        ); //Your file here
+        final VideoPlayerController testLengthController = VideoPlayerController.file(File(video.path)); //Your file here
         await testLengthController.initialize();
         if (testLengthController.value.duration.inSeconds > 60) {
           showSnackBar('noConnection3', 'video_upload_subtitle_error', Colors.red);
@@ -56,9 +54,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
               _controller = VideoPlayerController.file(selectedVideo!);
               _controller!.pause();
               _initializeVideoPlayerFuture = _controller!.initialize();
-              flickManager = FlickManager(
-                videoPlayerController: VideoPlayerController.file(selectedVideo!),
-              );
+              flickManager = FlickManager(videoPlayerController: VideoPlayerController.file(selectedVideo!));
             });
           } else {
             showSnackBar('noConnection3', 'video_size_error', Colors.amber);
@@ -116,15 +112,13 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                     Text(
                       'video_upload_title'.tr,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Text(
                       'cannot_upload_video'.tr,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.grey, fontFamily: josefinSansRegular, fontSize: 16),
+                      style: const TextStyle(color: Colors.grey, fontFamily: gilroyRegular, fontSize: 16),
                     ),
                   ],
                 ),
@@ -134,29 +128,19 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                 child: Text(
                   '$myNumber/$a',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 25),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 25),
                 ),
               ),
               videoPlayer(),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Center(
-                child: AgreeButton(
-                  onTap: onTapp,
-                  name: 'agree',
-                ),
+                child: AgreeButton(onTap: onTapp, name: 'agree'),
               ),
               SizedBox(
                 width: Get.size.width,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const ConnectionCheck(),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
+                    await Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const ConnectionCheck()), (Route<dynamic> route) => false);
                     await _controller!.pause();
                     flickManager!.dispose();
                   },
@@ -171,7 +155,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansMedium, fontSize: 20),
+                    style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyMedium, fontSize: 20),
                   ),
                 ),
               ),
@@ -200,15 +184,10 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                       borderRadius: borderRadius15,
                       child: FlickVideoPlayer(
                         flickVideoWithControls: FlickVideoWithControls(
-                          controls: FlickPortraitControls(
-                            progressBarSettings: FlickProgressBarSettings(),
-                          ),
+                          controls: FlickPortraitControls(progressBarSettings: FlickProgressBarSettings()),
                           videoFit: BoxFit.fitHeight,
                         ),
-                        preferredDeviceOrientation: const [
-                          DeviceOrientation.portraitDown,
-                          DeviceOrientation.portraitUp,
-                        ],
+                        preferredDeviceOrientation: const [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
                         preferredDeviceOrientationFullscreen: const [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp],
                         flickManager: flickManager!,
                       ),
@@ -221,11 +200,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                       onPressed: () {
                         pickVideo();
                       },
-                      icon: const Icon(
-                        CupertinoIcons.xmark_circle,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                      icon: const Icon(CupertinoIcons.xmark_circle, color: Colors.white, size: 30),
                     ),
                   ),
                 ],
@@ -241,18 +216,8 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
               height: 250,
               padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10),
               child: DottedBorder(
-                borderType: BorderType.RRect,
-                radius: const Radius.circular(12),
-                padding: const EdgeInsets.all(6),
-                strokeWidth: 2,
-                color: kPrimaryColor,
-                child: const Center(
-                  child: Icon(
-                    Icons.add,
-                    color: kPrimaryColor,
-                    size: 50,
-                  ),
-                ),
+                options: RoundedRectDottedBorderOptions(radius: const Radius.circular(12), padding: const EdgeInsets.all(6), strokeWidth: 2, color: kPrimaryColor),
+                child: const Center(child: Icon(Icons.add, color: kPrimaryColor, size: 50)),
               ),
             ),
           );
@@ -261,7 +226,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
     );
   }
 
-  onTapp() async {
+  Future<void> onTapp() async {
     if (a >= myNumber) {
       if (Get.find<SettingsController>().agreeButton.value == false) {
         Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;

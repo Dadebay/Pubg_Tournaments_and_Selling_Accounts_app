@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../cards/video_card.dart';
 import '../../constants/index.dart';
+import 'follow_button.dart';
 import 'page_1.dart';
 import 'text_part.dart';
 
@@ -52,7 +53,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
                       child: Text(
                         'accountsForSale'.tr,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: josefinSansSemiBold),
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: gilroySemiBold),
                       ),
                     ),
                     const Icon(IconlyLight.infoSquare, color: kPrimaryColor, size: 30),
@@ -69,7 +70,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
                         data: value['text_one'],
                         style: {
                           'body': Style(
-                            fontFamily: josefinSansRegular,
+                            fontFamily: gilroyRegular,
                             fontSize: FontSize(20.0),
                             color: Colors.white,
                             textAlign: TextAlign.center,
@@ -128,7 +129,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
                             'account_profil_not_video'.tr,
                             maxLines: 2,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                           ),
                         )
                       : ListView.builder(
@@ -169,9 +170,9 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
           ),
         ),
       ),
-      // actions: [
-      //   moreInfoButton(model.user!),
-      // ],
+      actions: [
+        if (model.user?.id != null) FollowButton(userId: model.user!.id!),
+      ],
       pinned: true,
       floating: true,
       systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -201,7 +202,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
             },
             child: Text(
               'popUP1'.tr,
-              style: const TextStyle(fontFamily: josefinSansRegular),
+              style: const TextStyle(fontFamily: gilroyRegular),
             ),
           ),
           PopupMenuItem<Text>(
@@ -210,7 +211,7 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
             },
             child: Text(
               'popUp2'.tr,
-              style: const TextStyle(fontFamily: josefinSansRegular),
+              style: const TextStyle(fontFamily: gilroyRegular),
             ),
           ),
         ],
@@ -227,8 +228,8 @@ class _AccountProfilPageState extends State<AccountProfilPage> {
           border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.2))),
         ),
         child: TabBar(
-          labelStyle: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 18),
-          unselectedLabelStyle: const TextStyle(color: Colors.grey, fontSize: 17, fontFamily: josefinSansRegular),
+          labelStyle: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold, fontSize: 18),
+          unselectedLabelStyle: const TextStyle(color: Colors.grey, fontSize: 17, fontFamily: gilroyRegular),
           labelColor: kPrimaryColor,
           unselectedLabelColor: Colors.grey,
           indicatorSize: TabBarIndicatorSize.label,

@@ -47,10 +47,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
       centerTitle: true,
       leadingWidth: 80,
       leading: IconButton(
-        icon: const Icon(
-          IconlyLight.arrowLeftCircle,
-          color: Colors.white,
-        ),
+        icon: const Icon(IconlyLight.arrowLeftCircle, color: Colors.white),
         onPressed: () {
           Navigator.pop(context);
         },
@@ -63,11 +60,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.white,
-          fontFamily: josefinSansSemiBold,
-          fontSize: 25,
-        ),
+        style: TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 25),
       ),
     );
   }
@@ -84,13 +77,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
           }
           walletController.finalPRice.value = value;
           walletController.finalCount.value = counts;
-          await Get.to(
-            () => const OrderPage(
-              pubgID: 'gift',
-              onlyCard: false,
-              asking: 'gift',
-            ),
-          );
+          await Get.to(() => const OrderPage(pubgID: 'gift', onlyCard: false, asking: 'gift'));
         } else {
           showSnackBar('noConnection3', 'order_error_subtitle', Colors.red);
         }
@@ -106,19 +93,11 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
         children: [
           Text(
             'order'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: josefinSansSemiBold,
-              fontSize: 22,
-            ),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 2, bottom: 2, left: 8),
-            child: Icon(
-              IconlyLight.arrowRightCircle,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: Icon(IconlyLight.arrowRightCircle, color: Colors.white, size: 24),
           ),
         ],
       ),
@@ -156,7 +135,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
             child: dialogTitle == ''
                 ? spinKit()
                 : Consumer<getGiftsProvider>(
-                    builder: (_, gifts, __) {
+                    builder: (_, gifts, _) {
                       return GridView.builder(
                         itemCount: gifts.giftsCart.length,
                         physics: const BouncingScrollPhysics(),
@@ -164,10 +143,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
                         // shrinkWrap: true,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.8 / 4),
                         itemBuilder: (context, index) {
-                          return GiftCARD(
-                            model: gifts.giftsCart[index],
-                            selectedIndex: selectedIndex,
-                          );
+                          return GiftCARD(model: gifts.giftsCart[index], selectedIndex: selectedIndex);
                         },
                       );
                     },

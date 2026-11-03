@@ -39,10 +39,14 @@ Future<void> main() async {
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: kPrimaryColorBlack,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarContrastEnforced: false,
       statusBarColor: kPrimaryColorBlack,
     ),
   );
 
+  // Hide the Android system navigation bar; it comes back for a moment on an edge swipe.
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky, overlays: [SystemUiOverlay.top]);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -101,11 +105,18 @@ class _MyAppRunState extends State<MyAppRun> {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
+        fontFamily: 'Gilroy',
+        // Pure black pages, and an app bar that keeps its colour when content scrolls under it.
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.black, scrolledUnderElevation: 0, surfaceTintColor: Colors.transparent),
       ),
       theme: ThemeData(
         brightness: Brightness.dark,
-        fontFamily: josefinSansRegular,
+        fontFamily: 'Gilroy',
         useMaterial3: true,
+        // Pure black pages, and an app bar that keeps its colour when content scrolls under it.
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.black, scrolledUnderElevation: 0, surfaceTintColor: Colors.transparent),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       fallbackLocale: const Locale('tr'),

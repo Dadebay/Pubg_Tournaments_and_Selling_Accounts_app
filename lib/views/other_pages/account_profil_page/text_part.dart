@@ -25,7 +25,7 @@ class CustomFlexibleSpace extends StatelessWidget {
               maxLines: 5,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontFamily: josefinSansRegular, fontSize: 20),
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
             ),
           ),
           Container(
@@ -118,7 +118,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                             child: Text(
                               'noImage'.tr,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
                             ),
                           ),
                         ),
@@ -137,7 +137,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                   //           textAlign: TextAlign.start,
                   //           maxLines: 2,
                   //           overflow: TextOverflow.ellipsis,
-                  //           style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 20),
+                  //           style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
                   //         ),
                   //         const SizedBox(
                   //           height: 4,
@@ -146,7 +146,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                   //           model.user!.phone ?? '',
                   //           maxLines: 2,
                   //           overflow: TextOverflow.ellipsis,
-                  //           style: const TextStyle(color: Colors.grey, fontFamily: josefinSansRegular, fontSize: 16),
+                  //           style: const TextStyle(color: Colors.grey, fontFamily: gilroyRegular, fontSize: 16),
                   //         ),
                   //       ],
                   //     ),
@@ -178,7 +178,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                       style: const TextStyle(
                         color: kPrimaryColor,
                         fontSize: 20,
-                        fontFamily: josefinSansSemiBold,
+                        fontFamily: gilroySemiBold,
                       ),
                     ),
                     const Text(
@@ -187,7 +187,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                         color: kPrimaryColor,
                         fontSize: 13,
                         height: 2,
-                        fontFamily: josefinSansSemiBold,
+                        fontFamily: gilroySemiBold,
                       ),
                     ),
                   ],
@@ -197,7 +197,7 @@ class CustomFlexibleSpace extends StatelessWidget {
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: const TextStyle(color: kPrimaryColor, fontSize: 20, fontFamily: josefinSansSemiBold),
+                  style: const TextStyle(color: kPrimaryColor, fontSize: 20, fontFamily: gilroySemiBold),
                 ),
           Padding(
             padding: const EdgeInsets.only(top: 12),
@@ -206,7 +206,7 @@ class CustomFlexibleSpace extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
-              style: const TextStyle(color: Colors.white, fontSize: 19, fontFamily: josefinSansRegular),
+              style: const TextStyle(color: Colors.white, fontSize: 19, fontFamily: gilroyRegular),
             ),
           ),
         ],

@@ -9,8 +9,6 @@ import 'package:game_app/views/tournament_page/register_show_page.dart';
 import 'package:game_app/views/tournament_page/team_registration_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class TournamentDetailPage extends StatefulWidget {
   final String? filter;
@@ -19,14 +17,7 @@ class TournamentDetailPage extends StatefulWidget {
   final TeamMember members;
   final String static_g;
 
-  const TournamentDetailPage({
-    required this.filter,
-    required this.groupName,
-    required this.tournament,
-    required this.members,
-    required this.static_g,
-    super.key,
-  });
+  const TournamentDetailPage({required this.filter, required this.groupName, required this.tournament, required this.members, required this.static_g, super.key});
 
   @override
   State<TournamentDetailPage> createState() => _TournamentDetailPageState();
@@ -41,10 +32,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
 
     if (widget.filter == 'yarym_final') {
       Future.microtask(() {
-        Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamHalf(
-          widget.static_g == 'B2' ? 'ikinji' : 'birinji',
-          widget.tournament.id,
-        );
+        Provider.of<TeamMembersProvider>(context, listen: false).fetchTeamHalf(widget.static_g == 'B2' ? 'ikinji' : 'birinji', widget.tournament.id);
       });
     } else if (widget.filter == 'final') {
       Future.microtask(() {
@@ -94,11 +82,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
         ),
         title: Text(
           widget.tournament.nameTm ?? widget.tournament.nameRu ?? 'Tournament',
-          style: const TextStyle(
-            fontFamily: josefinSansSemiBold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
         ),
       ),
       body: Consumer<TeamMembersProvider>(
@@ -117,11 +101,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                     return Container(
                       height: 200,
                       color: Colors.grey[800],
-                      child: const Icon(
-                        Icons.image_not_supported,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                      child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                     );
                   },
                 ),
@@ -135,33 +115,25 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                       // Date & Time Row
                       Row(
                         children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            size: 18,
-                            color: kAccentColor,
-                          ),
+                          const Icon(Icons.calendar_today, size: 18, color: kAccentColor),
                           const SizedBox(width: 4),
                           Text(
                             widget.filter == 'yarym_final'
                                 ? formatDate(widget.members.halfturnir?.startDate)
                                 : widget.filter == 'final'
-                                    ? formatDate(widget.members.finalturnir?.startDate)
-                                    : formatDate(widget.members.quartturnir?.startDate),
+                                ? formatDate(widget.members.finalturnir?.startDate)
+                                : formatDate(widget.members.quartturnir?.startDate),
                             style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                           const SizedBox(width: 10),
-                          const Icon(
-                            Icons.access_time,
-                            size: 18,
-                            color: kAccentColor,
-                          ),
+                          const Icon(Icons.access_time, size: 18, color: kAccentColor),
                           const SizedBox(width: 4),
                           Text(
                             widget.filter == 'yarym_final'
                                 ? '${formatTime(widget.members.halfturnir?.startDate)} - ${formatTime(widget.members.halfturnir?.finishDate)}'
                                 : widget.filter == 'final'
-                                    ? '${formatTime(widget.members.finalturnir?.startDate)} - ${formatTime(widget.members.finalturnir?.finishDate)}'
-                                    : '${formatTime(widget.members.quartturnir?.startDate)} - ${formatTime(widget.members.quartturnir?.finishDate)}',
+                                ? '${formatTime(widget.members.finalturnir?.startDate)} - ${formatTime(widget.members.finalturnir?.finishDate)}'
+                                : '${formatTime(widget.members.quartturnir?.startDate)} - ${formatTime(widget.members.quartturnir?.finishDate)}',
                             style: const TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ],
@@ -173,27 +145,14 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                         children: [
                           const Icon(Icons.map, color: kPrimaryColor, size: 20),
                           const SizedBox(width: 8),
-                          Text(
-                            widget.tournament.map ?? 'Unknown',
-                            style: TextStyle(color: Colors.grey[400], fontSize: 14),
-                          ),
+                          Text(widget.tournament.map ?? 'Unknown', style: TextStyle(color: Colors.grey[400], fontSize: 14)),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: kPrimaryColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(12)),
                             child: Text(
                               '${widget.tournament.price} TMT',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ),
                         ],
@@ -205,13 +164,9 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                         widget.filter == 'yarym_final'
                             ? 'Pol Final Team Members'.tr
                             : widget.filter == 'final'
-                                ? 'Final Team Members'.tr
-                                : 'Team Members'.tr,
-                        style: const TextStyle(
-                          fontFamily: josefinSansSemiBold,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                            ? 'Final Team Members'.tr
+                            : 'Team Members'.tr,
+                        style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
                       ),
                       const SizedBox(height: 16),
 
@@ -238,10 +193,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.all(32),
-                            child: Text(
-                              'No team members found'.tr,
-                              style: TextStyle(color: Colors.grey[400]),
-                            ),
+                            child: Text('No team members found'.tr, style: TextStyle(color: Colors.grey[400])),
                           ),
                         )
                       else
@@ -255,25 +207,12 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                             return GestureDetector(
                               onTap: () {
                                 if (member.user1.isEmpty && member.user2.isEmpty && member.user3.isEmpty) {
-                                  Get.to(
-                                    () => TeamRegistrationScreen(
-                                      tournamentId: widget.tournament.id,
-                                      teamMember: member,
-                                    ),
-                                  );
+                                  Get.to(() => TeamRegistrationScreen(tournamentId: widget.tournament.id, teamMember: member));
                                 } else {
-                                  Get.to(
-                                    () => TeamRegistrationScreenDetail(
-                                      tournamentId: widget.tournament.id,
-                                      teamMember: member,
-                                    ),
-                                  );
+                                  Get.to(() => TeamRegistrationScreenDetail(tournamentId: widget.tournament.id, teamMember: member));
                                 }
                               },
-                              child: TeamMemberCard(
-                                member: member,
-                                index: index,
-                              ),
+                              child: TeamMemberCard(member: member, index: index),
                             );
                           },
                         ),

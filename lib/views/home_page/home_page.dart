@@ -129,21 +129,21 @@ class _HomePageState extends State<HomePage> {
             builder: (ctxt) => AlertDialog(
               backgroundColor: kPrimaryColorBlack,
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              title: Text('Üns Beriň!'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold)),
+              title: Text('Üns Beriň!'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold)),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'Siz Blocklandyňyz!'.tr,
-                      style: const TextStyle(fontSize: 18, color: Colors.redAccent, fontFamily: josefinSansBold),
+                      style: const TextStyle(fontSize: 18, color: Colors.redAccent, fontFamily: gilroyBold),
                     ),
                     const SizedBox(height: 15),
-                    Text('Sebäbi:'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: josefinSansRegular)),
-                    Text(blockReason.tr, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, color: Colors.white, fontFamily: josefinSansMedium)),
+                    Text('Sebäbi:'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: gilroyRegular)),
+                    Text(blockReason.tr, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, color: Colors.white, fontFamily: gilroyMedium)),
                     const SizedBox(height: 15),
-                    Text('Blok möhleti:'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: josefinSansRegular)),
-                    Text(blockEndDate.tr, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: josefinSansRegular)),
+                    Text('Blok möhleti:'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: gilroyRegular)),
+                    Text(blockEndDate.tr, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: gilroyRegular)),
                   ],
                 ),
               ),

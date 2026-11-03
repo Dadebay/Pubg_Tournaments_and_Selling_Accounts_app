@@ -19,7 +19,7 @@ void logOut(BuildContext context) {
                 const SizedBox.shrink(),
                 Text(
                   'log_out'.tr,
-                  style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 16),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -38,7 +38,7 @@ void logOut(BuildContext context) {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.grey[500],
-                fontFamily: josefinSansMedium,
+                fontFamily: gilroyMedium,
                 fontSize: 16,
               ),
             ),
@@ -62,7 +62,7 @@ void logOut(BuildContext context) {
               child: Text(
                 'yes'.tr,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
               ),
             ),
           ),
@@ -78,7 +78,7 @@ void logOut(BuildContext context) {
               child: Text(
                 'no'.tr,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
               ),
             ),
           ),
@@ -105,7 +105,7 @@ void changeLanguage() {
                 const SizedBox.shrink(),
                 Text(
                   'select_language'.tr,
-                  style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium, fontSize: 18),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 18),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -133,7 +133,7 @@ void changeLanguage() {
               ),
               title: const Text(
                 'Türkmen',
-                style: TextStyle(fontFamily: josefinSansMedium, color: Colors.white),
+                style: TextStyle(fontFamily: gilroyMedium, color: Colors.white),
               ),
             ),
           ),
@@ -154,7 +154,7 @@ void changeLanguage() {
               ),
               title: const Text(
                 'Русский',
-                style: TextStyle(fontFamily: josefinSansMedium, color: Colors.white),
+                style: TextStyle(fontFamily: gilroyMedium, color: Colors.white),
               ),
             ),
           ),
@@ -178,7 +178,7 @@ void defaultBottomSheet({required String name, required Widget child}) {
                 const SizedBox.shrink(),
                 Text(
                   name.tr,
-                  style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -212,7 +212,7 @@ Future<Object?> showDeleteDialog(BuildContext context, String text, String text2
             shape: const OutlineInputBorder(borderRadius: borderRadius15, borderSide: BorderSide(color: Colors.white)),
             title: Text(
               text.tr,
-              style: const TextStyle(color: Colors.white, fontSize: 24, fontFamily: josefinSansBold),
+              style: const TextStyle(color: Colors.white, fontSize: 24, fontFamily: gilroyBold),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -221,7 +221,7 @@ Future<Object?> showDeleteDialog(BuildContext context, String text, String text2
                   padding: const EdgeInsets.only(bottom: 20, left: 6, right: 6),
                   child: Text(
                     text2.tr,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Row(

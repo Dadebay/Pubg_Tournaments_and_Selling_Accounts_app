@@ -40,7 +40,7 @@
 //                 'account_profil_not_video'.tr,
 //                 maxLines: 2,
 //                 textAlign: TextAlign.center,
-//                 style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+//                 style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
 //               ),
 //             );
 //           } else if (snapshot.data!.isEmpty) {
@@ -53,7 +53,7 @@
 //                     'account_profil_not_video'.tr,
 //                     maxLines: 2,
 //                     textAlign: TextAlign.center,
-//                     style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+//                     style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
 //                   ),
 //                   Padding(
 //                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -65,7 +65,7 @@
 //                       },
 //                       child: Text(
 //                         'videoUpload'.tr,
-//                         style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansMedium),
+//                         style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyMedium),
 //                       ),
 //                     ),
 //                   ),

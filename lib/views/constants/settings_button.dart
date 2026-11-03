@@ -23,7 +23,7 @@ class SettingButton extends StatelessWidget {
         name.tr,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: const TextStyle(color: Colors.white, fontFamily: josefinSansMedium),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium),
       ),
       trailing: icon,
     );

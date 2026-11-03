@@ -114,7 +114,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                       style: const TextStyle(
                         fontSize: 24.0,
                         color: kPrimaryColor,
-                        fontFamily: josefinSansMedium,
+                        fontFamily: gilroyMedium,
                       ),
                     ),
                     Padding(
@@ -124,7 +124,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontFamily: josefinSansMedium,
+                          fontFamily: gilroyMedium,
                           fontSize: 16.0,
                         ),
                       ),
@@ -145,7 +145,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                       ),
                       child: Text(
                         'noConnection3'.tr,
-                        style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: josefinSansMedium),
+                        style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: gilroyMedium),
                       ),
                     ),
                     const SizedBox(

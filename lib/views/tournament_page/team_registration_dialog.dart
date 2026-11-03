@@ -10,11 +10,7 @@ class TeamRegistrationScreen extends StatefulWidget {
   final int tournamentId;
   final TeamMember? teamMember;
 
-  const TeamRegistrationScreen({
-    required this.tournamentId,
-    this.teamMember,
-    super.key,
-  });
+  const TeamRegistrationScreen({required this.tournamentId, this.teamMember, super.key});
 
   @override
   State<TeamRegistrationScreen> createState() => _TeamRegistrationScreenState();
@@ -76,14 +72,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     if (_formKey.currentState!.validate()) {
       final provider = Provider.of<TeamMembersProvider>(context, listen: false);
 
-      final success = await provider.registerTeam(
-        tournamentId: widget.teamMember?.id ?? 0,
-        account: _accountController.text.trim(),
-        extra_name: _userController.text.trim(),
-        user1: _user1Controller.text.trim(),
-        user2: _user2Controller.text.trim(),
-        user3: _user3Controller.text.trim(),
-      );
+      final success = await provider.registerTeam(tournamentId: widget.teamMember?.id ?? 0, account: _accountController.text.trim(), extra_name: _userController.text.trim(), user1: _user1Controller.text.trim(), user2: _user2Controller.text.trim(), user3: _user3Controller.text.trim());
 
       if (!mounted) return;
 
@@ -129,11 +118,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
         ),
         title: Text(
           'Register Team'.tr,
-          style: const TextStyle(
-            fontFamily: josefinSansSemiBold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
         ),
       ),
       body: Form(
@@ -148,30 +133,16 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      kPrimaryColor.withOpacity(0.2),
-                      kPrimaryColor.withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: LinearGradient(colors: [kPrimaryColor.withValues(alpha: 0.2), kPrimaryColor.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
+                  border: Border.all(color: kPrimaryColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: kPrimaryColor.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.group_add,
-                        color: kPrimaryColor,
-                        size: 32,
-                      ),
+                      decoration: BoxDecoration(color: kPrimaryColor.withValues(alpha: 0.2), shape: BoxShape.circle),
+                      child: const Icon(Icons.group_add, color: kPrimaryColor, size: 32),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -180,20 +151,10 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                         children: [
                           Text(
                             'Topar hasaba alyş'.tr,
-                            style: const TextStyle(
-                              fontFamily: josefinSansSemiBold,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
+                            style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            'Topary bir gezek hasaba alyp bolýar, dostlaryňyzy ýa-da tanyşlaryňyzy çagyryň'.tr,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
+                          Text('Topary bir gezek hasaba alyp bolýar, dostlaryňyzy ýa-da tanyşlaryňyzy çagyryň'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey)),
                           const SizedBox(height: 20),
                           Row(
                             children: [
@@ -208,20 +169,13 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                                     _isVisible = !_isVisible;
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
-                                ),
+                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr)),
                               ),
                               const SizedBox(width: 10),
                               if (_isVisible)
                                 Text(
                                   widget.teamMember?.quartturnir?.code ?? 'Unknown Code',
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                             ],
                           ),
@@ -254,34 +208,23 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   Container(
                     width: 4,
                     height: 24,
-                    decoration: BoxDecoration(
-                      color: kPrimaryColor,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+                    decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(2)),
                   ),
                   const SizedBox(width: 12),
                   Text(
                     'Team Players'.tr,
-                    style: const TextStyle(
-                      fontFamily: josefinSansSemiBold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
+                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
-              _buildInfoCard(
-                label: 'Player 1'.tr,
-                value: currentUserId ?? 'Owner name'.tr,
-                icon: Icons.person,
-              ),
+              _buildInfoCard(label: 'Player 1'.tr, value: currentUserId ?? 'Owner name'.tr, icon: Icons.person),
               const SizedBox(height: 20),
               // User 1
               _buildTextField(
                 controller: _user1Controller,
-                  label: 'Player 2'.tr,
+                label: 'Player 2'.tr,
                 hint: 'Second player username'.tr,
                 icon: Icons.person,
                 validator: (value) {
@@ -296,7 +239,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // User 2
               _buildTextField(
                 controller: _user2Controller,
-                    label: 'Player 3'.tr,
+                label: 'Player 3'.tr,
                 hint: 'Third player username'.tr,
                 icon: Icons.person_outline,
                 validator: (value) {
@@ -326,8 +269,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               // // User 3
               // _buildTextField(
               //   controller: _userController,
-                // label: 'Player 4'.tr,
-                // hint: 'Foths player username'.tr,
+              // label: 'Player 4'.tr,
+              // hint: 'Foths player username'.tr,
               //   icon: Icons.person_outline,
               //   validator: (value) {
               //     if (value == null || value.trim().isEmpty) {
@@ -336,7 +279,6 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               //     return null;
               //   },
               // ),
-
               const SizedBox(height: 32),
 
               // Submit Button
@@ -350,36 +292,19 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryColor,
                         disabledBackgroundColor: Colors.grey[700],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         elevation: 0,
                       ),
                       child: provider.isRegistering
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.black,
-                                strokeWidth: 3,
-                              ),
-                            )
+                          ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 3))
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  widget.teamMember != null ? Icons.edit : Icons.check_circle,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
+                                Icon(widget.teamMember != null ? Icons.edit : Icons.check_circle, color: Colors.black, size: 24),
                                 const SizedBox(width: 12),
                                 Text(
                                   'Register Team'.tr,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: josefinSansSemiBold,
-                                    fontSize: 18,
-                                  ),
+                                  style: const TextStyle(color: Colors.black, fontFamily: gilroySemiBold, fontSize: 18),
                                 ),
                               ],
                             ),
@@ -393,22 +318,16 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.info_outline, color: Colors.blue[300], size: 20),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        'All team members must have valid accounts'.tr,
-                        style: TextStyle(
-                          color: Colors.blue[300],
-                          fontSize: 13,
-                        ),
-                      ),
+                      child: Text('All team members must have valid accounts'.tr, style: TextStyle(color: Colors.blue[300], fontSize: 13)),
                     ),
                   ],
                 ),
@@ -420,22 +339,13 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     );
   }
 
-  Widget _buildInfoCard({
-    required String label,
-    required String value,
-    required IconData icon,
-  }) {
+  Widget _buildInfoCard({required String label, required String value, required IconData icon}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            fontFamily: josefinSansMedium,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
         ),
         const SizedBox(height: 10),
         Container(
@@ -451,13 +361,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
               Icon(icon, color: kPrimaryColor, size: 22),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  value,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
+                child: Text(value, style: const TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ],
           ),
@@ -466,46 +370,26 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    String? Function(String?)? validator,
-  }) {
+  Widget _buildTextField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            fontFamily: josefinSansMedium,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
         ),
         const SizedBox(height: 10),
         TextFormField(
           controller: controller,
           validator: validator,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 16),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 15,
-            ),
+            hintStyle: TextStyle(color: Colors.grey[600], fontSize: 15),
             prefixIcon: Icon(icon, color: kPrimaryColor, size: 22),
             filled: true,
             fillColor: Colors.grey[900],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide(color: Colors.grey[800]!, width: 1),

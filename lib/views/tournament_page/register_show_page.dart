@@ -10,11 +10,7 @@ class TeamRegistrationScreenDetail extends StatefulWidget {
   final TeamMember teamMember;
   final int tournamentId;
 
-  const TeamRegistrationScreenDetail({
-    required this.teamMember,
-    required this.tournamentId,
-    super.key,
-  });
+  const TeamRegistrationScreenDetail({required this.teamMember, required this.tournamentId, super.key});
 
   @override
   State<TeamRegistrationScreenDetail> createState() => _TeamRegistrationScreenDetailState();
@@ -35,11 +31,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
         ),
         title: Text(
           widget.teamMember.name ?? '',
-          style: const TextStyle(
-            fontFamily: josefinSansSemiBold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
         ),
       ),
       body: FutureBuilder<GetMeModel>(
@@ -71,30 +63,16 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        kPrimaryColor.withOpacity(0.2),
-                        kPrimaryColor.withOpacity(0.05),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    gradient: LinearGradient(colors: [kPrimaryColor.withValues(alpha: 0.2), kPrimaryColor.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
+                    border: Border.all(color: kPrimaryColor.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.group,
-                          color: kPrimaryColor,
-                          size: 32,
-                        ),
+                        decoration: BoxDecoration(color: kPrimaryColor.withValues(alpha: 0.2), shape: BoxShape.circle),
+                        child: const Icon(Icons.group, color: kPrimaryColor, size: 32),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -103,29 +81,15 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                           children: [
                             Text(
                               'Registered Team'.tr,
-                              style: const TextStyle(
-                                fontFamily: josefinSansSemiBold,
-                                fontSize: 20,
-                                color: Colors.white,
-                              ),
+                              style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
                             ),
                             const SizedBox(height: 4),
-                            Text(
-                              'View your team information'.tr,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            Text('View your team information'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey)),
                             Row(
                               children: [
                                 const Text(
                                   'LobbiID: ',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
                                 ),
                                 if (user.teams != null &&
                                     user.teams!.isNotEmpty &&
@@ -142,7 +106,6 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                                     user.teams!.first.user2 == widget.teamMember.user2 &&
                                     user.teams!.first.user3 == widget.teamMember.user3)
                                   CopyableText(lobbiId: widget.teamMember.quartturnir?.lobbiId),
-
                               ],
                             ),
                             const SizedBox(height: 20),
@@ -162,32 +125,24 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                                     user.teams!.first.user1 == widget.teamMember.user1 &&
                                     user.teams!.first.user2 == widget.teamMember.user2 &&
                                     user.teams!.first.user3 == widget.teamMember.user3)
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: kAccentColor, // button color
-                                    foregroundColor: Colors.black, // text color
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: kAccentColor, // button color
+                                      foregroundColor: Colors.black, // text color
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isVisible = !_isVisible;
+                                      });
+                                    },
+                                    child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr)),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isVisible = !_isVisible;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr),
-                                  ),
-                                ),
                                 const SizedBox(width: 10),
                                 if (_isVisible)
-                                
                                   Text(
                                     widget.teamMember.quartturnir?.code ?? 'Unknown Code',
-                                    style: const TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
+                                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
                                   ),
                               ],
                             ),
@@ -200,11 +155,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                 const SizedBox(height: 32),
 
                 // Account Info
-                _buildInfoCard(
-                  label: 'Account Name'.tr,
-                  value: widget.teamMember.name ?? '',
-                  icon: Icons.account_circle,
-                ),
+                _buildInfoCard(label: 'Account Name'.tr, value: widget.teamMember.name ?? '', icon: Icons.account_circle),
                 const SizedBox(height: 20),
 
                 // Players Section Header
@@ -213,19 +164,12 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                     Container(
                       width: 4,
                       height: 24,
-                      decoration: BoxDecoration(
-                        color: kPrimaryColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
+                      decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(2)),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       'Team Players'.tr,
-                      style: const TextStyle(
-                        fontFamily: josefinSansSemiBold,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                     ),
                   ],
                 ),
@@ -233,57 +177,35 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                 const SizedBox(height: 20),
 
                 // Player 3
-                _buildInfoCard(
-                   label: 'Player 1'.tr,
-                  value: widget.teamMember.account,
-                  icon: Icons.person_outline,
-                ),
+                _buildInfoCard(label: 'Player 1'.tr, value: widget.teamMember.account, icon: Icons.person_outline),
                 const SizedBox(height: 20),
 
                 // Player 1
-                _buildInfoCard(
-                  label: 'Player 2'.tr,
-                  value: widget.teamMember.user1,
-                  icon: Icons.person,
-                ),
+                _buildInfoCard(label: 'Player 2'.tr, value: widget.teamMember.user1, icon: Icons.person),
                 const SizedBox(height: 20),
 
                 // Player 2
-                _buildInfoCard(
-                   label: 'Player 3'.tr,
-                  value: widget.teamMember.user2,
-                  icon: Icons.person_outline,
-                ),
+                _buildInfoCard(label: 'Player 3'.tr, value: widget.teamMember.user2, icon: Icons.person_outline),
                 const SizedBox(height: 20),
 
                 // Player 3
-                _buildInfoCard(
-                  label: 'Player 4'.tr,
-                  value: widget.teamMember.user3,
-                  icon: Icons.person_outline,
-                ),
+                _buildInfoCard(label: 'Player 4'.tr, value: widget.teamMember.user3, icon: Icons.person_outline),
 
                 const SizedBox(height: 32),
 
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.green.withOpacity(0.3)),
+                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
                       Icon(Icons.check_circle_outline, color: Colors.green[300], size: 20),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          'Team successfully registered for tournament'.tr,
-                          style: TextStyle(
-                            color: Colors.green[300],
-                            fontSize: 13,
-                          ),
-                        ),
+                        child: Text('Team successfully registered for tournament'.tr, style: TextStyle(color: Colors.green[300], fontSize: 13)),
                       ),
                     ],
                   ),
@@ -296,22 +218,13 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
     );
   }
 
-  Widget _buildInfoCard({
-    required String label,
-    required String value,
-    required IconData icon,
-  }) {
+  Widget _buildInfoCard({required String label, required String value, required IconData icon}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            fontFamily: josefinSansMedium,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
         ),
         const SizedBox(height: 10),
         Container(
@@ -327,13 +240,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
               Icon(icon, color: kPrimaryColor, size: 22),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  value,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
+                child: Text(value, style: const TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ],
           ),
@@ -342,8 +249,6 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
     );
   }
 }
-
-
 
 class CopyableText extends StatelessWidget {
   final String? lobbiId;
@@ -359,11 +264,7 @@ class CopyableText extends StatelessWidget {
       children: [
         Text(
           textToCopy,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
         ),
         const SizedBox(width: 6),
         IconButton(
@@ -371,12 +272,7 @@ class CopyableText extends StatelessWidget {
           onPressed: () {
             if (textToCopy.isNotEmpty) {
               Clipboard.setData(ClipboardData(text: textToCopy));
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Copied to clipboard'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard'), duration: Duration(seconds: 1)));
             }
           },
         ),

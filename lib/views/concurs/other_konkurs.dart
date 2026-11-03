@@ -52,7 +52,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: Colors.white,
-          fontFamily: josefinSansSemiBold,
+          fontFamily: gilroySemiBold,
           fontSize: 25,
         ),
       ),
@@ -79,7 +79,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
             'order'.tr,
             style: const TextStyle(
               color: Colors.white,
-              fontFamily: josefinSansSemiBold,
+              fontFamily: gilroySemiBold,
               fontSize: 22,
             ),
           ),
@@ -122,7 +122,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
                 'enterIDGift'.tr,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontFamily: josefinSansBold,
+                  fontFamily: gilroyBold,
                   fontSize: 22,
                 ),
               ),

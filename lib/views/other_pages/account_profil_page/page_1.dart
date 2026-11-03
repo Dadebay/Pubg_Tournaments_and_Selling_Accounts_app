@@ -60,7 +60,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                         ),
                         Text(
                           data['text_three'],
-                          style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: josefinSansRegular),
+                          style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: gilroyRegular),
                         ),
                       ],
                     ),
@@ -103,7 +103,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
             maxLines: 2,
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white, fontFamily: josefinSansRegular, fontSize: 20),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
           ),
         ),
         // infoPartText('accountDetaile7', widget.model.user!.firsName ?? '', false),
@@ -133,7 +133,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
               maxLines: 2,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70, fontFamily: josefinSansRegular, fontSize: 20),
+              style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 20),
             ),
           ),
           Expanded(
@@ -148,7 +148,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
-                          fontFamily: josefinSansSemiBold,
+                          fontFamily: gilroySemiBold,
                         ),
                       ),
                       const Text(
@@ -156,7 +156,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 13,
-                          fontFamily: josefinSansSemiBold,
+                          fontFamily: gilroySemiBold,
                         ),
                       ),
                     ],
@@ -166,7 +166,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                     maxLines: 8,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                    style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                   ),
           ),
         ],
@@ -186,7 +186,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
               maxLines: 2,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70, fontFamily: josefinSansRegular, fontSize: 20),
+              style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 20),
             ),
           ),
           Expanded(
@@ -201,7 +201,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
-                          fontFamily: josefinSansSemiBold,
+                          fontFamily: gilroySemiBold,
                         ),
                       ),
                       const Text(
@@ -209,7 +209,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 13,
-                          fontFamily: josefinSansSemiBold,
+                          fontFamily: gilroySemiBold,
                         ),
                       ),
                     ],
@@ -219,7 +219,7 @@ class _TabbarPage1State extends State<TabbarPage1> {
                     maxLines: 8,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.red, fontFamily: josefinSansSemiBold, fontSize: 18),
+                    style: const TextStyle(color: Colors.red, fontFamily: gilroySemiBold, fontSize: 18),
                   ),
           ),
         ],

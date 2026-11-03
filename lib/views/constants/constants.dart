@@ -5,7 +5,7 @@ const Color backgroundColor = Color(0xfff2f2f2);
 const Color kPrimaryColor = Color(0xFFFF9800);
 const kAccentColor = Color(0xFFFFB74D);
 const kDarkOrange = Color(0xFFF57C00);
-const Color kPrimaryColorBlack = Color(0xff161621);
+const Color kPrimaryColorBlack = Colors.black;
 const Color kPrimaryColorBlack1 = Color.fromARGB(255, 37, 42, 51);
 const MaterialColor colorCustom = MaterialColor(0xff55b539, color);
 
@@ -30,10 +30,10 @@ const BorderRadius borderRadius20 = BorderRadius.all(Radius.circular(20));
 const BorderRadius borderRadius25 = BorderRadius.all(Radius.circular(25));
 const BorderRadius borderRadius30 = BorderRadius.all(Radius.circular(30));
 /////////////////////////////////
-const String josefinSansRegular = 'JosefinSansRegular';
-const String josefinSansMedium = 'JosefinSansMedium';
-const String josefinSansSemiBold = 'JosefinSansSemiBold';
-const String josefinSansBold = 'JosefinSansBold';
+const String gilroyRegular = 'GilroyRegular';
+const String gilroyMedium = 'GilroyMedium';
+const String gilroySemiBold = 'GilroySemiBold';
+const String gilroyBold = 'GilroyBold';
 //Language icons
 const String tmIcon = 'assets/lang/tm.png';
 const String ruIcon = 'assets/lang/ru.png';
@@ -44,6 +44,8 @@ const String loader = 'assets/lottie/spinKit.json';
 const String noDataLottie = 'assets/lottie/noData.json';
 const String appName = 'UC Daýy';
 const String appShareLink = 'https://ucdayy.online/';
+const String playStoreLink = 'https://play.google.com/store/apps/details?id=com.gurbanov.ucdayy';
+const String appStoreLink = 'https://apps.apple.com/tm/app/uc-dayy/id6737436233';
 const String loremImpsum =
     'Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir';
 

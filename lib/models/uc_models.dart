@@ -77,12 +77,12 @@ class UcModel {
     );
   }
 
-  Future<List<UcModel>> getUCS() async {
+  Future<List<UcModel>> getUCS({int? category}) async {
     final List<UcModel> ucList = [];
     final response = await http.get(
       Uri.parse(
         '$serverURL/api/ucs/',
-      ),
+      ).replace(queryParameters: category == null ? null : {'category': '$category'}),
       headers: <String, String>{
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
       },

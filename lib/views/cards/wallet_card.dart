@@ -57,7 +57,7 @@ class WalletCard extends StatelessWidget {
                   child: Text(
                     'noImage'.tr,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.black, fontFamily: gilroySemiBold),
                   ),
                 ),
               ),

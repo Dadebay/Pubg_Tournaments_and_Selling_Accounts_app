@@ -66,7 +66,7 @@ class ShowAllProductsCard extends StatelessWidget {
                               child: Text(
                                 'noImage'.tr,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+                                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
                               ),
                             ),
                           ),
@@ -93,14 +93,14 @@ class ShowAllProductsCard extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontFamily: josefinSansSemiBold,
+                        fontFamily: gilroySemiBold,
                       ),
                     ),
                     Text(
                       model.createdAt.toString().substring(0, 10),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white70, fontFamily: josefinSansMedium, fontSize: 16),
+                      style: const TextStyle(color: Colors.white70, fontFamily: gilroyMedium, fontSize: 16),
                     ),
                     Price(showDiscountedPrice: false, textColor: Colors.white, selectedIndex: Get.locale!.languageCode.toString() == 'tr' ? 2 : 1, price: model.price.toString().substring(0, model.price!.length - 3)),
                   ],

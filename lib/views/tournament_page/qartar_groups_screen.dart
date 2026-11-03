@@ -44,29 +44,20 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
           widget.filter == 'final'
               ? 'final_tournament'.tr
               : widget.filter == 'yarym_final'
-                  ? 'pol_final'.tr
-                  : 'qarterFinals'.tr,
-          style: const TextStyle(
-            fontFamily: josefinSansSemiBold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
+              ? 'pol_final'.tr
+              : 'qarterFinals'.tr,
+          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
         ),
       ),
       body: Consumer<TeamMembersProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: kPrimaryColor),
-            );
+            return const Center(child: CircularProgressIndicator(color: kPrimaryColor));
           }
 
           if (provider.errorMessage != null) {
             return Center(
-              child: Text(
-                provider.errorMessage!,
-                style: const TextStyle(color: Colors.red),
-              ),
+              child: Text(provider.errorMessage!, style: const TextStyle(color: Colors.red)),
             );
           }
 
@@ -96,11 +87,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                     return Container(
                       height: 150,
                       color: Colors.grey[800],
-                      child: const Icon(
-                        Icons.image_not_supported,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                      child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                     );
                   },
                 ),
@@ -112,11 +99,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                     children: [
                       Text(
                         widget.tournament.nameTm,
-                        style: const TextStyle(
-                          fontFamily: josefinSansSemiBold,
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
+                        style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 22, color: Colors.white),
                       ),
                       const SizedBox(height: 24),
 
@@ -129,14 +112,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                           itemBuilder: (context, index) {
                             final groupName = sortedGroups[index];
                             final members = groupedTeams[groupName]!;
-                            return QuarterGroupCard(
-                              filter: widget.filter,
-                              groupName: groupName,
-                              teamCount: 25,
-                              tournament: widget.tournament,
-                              member: members.first,
-                              static_g: '',
-                            );
+                            return QuarterGroupCard(filter: widget.filter, groupName: groupName, teamCount: 25, tournament: widget.tournament, member: members.first, static_g: '');
                           },
                         ),
 
@@ -152,14 +128,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                             // final groupName = teams[index];
                             // final member = provider.teamMembers[index];
 
-                            return QuarterGroupCard(
-                              filter: widget.filter,
-                              groupName: groupName,
-                              teamCount: 25,
-                              tournament: widget.tournament,
-                              member: members.first,
-                              static_g: index == 0 ? '' : 'B2',
-                            );
+                            return QuarterGroupCard(filter: widget.filter, groupName: groupName, teamCount: 25, tournament: widget.tournament, member: members.first, static_g: index == 0 ? '' : 'B2');
                           },
                         ),
 
@@ -168,10 +137,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.all(32),
-                              child: Text(
-                                'noGroupsFound'.tr,
-                                style: TextStyle(color: Colors.grey[400]),
-                              ),
+                              child: Text('noGroupsFound'.tr, style: TextStyle(color: Colors.grey[400])),
                             ),
                           )
                         else
@@ -213,15 +179,7 @@ class QuarterGroupCard extends StatelessWidget {
   final TeamMember member;
   final String static_g;
 
-  const QuarterGroupCard({
-    required this.filter,
-    required this.groupName,
-    required this.teamCount,
-    required this.tournament,
-    required this.member,
-    required this.static_g,
-    super.key,
-  });
+  const QuarterGroupCard({required this.filter, required this.groupName, required this.teamCount, required this.tournament, required this.member, required this.static_g, super.key});
 
   // Only show HH:mm
   String formatTime(String? dateTimeString) {
@@ -246,16 +204,7 @@ class QuarterGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = [
-      filter == 'final' ? Colors.green : Colors.orange,
-      Colors.blue,
-      Colors.green,
-      Colors.purple,
-      Colors.red,
-      Colors.teal,
-      Colors.pink,
-      Colors.amber,
-    ];
+    final colors = [filter == 'final' ? Colors.green : Colors.orange, Colors.blue, Colors.green, Colors.purple, Colors.red, Colors.teal, Colors.pink, Colors.amber];
 
     final colorIndex = int.tryParse(groupName.replaceAll(RegExp(r'\D'), '')) ?? 0;
     final color = colors[colorIndex % colors.length];
@@ -279,30 +228,15 @@ class QuarterGroupCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Get.to(
-          () => TournamentDetailPage(
-            filter: filter,
-            tournament: tournament,
-            groupName: groupName,
-            members: member,
-            static_g: static_g,
-          ),
-        );
+        Get.to(() => TournamentDetailPage(filter: filter, tournament: tournament, groupName: groupName, members: member, static_g: static_g));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              color.withOpacity(0.25),
-              color.withOpacity(0.05),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
+          gradient: LinearGradient(colors: [color.withValues(alpha: 0.25), color.withValues(alpha: 0.05)], begin: Alignment.centerLeft, end: Alignment.centerRight),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.4), width: 1.5),
+          border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
         ),
         child: Row(
           children: [
@@ -311,18 +245,14 @@ class QuarterGroupCard extends StatelessWidget {
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
-                border: Border.all(color: color.withOpacity(0.5), width: 2),
+                border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
               ),
               child: Center(
                 child: Text(
                   groupName,
-                  style: TextStyle(
-                    fontFamily: josefinSansSemiBold,
-                    fontSize: 26,
-                    color: color,
-                  ),
+                  style: TextStyle(fontFamily: gilroySemiBold, fontSize: 26, color: color),
                 ),
               ),
             ),
@@ -335,21 +265,14 @@ class QuarterGroupCard extends StatelessWidget {
                 children: [
                   Text(
                     '${'group'.tr}$groupName',
-                    style: const TextStyle(
-                      fontFamily: josefinSansSemiBold,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
+                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                   ),
                   const SizedBox(height: 6),
                   Row(
                     children: [
                       Icon(Icons.groups, size: 16, color: Colors.grey[400]),
                       const SizedBox(width: 6),
-                      Text(
-                        '$teamCount ${teamCount == 1 ? 'Team'.tr : 'Team'.tr}',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
-                      ),
+                      Text('$teamCount ${teamCount == 1 ? 'Team'.tr : 'Team'.tr}', style: TextStyle(color: Colors.grey[400], fontSize: 14)),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -359,20 +282,14 @@ class QuarterGroupCard extends StatelessWidget {
                     children: [
                       Icon(Icons.calendar_month, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
-                      Text(
-                        dataDay,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      ),
+                      Text(dataDay, style: TextStyle(color: Colors.grey[400], fontSize: 12)),
                     ],
                   ),
                   Row(
                     children: [
                       Icon(Icons.play_arrow, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
-                      Text(
-                        'Açyldy: $start',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      ),
+                      Text('Açyldy: $start', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -382,10 +299,7 @@ class QuarterGroupCard extends StatelessWidget {
                     children: [
                       Icon(Icons.flag, size: 14, color: Colors.grey[400]),
                       const SizedBox(width: 4),
-                      Text(
-                        'Başlanýar: $finish',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      ),
+                      Text('Başlanýar: $finish', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -394,22 +308,17 @@ class QuarterGroupCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.2),
+                      color: color.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: color.withOpacity(0.4)),
+                      border: Border.all(color: color.withValues(alpha: 0.4)),
                     ),
                     child: Text(
                       filter == 'yarym_final'
                           ? 'pol_final'.tr
                           : filter == 'final'
-                              ? 'final_tournament'.tr
-                              : 'qarterFinals'.tr,
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
+                          ? 'final_tournament'.tr
+                          : 'qarterFinals'.tr,
+                      style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5),
                     ),
                   ),
                 ],
@@ -419,10 +328,7 @@ class QuarterGroupCard extends StatelessWidget {
             // Arrow Icon
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
               child: Icon(Icons.arrow_forward_ios, color: color, size: 18),
             ),
           ],

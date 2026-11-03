@@ -69,12 +69,12 @@ class TournamentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(finised ? 'endTournament'.tr : tournamentModel.title!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 28)),
+                    Text(finised ? 'endTournament'.tr : tournamentModel.title!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 28)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Text(tournamentModel.start_date!.substring(0, 10), textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.8), fontFamily: josefinSansSemiBold, fontSize: 18)),
+                      child: Text(tournamentModel.start_date!.substring(0, 10), textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.8), fontFamily: gilroySemiBold, fontSize: 18)),
                     ),
-                    Text(tournamentModel.start_date!.substring(11, 16), textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.8), fontFamily: josefinSansSemiBold, fontSize: 18)),
+                    Text(tournamentModel.start_date!.substring(11, 16), textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.8), fontFamily: gilroySemiBold, fontSize: 18)),
                   ],
                 ),
               ),

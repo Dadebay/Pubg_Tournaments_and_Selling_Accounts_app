@@ -30,7 +30,7 @@ class Price extends StatelessWidget {
           style: TextStyle(
             color: textColor,
             fontSize: size.width >= 800 ? 27 : 25,
-            fontFamily: josefinSansBold,
+            fontFamily: gilroyBold,
           ),
         ),
         Padding(
@@ -40,7 +40,7 @@ class Price extends StatelessWidget {
             style: TextStyle(
               color: textColor,
               fontSize: size.width >= 800 ? 20 : 14,
-              fontFamily: josefinSansBold,
+              fontFamily: gilroyBold,
             ),
           ),
         ),

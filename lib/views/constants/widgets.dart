@@ -16,11 +16,11 @@ SnackbarController showSnackBar(String title, String subtitle, Color color) {
         ? const SizedBox.shrink()
         : Text(
             title.tr,
-            style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 18, color: Colors.white),
+            style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
           ),
     messageText: Text(
       subtitle.tr,
-      style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 16, color: Colors.white),
+      style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 16, color: Colors.white),
     ),
     snackPosition: SnackPosition.BOTTOM,
     backgroundColor: color,
@@ -71,7 +71,7 @@ Widget userAppBarMoney() {
           if (Get.find<WalletController>().userMoney != null) {
             a = double.parse(Get.find<WalletController>().userMoney.toString());
           }
-          return Text(a.toStringAsFixed(1), style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 23));
+          return Text(a.toStringAsFixed(1), style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 23));
         }),
         const Padding(
           padding: EdgeInsets.only(
@@ -96,7 +96,7 @@ Column errorData({required Function() onTap}) {
     children: [
       Text(
         'errorLoadData'.tr,
-        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
       ),
       const SizedBox(
         height: 15,
@@ -106,7 +106,7 @@ Column errorData({required Function() onTap}) {
         style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const RoundedRectangleBorder(borderRadius: borderRadius5), elevation: 0),
         child: Text(
           'noConnection3'.tr,
-          style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 16),
+          style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold, fontSize: 16),
         ),
       ),
     ],
@@ -125,7 +125,7 @@ Column emptyData() {
       ),
       Text(
         'errorLoadEmptyData'.tr,
-        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
       ),
     ],
   );
@@ -135,7 +135,7 @@ Center noData(String text) {
   return Center(
     child: Text(
       text.tr,
-      style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+      style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
     ),
   );
 }
@@ -168,7 +168,7 @@ Container noBannerImage() {
     child: Center(
       child: Text(
         'noImageBanner'.tr,
-        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
       ),
     ),
   );
@@ -182,7 +182,7 @@ Padding listViewName(String text, bool icon, Size size) {
       children: [
         Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: size.width >= 800 ? 30 : 24, fontFamily: josefinSansBold),
+          style: TextStyle(color: Colors.white, fontSize: size.width >= 800 ? 30 : 24, fontFamily: gilroyBold),
         ),
         icon
             ? IconButton(

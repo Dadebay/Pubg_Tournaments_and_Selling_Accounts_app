@@ -127,7 +127,7 @@ class TournamentModel {
               ? const SizedBox.shrink()
               : Text(
                   'tournamentInfo15'.tr,
-                  style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 18, color: Colors.white),
+                  style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                 ),
           messageText: Column(
             children: [
@@ -136,11 +136,11 @@ class TournamentModel {
                 children: [
                   Text(
                     'lobid'.tr,
-                    style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                   ),
                   Text(
                     "${responseJson["lobb_id"]}".tr,
-                    style: const TextStyle(fontFamily: josefinSansRegular, fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontFamily: gilroyRegular, fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {
@@ -162,11 +162,11 @@ class TournamentModel {
                 children: [
                   Text(
                     'code'.tr,
-                    style: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 18, color: Colors.white),
+                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
                   ),
                   Text(
                     "${responseJson["code"]}".tr,
-                    style: const TextStyle(fontFamily: josefinSansRegular, fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontFamily: gilroyRegular, fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {

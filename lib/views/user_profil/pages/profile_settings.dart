@@ -277,11 +277,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                     height: 120,
                                     margin: const EdgeInsets.only(top: 25),
                                     child: DottedBorder(
-                                      borderType: BorderType.Oval,
-                                      radius: const Radius.circular(12),
-                                      padding: const EdgeInsets.all(6),
-                                      strokeWidth: 2,
-                                      color: kPrimaryColor,
+                                      options: OvalDottedBorderOptions(
+ padding: const EdgeInsets.all(6),
+ strokeWidth: 2,
+ color: kPrimaryColor,
+ ),
                                       child: const Center(
                                         child: Icon(
                                           Icons.add_circle_outline_sharp,
@@ -473,7 +473,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         name.tr,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: josefinSansBold),
+        style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: gilroyBold),
       ),
     );
   }

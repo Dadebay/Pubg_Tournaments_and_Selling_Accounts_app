@@ -18,7 +18,7 @@ class BannerProfileView extends GetView {
       appBar: AppBar(
         title: Text(
           pageName,
-          style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansBold, fontSize: 20),
+          style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 20),
         ),
         leading: IconButton(
           onPressed: () {
@@ -57,7 +57,7 @@ class BannerProfileView extends GetView {
             child: Html(
               data: description,
               style: {
-                'body': Style(fontFamily: josefinSansMedium, fontSize: FontSize(20.0), textAlign: TextAlign.left),
+                'body': Style(fontFamily: gilroyMedium, fontSize: FontSize(20.0), textAlign: TextAlign.left),
               },
             ),
           ),

@@ -55,7 +55,7 @@ class VideoCard extends StatelessWidget {
                         child: Text(
                           'noImageBanner'.tr,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+                          style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
                         ),
                       ),
                     ),

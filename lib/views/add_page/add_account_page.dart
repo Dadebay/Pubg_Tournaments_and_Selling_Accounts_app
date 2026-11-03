@@ -83,7 +83,7 @@ class _AddPageState extends State<AddPage> {
           padding: const EdgeInsets.only(top: 30, left: 20),
           child: Text(
             'select_user_image'.tr,
-            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
         ),
         selectedImage != null
@@ -116,11 +116,11 @@ class _AddPageState extends State<AddPage> {
                     height: 120,
                     margin: const EdgeInsets.only(top: 25),
                     child: DottedBorder(
-                      borderType: BorderType.Oval,
-                      radius: const Radius.circular(12),
-                      padding: const EdgeInsets.all(6),
-                      strokeWidth: 2,
-                      color: kPrimaryColor,
+                      options: OvalDottedBorderOptions(
+ padding: const EdgeInsets.all(6),
+ strokeWidth: 2,
+ color: kPrimaryColor,
+ ),
                       child: const Center(
                         child: Icon(
                           Icons.add_circle_outline_sharp,
@@ -149,7 +149,7 @@ class _AddPageState extends State<AddPage> {
           padding: const EdgeInsets.only(top: 40, left: 20, bottom: 20),
           child: Text(
             'select_user_bg_image'.tr,
-            style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
         ),
         selectedImage1 != null
@@ -183,11 +183,12 @@ class _AddPageState extends State<AddPage> {
                   height: 150,
                   width: double.infinity,
                   child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: const Radius.circular(12),
-                    padding: const EdgeInsets.all(6),
-                    strokeWidth: 2,
-                    color: kPrimaryColor,
+                    options: RoundedRectDottedBorderOptions(
+ radius: const Radius.circular(12),
+ padding: const EdgeInsets.all(6),
+ strokeWidth: 2,
+ color: kPrimaryColor,
+ ),
                     child: const Center(
                       child: Icon(
                         Icons.add,
@@ -275,7 +276,7 @@ class _AddPageState extends State<AddPage> {
                 child: Text(
                   'addAccount1'.tr,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
                 ),
               ),
               CustomTextField(labelName: 'signIn1', controller: userNameController, focusNode: userNameFocusNode, requestfocusNode: pubgIDFocusNode, isNumber: false, borderRadius: true),

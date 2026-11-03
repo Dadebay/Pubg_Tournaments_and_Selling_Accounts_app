@@ -29,9 +29,7 @@ class _TransferScreenState extends State<TransferScreen> {
     return Scaffold(
       appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: false, elevationWhite: true, name: 'transfer_monay'),
       body: Container(
-        decoration: const BoxDecoration(
-          color: kPrimaryColorBlack,
-        ),
+        decoration: const BoxDecoration(color: kPrimaryColorBlack),
         child: SafeArea(
           child: Column(
             children: [
@@ -44,26 +42,17 @@ class _TransferScreenState extends State<TransferScreen> {
 
                       Text(
                         'text_pay'.tr,
-                        style:const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10),
                       _buildInputCard(
                         title: 'pay_num'.tr,
                         child: TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
-                            prefix: Text(
-                              '+993',
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                            ),
+                            prefix: Text('+993', style: TextStyle(color: Colors.black)),
                             hintText: '',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -79,10 +68,7 @@ class _TransferScreenState extends State<TransferScreen> {
                             ),
                             contentPadding: EdgeInsets.all(16),
                           ),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
+                          style: const TextStyle(fontSize: 18, color: Colors.black),
                           onChanged: (value) {
                             setState(() {});
                           },
@@ -103,9 +89,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                     controller: _amountController,
                                     keyboardType: TextInputType.number,
                                     textAlign: TextAlign.center,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
+                                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                     decoration: const InputDecoration(
                                       hintText: '0',
                                       border: OutlineInputBorder(
@@ -122,18 +106,12 @@ class _TransferScreenState extends State<TransferScreen> {
                                       ),
                                       contentPadding: EdgeInsets.all(16),
                                     ),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: const TextStyle(color: Colors.black, fontSize: 28, fontWeight: FontWeight.bold),
                                     onChanged: (value) {
                                       final double? val = double.tryParse(value);
                                       if (val != null && val > 500) {
                                         _amountController.text = '500';
-                                        _amountController.selection = TextSelection.fromPosition(
-                                          TextPosition(offset: _amountController.text.length),
-                                        );
+                                        _amountController.selection = TextSelection.fromPosition(TextPosition(offset: _amountController.text.length));
                                       }
                                       setState(() {});
                                     },
@@ -144,13 +122,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            Text(
-                              'max_5'.tr,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color(0xFF6B7280),
-                              ),
-                            ),
+                            Text('max_5'.tr, style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280))),
                           ],
                         ),
                       ),
@@ -159,9 +131,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       if (amount > 0)
                         Container(
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFFF5F0), Color(0xFFFFE5D9)],
-                            ),
+                            gradient: const LinearGradient(colors: [Color(0xFFFFF5F0), Color(0xFFFFE5D9)]),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(color: const Color(0xFFFFD4C4), width: 2),
                           ),
@@ -185,19 +155,14 @@ class _TransferScreenState extends State<TransferScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 1),
                             elevation: 0,
                             shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             minimumSize: const Size(double.infinity, 0),
                           ),
                           onPressed: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
                               ? () async {
                                   final transferProvider = context.read<TransferProvider>();
 
-                                  await transferProvider.sendTransfer(
-                                    phone: _phoneController.text,
-                                    amount: _amountController.text,
-                                  );
+                                  await transferProvider.sendTransfer(phone: _phoneController.text, amount: _amountController.text);
 
                                   if (transferProvider.errorMessage != null) {
                                     showDialog(
@@ -205,12 +170,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                       builder: (context) => AlertDialog(
                                         title: const Text('Ýalňyşlyk!'),
                                         content: Text(transferProvider.errorMessage!),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(context),
-                                            child: const Text('Bolýar'),
-                                          ),
-                                        ],
+                                        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Bolýar'))],
                                       ),
                                     );
                                   } else if (transferProvider.successMessage != null) {
@@ -238,15 +198,10 @@ class _TransferScreenState extends State<TransferScreen> {
                           label: Container(
                             decoration: (_phoneController.text.isNotEmpty && amount > 0 && amount <= 500)
                                 ? const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [Color(0xFFFF6B35), Color(0xFFFF8C42)],
-                                    ),
+                                    gradient: LinearGradient(colors: [Color(0xFFFF6B35), Color(0xFFFF8C42)]),
                                     borderRadius: BorderRadius.all(Radius.circular(16)),
                                   )
-                                : BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    borderRadius: const BorderRadius.all(Radius.circular(16)),
-                                  ),
+                                : BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: const BorderRadius.all(Radius.circular(16))),
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             alignment: Alignment.center,
                             child: Row(
@@ -254,14 +209,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               children: [
                                 Icon(Icons.send_rounded, size: 20),
                                 SizedBox(width: 8),
-                                Text(
-                                  'send_p'.tr,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.3,
-                                  ),
-                                ),
+                                Text('send_p'.tr, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.3)),
                               ],
                             ),
                           ),
@@ -282,13 +230,7 @@ class _TransferScreenState extends State<TransferScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -296,11 +238,7 @@ class _TransferScreenState extends State<TransferScreen> {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
           ),
           const SizedBox(height: 12),
           child,
@@ -311,10 +249,7 @@ class _TransferScreenState extends State<TransferScreen> {
 
   Widget _buildAdjustButton(IconData icon, VoidCallback onPressed) {
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFE5D9),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFFFE5D9), borderRadius: BorderRadius.circular(12)),
       child: IconButton(
         onPressed: onPressed,
         icon: Icon(icon, color: kAccentColor),
@@ -328,19 +263,11 @@ class _TransferScreenState extends State<TransferScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: isTotal ? 18 : 16,
-            fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
-            color: const Color(0xFF1F2937),
-          ),
+          style: TextStyle(fontSize: isTotal ? 18 : 16, fontWeight: isTotal ? FontWeight.bold : FontWeight.w500, color: const Color(0xFF1F2937)),
         ),
         Text(
           value,
-          style: TextStyle(
-            fontSize: isTotal ? 24 : (isHighlight ? 18 : 20),
-            fontWeight: FontWeight.bold,
-            color: isHighlight ? kAccentColor : (isTotal ? kDarkOrange : const Color(0xFF1F2937)),
-          ),
+          style: TextStyle(fontSize: isTotal ? 24 : (isHighlight ? 18 : 20), fontWeight: FontWeight.bold, color: isHighlight ? kAccentColor : (isTotal ? kDarkOrange : const Color(0xFF1F2937))),
         ),
       ],
     );

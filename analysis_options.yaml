@@ -3,6 +3,10 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     camel_case_types: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
   plugins:
     - dart_code_metrics
 

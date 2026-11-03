@@ -35,7 +35,10 @@ class AgreeButton extends StatelessWidget {
         color: Colors.white,
       ),
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: settingsController.agreeButton.value ? 0 : 10),
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: settingsController.agreeButton.value ? 0 : 10,
+      ),
       width: settingsController.agreeButton.value ? 60 : Get.size.width,
       duration: const Duration(milliseconds: 1000),
       child: settingsController.agreeButton.value
@@ -43,40 +46,48 @@ class AgreeButton extends StatelessWidget {
               child: SizedBox(
                 width: 28,
                 height: 28,
-                child: CircularProgressIndicator(
-                  color: kPrimaryColor,
-                ),
+                child: CircularProgressIndicator(color: kPrimaryColor),
               ),
             )
           : showIcon == true
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8, top: 4),
-                      child: Icon(
-                        name == 'Nagt' ? IconlyLight.wallet : CupertinoIcons.creditcard,
-                        color: kPrimaryColor,
-                      ),
-                    ),
-                    Text(
-                      name.tr,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 22),
-                    ),
-                  ],
-                )
-              : Text(
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8, top: 4),
+                  child: Icon(
+                    name == 'Nagt'
+                        ? IconlyLight.wallet
+                        : CupertinoIcons.creditcard,
+                    color: kPrimaryColor,
+                  ),
+                ),
+                Text(
                   name.tr,
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold, fontSize: 22),
+                  style: const TextStyle(
+                    color: kPrimaryColor,
+                    fontFamily: gilroySemiBold,
+                    fontSize: 22,
+                  ),
                 ),
+              ],
+            )
+          : Text(
+              name.tr,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: kPrimaryColor,
+                fontFamily: gilroySemiBold,
+                fontSize: 22,
+              ),
+            ),
     );
   }
 }

@@ -117,7 +117,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
           'online_p'.tr,
           style: const TextStyle(
             color: Colors.white,
-            fontFamily: josefinSansSemiBold,
+            fontFamily: gilroySemiBold,
           ),
         ),
         content: Column(

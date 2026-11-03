@@ -69,14 +69,14 @@ class HomePageCard extends StatelessWidget {
               style: TextStyle(
                 color: vip ? Colors.black : Colors.white,
                 fontSize: size.width >= 800 ? 27 : 20,
-                fontFamily: josefinSansBold,
+                fontFamily: gilroyBold,
               ),
             ),
             Text(
               model.pubgID!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: vip ? Colors.black87 : Colors.white70, fontFamily: josefinSansRegular, fontSize: size.width >= 800 ? 22 : 17),
+              style: TextStyle(color: vip ? Colors.black87 : Colors.white70, fontFamily: gilroyRegular, fontSize: size.width >= 800 ? 22 : 17),
             ),
             Price(
               price: model.price!.substring(0, model.price!.length - 3),
@@ -91,7 +91,7 @@ class HomePageCard extends StatelessWidget {
                     style: TextStyle(
                       color: vip ? Colors.black87 : Colors.white70,
                       fontSize: size.width >= 800 ? 22 : 16,
-                      fontFamily: josefinSansRegular,
+                      fontFamily: gilroyRegular,
                     ),
                   ),
           ],
@@ -131,7 +131,7 @@ class HomePageCard extends StatelessWidget {
                     child: Text(
                       'noImageBanner'.tr,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
                     ),
                   ),
                 ),

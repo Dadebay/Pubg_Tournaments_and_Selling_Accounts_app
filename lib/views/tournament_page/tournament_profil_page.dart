@@ -158,8 +158,8 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
                 child: TabBar(
                   indicatorSize: TabBarIndicatorSize.label,
                   indicatorColor: kPrimaryColor,
-                  labelStyle: const TextStyle(fontFamily: josefinSansSemiBold, fontSize: 20),
-                  unselectedLabelStyle: const TextStyle(fontFamily: josefinSansMedium, fontSize: 18),
+                  labelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20),
+                  unselectedLabelStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
                   labelColor: Colors.white,
                   isScrollable: widget.finised ? false : true,
                   indicatorWeight: 4,

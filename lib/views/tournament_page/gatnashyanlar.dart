@@ -91,7 +91,7 @@ class _GatnashyanlatrState extends State<Gatnashyanlatr> {
       children: [
         const Text(
           'Team: ',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: josefinSansBold),
+          style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: gilroyBold),
         ),
         Text(
           widget.teams.number.toString(),

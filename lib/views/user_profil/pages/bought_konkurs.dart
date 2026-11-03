@@ -23,7 +23,7 @@ class BoughtKonkurs extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -33,7 +33,7 @@ class BoughtKonkurs extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -43,7 +43,7 @@ class BoughtKonkurs extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
               ],
@@ -100,7 +100,7 @@ class BoughtKonkurs extends StatelessWidget {
                                     textAlign: TextAlign.start,
                                     style: const TextStyle(
                                       color: Colors.white,
-                                      fontFamily: josefinSansMedium,
+                                      fontFamily: gilroyMedium,
                                       fontSize: 17,
                                     ),
                                   ),
@@ -117,7 +117,7 @@ class BoughtKonkurs extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansBold,
+                                fontFamily: gilroyBold,
                                 fontSize: 14,
                               ),
                             ),
@@ -129,7 +129,7 @@ class BoughtKonkurs extends StatelessWidget {
                               textAlign: TextAlign.end,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 16,
                               ),
                             ),
@@ -171,7 +171,7 @@ class BoughtCODES extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -181,7 +181,7 @@ class BoughtCODES extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -191,7 +191,7 @@ class BoughtCODES extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -201,7 +201,7 @@ class BoughtCODES extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
               ],
@@ -243,7 +243,7 @@ class BoughtCODES extends StatelessWidget {
                               textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansBold,
+                                fontFamily: gilroyBold,
                                 fontSize: 14,
                               ),
                             ),
@@ -257,7 +257,7 @@ class BoughtCODES extends StatelessWidget {
                               textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 17,
                               ),
                             ),
@@ -271,7 +271,7 @@ class BoughtCODES extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansBold,
+                                fontFamily: gilroyBold,
                                 fontSize: 14,
                               ),
                             ),
@@ -283,7 +283,7 @@ class BoughtCODES extends StatelessWidget {
                               textAlign: TextAlign.end,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 16,
                               ),
                             ),

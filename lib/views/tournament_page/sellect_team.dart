@@ -60,7 +60,7 @@ class _SellctTeamState extends State<SellctTeam> {
 
     Get.defaultDialog(
       title: 'buySQUAD3'.tr,
-      titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 22),
+      titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -113,7 +113,7 @@ class _SellctTeamState extends State<SellctTeam> {
           // Get.defaultDialog(
           //   backgroundColor: kPrimaryColorBlack,
           //   title: 'buySQUAD'.tr,
-          //   titleStyle: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 23),
+          //   titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 23),
           //   content: Column(
           //     children: [
           //       // AgreeButton(
@@ -144,7 +144,7 @@ class _SellctTeamState extends State<SellctTeam> {
             alignment: Alignment.center,
             child: Text(
               'agree'.tr,
-              style: TextStyle(fontSize: 20, fontFamily: josefinSansBold, color: Colors.amber[800]),
+              style: TextStyle(fontSize: 20, fontFamily: gilroyBold, color: Colors.amber[800]),
             ),
           ),
         ),

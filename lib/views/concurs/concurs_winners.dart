@@ -25,7 +25,7 @@ class ConcursWinners extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -35,7 +35,7 @@ class ConcursWinners extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -45,7 +45,7 @@ class ConcursWinners extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
               ],
@@ -69,7 +69,7 @@ class ConcursWinners extends StatelessWidget {
                       ),
                       Text(
                         'notBoughtConcurs'.tr,
-                        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                       ),
                     ],
                   );
@@ -95,7 +95,7 @@ class ConcursWinners extends StatelessWidget {
                           Text(
                             ' ${index + 1}.',
                             textAlign: TextAlign.start,
-                            style: const TextStyle(color: Colors.white, fontFamily: josefinSansBold, fontSize: 20),
+                            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
                           ),
                           Container(
                             height: 50,
@@ -121,7 +121,7 @@ class ConcursWinners extends StatelessWidget {
                                   child: Text(
                                     'Surat ýok',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold),
+                                    style: TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
                                   ),
                                 ),
                               ),
@@ -136,7 +136,7 @@ class ConcursWinners extends StatelessWidget {
                               textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 17,
                               ),
                             ),
@@ -151,7 +151,7 @@ class ConcursWinners extends StatelessWidget {
                               textAlign: TextAlign.start,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansBold,
+                                fontFamily: gilroyBold,
                                 fontSize: 14,
                               ),
                             ),
@@ -163,7 +163,7 @@ class ConcursWinners extends StatelessWidget {
                               textAlign: TextAlign.end,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontFamily: josefinSansMedium,
+                                fontFamily: gilroyMedium,
                                 fontSize: 16,
                               ),
                             ),

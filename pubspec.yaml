@@ -3,58 +3,70 @@ version: 1.0.4+8
 publish_to: none
 description: A new Flutter project.
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 dependencies:
-  cached_network_image: 
-  carousel_slider: ^5.0.0
-  cupertino_icons: ^1.0.2
-  dotted_border: ^2.0.0+1
-  flutter_iconly: ^1.0.2
-  firebase_messaging:
-  firebase_core: 
-  flutter_local_notifications: any
-  shared_preferences: ^2.5.3
-  get_storage: any
-  awesome_notifications: ^0.10.1
-  http: any
-  image_picker: ^0.8.4+4
-  lottie: ^1.2.1
-  permission_handler: ^11.0.1
-  # share: any
-  url_launcher: ^6.3.1
-  # restart_app: ^1.1.0
-  flutter_html: ^3.0.0-alpha.6
-  vibration: ^3.0.0
-  mime: ^1.0.1
-  pull_to_refresh: 
-  flick_video_player: any
-  get: ^4.6.5
-  file: ^6.1.4
-  intl: ^0.20.0
-  time_machine: ^0.9.17
-  provider: ^6.0.5
-  dio: ^5.3.0
-  timer_count_down: 
-  webview_flutter: ^4.10.0
-  change_app_package_name: ^1.1.0
-  path_provider: ^2.1.5
-  package_info_plus: ^8.3.0
-  flutter_image_compress: ^2.4.0
-  # media_kit: ^1.1.10
-  # media_kit_video: ^1.1.10
-  video_player: ^2.10.0
-  chewie: ^1.8.5
-
- 
-
+  # --- Flutter SDK ---
   flutter:
     sdk: flutter
   async: ^2.11.0
 
+  # --- State management & navigation ---
+  get: ^4.6.5
+  provider: ^6.0.5
+
+  # --- Networking ---
+  dio: ^5.3.0
+  http: any
+  mime: ^2.1.0
+
+  # --- Storage & device info ---
+  get_storage: any
+  path_provider: ^2.1.5
+  permission_handler: ^13.0.2
+  vibration: ^3.0.0
+  url_launcher: ^6.3.1
+  # share: any
+  # restart_app: ^1.1.0
+
+  # --- Firebase & notifications ---
+  firebase_core:
+  firebase_messaging:
+  awesome_notifications: ^0.12.1
+
+  # --- Images, media & video ---
+  cached_network_image:
+  image_picker: ^1.2.4
+  flutter_image_compress: ^2.4.0
+  video_player: ^2.10.0
+  chewie: ^1.8.5
+  flick_video_player: any
+  # media_kit: ^1.1.10
+  # media_kit_video: ^1.1.10
+
+  # --- UI widgets & icons ---
+  cupertino_icons: ^1.0.2
+  flutter_iconly:
+    path: packages/flutter_iconly
+  lottie: ^3.8.0
+  carousel_slider: ^5.0.0
+  dotted_border: ^3.1.0
+  pull_to_refresh:
+  flutter_html: ^3.0.0-alpha.6
+  webview_flutter: ^4.10.0
+
+  # --- Date, time & utils ---
+  intl: ^0.20.0
+  timer_count_down:
+  hugeicons: ^1.1.7
+  flutter_svg: ^2.3.2
+  share_plus: ^13.3.1
+
+  # --- Tooling ---
+
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
 
@@ -62,6 +74,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/icons/
+    - assets/icons/brands/
     - assets/lang/
     - assets/lottie/
     - assets/image/
@@ -76,5 +89,20 @@ flutter:
           weight: 500
         - asset: assets/fonts/Gilroy-Regular.ttf
           weight: 400
+    - family: GilroyRegular
+      fonts:
+        - asset: assets/fonts/Gilroy-Regular.ttf
+    - family: GilroyMedium
+      fonts:
+        - asset: assets/fonts/Gilroy-Medium.ttf
+    - family: GilroySemiBold
+      fonts:
+        - asset: assets/fonts/Gilroy-SemiBold.ttf
+    - family: GilroyBold
+      fonts:
+        - asset: assets/fonts/Gilroy-Bold.ttf
   uses-material-design: true
   generate: true
+
+dependency_overrides:
+  html: 0.15.6

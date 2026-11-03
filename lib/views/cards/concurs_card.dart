@@ -47,7 +47,7 @@ class GiftCARD extends StatelessWidget {
                 errorWidget: (context, url, error) => Center(
                   child: Text(
                     'noImage'.tr,
-                    style: const TextStyle(color: Colors.black, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.black, fontFamily: gilroySemiBold),
                   ),
                 ),
               ),
@@ -62,7 +62,7 @@ class GiftCARD extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: Get.size.width >= 800 ? 27 : 25,
-                fontFamily: josefinSansBold,
+                fontFamily: gilroyBold,
               ),
             ),
           ),
@@ -82,7 +82,7 @@ class GiftCARD extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     'noStock'.tr,
-                    style: const TextStyle(color: kPrimaryColor, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold),
                   ),
                 )
               : AddCartButton(
@@ -139,7 +139,7 @@ class ThingsCards extends StatelessWidget {
                 errorWidget: (context, url, error) => Center(
                   child: Text(
                     'noImage'.tr,
-                    style: const TextStyle(color: Colors.black, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.black, fontFamily: gilroySemiBold),
                   ),
                 ),
               ),
@@ -154,7 +154,7 @@ class ThingsCards extends StatelessWidget {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: Get.size.width >= 800 ? 27 : 25,
-                fontFamily: josefinSansBold,
+                fontFamily: gilroyBold,
               ),
             ),
           ),

@@ -11,10 +11,7 @@ import '../constants/widgets.dart';
 class Banners extends StatelessWidget {
   final Future<List<BannerModel>> future;
 
-  const Banners({
-    required this.future,
-    super.key,
-  });
+  const Banners({required this.future, super.key});
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -22,7 +19,13 @@ class Banners extends StatelessWidget {
       future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(margin: const EdgeInsets.all(8), height: 220, width: Get.size.width, decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withOpacity(0.4)), child: Center(child: spinKit()));
+          return Container(
+            margin: const EdgeInsets.all(8),
+            height: 220,
+            width: Get.size.width,
+            decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withValues(alpha: 0.4)),
+            child: Center(child: spinKit()),
+          );
         } else if (snapshot.hasError) {
           return noBannerImage();
         } else if (snapshot.data.toString() == '[]') {
@@ -33,11 +36,7 @@ class Banners extends StatelessWidget {
             CarouselSlider.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index, count) {
-                return BannerCard(
-                  image: '$serverURL${snapshot.data![index].image}',
-                  content: snapshot.data![index].content!,
-                  title: snapshot.data![index].title!,
-                );
+                return BannerCard(image: '$serverURL${snapshot.data![index].image}', content: snapshot.data![index].content!, title: snapshot.data![index].title!);
               },
               options: CarouselOptions(
                 onPageChanged: (index, CarouselPageChangedReason a) {
@@ -75,18 +74,18 @@ class Banners extends StatelessWidget {
                 curve: Curves.decelerate,
                 height: Get.find<SettingsController>().bannerSelectedIndex.value == index
                     ? size.width >= 800
-                        ? 22
-                        : 16
+                          ? 22
+                          : 16
                     : size.width >= 800
-                        ? 16
-                        : 10,
+                    ? 16
+                    : 10,
                 width: Get.find<SettingsController>().bannerSelectedIndex.value == index
                     ? size.width >= 800
-                        ? 21
-                        : 15
+                          ? 21
+                          : 15
                     : size.width >= 800
-                        ? 16
-                        : 10,
+                    ? 16
+                    : 10,
                 decoration: BoxDecoration(
                   color: Get.find<SettingsController>().bannerSelectedIndex.value == index ? Colors.transparent : Colors.grey,
                   shape: BoxShape.circle,

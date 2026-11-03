@@ -94,7 +94,7 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
               child: Text(
                 'signInDialog'.tr,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 20),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
               ),
             ),
             page ? CustomTextField(labelName: 'signIn1', controller: fullNameController, focusNode: fullNameFocusNode, requestfocusNode: idFocusNode, borderRadius: true, isNumber: false) : const SizedBox.shrink(),

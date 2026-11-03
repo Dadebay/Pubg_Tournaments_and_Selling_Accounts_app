@@ -112,7 +112,10 @@ class _ConcursByIDState extends State<ConcursByID> {
         Container(
           margin: const EdgeInsets.only(top: 8),
           height: 200,
-          decoration: BoxDecoration(border: Border.all(color: kPrimaryColor, width: 3), borderRadius: borderRadius20),
+          decoration: BoxDecoration(
+            border: Border.all(color: kPrimaryColor, width: 3),
+            borderRadius: borderRadius20,
+          ),
           width: MediaQuery.of(context).size.width,
           child: ClipRRect(
             borderRadius: borderRadius20,
@@ -130,17 +133,11 @@ class _ConcursByIDState extends State<ConcursByID> {
           child: Container(
             decoration: const BoxDecoration(
               color: kPrimaryColorBlack,
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(20),
-                topLeft: Radius.circular(20),
-              ),
+              borderRadius: BorderRadius.only(bottomRight: Radius.circular(20), topLeft: Radius.circular(20)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'startDate'.tr + getFormattedDate(concurs.concursCartById!.createdDate.toString()),
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
+              child: Text('startDate'.tr + getFormattedDate(concurs.concursCartById!.createdDate.toString()), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
             ),
           ),
         ),
@@ -149,7 +146,10 @@ class _ConcursByIDState extends State<ConcursByID> {
           right: 3,
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(color: kPrimaryColorBlack, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+            decoration: const BoxDecoration(
+              color: kPrimaryColorBlack,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+            ),
             child: Countdown(
               seconds: duration.inSeconds,
               build: (BuildContext ctx, double time) {
@@ -161,7 +161,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                 return Text(
                   'endDate'.tr + textt,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, fontFamily: josefinSansSemiBold, color: kPrimaryColor),
+                  style: const TextStyle(fontSize: 12, fontFamily: gilroySemiBold, color: kPrimaryColor),
                 );
               },
             ),
@@ -180,7 +180,7 @@ class _ConcursByIDState extends State<ConcursByID> {
           title: const Center(
             child: Text(
               'Töleg görnüşi',
-              style: TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 24),
+              style: TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 24),
             ),
           ),
           content: Column(
@@ -227,7 +227,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -237,7 +237,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
                 Expanded(
@@ -247,7 +247,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: josefinSansSemiBold),
+                    style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: gilroySemiBold),
                   ),
                 ),
               ],
@@ -266,12 +266,10 @@ class _ConcursByIDState extends State<ConcursByID> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Lottie.asset(noDataLottie, width: 350, height: 350),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      const SizedBox(height: 15),
                       Text(
                         'notBoughtConcurs'.tr,
-                        style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 18),
+                        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
                       ),
                     ],
                   );
@@ -300,11 +298,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.only(right: 6, bottom: 4),
-                                  child: Icon(
-                                    CupertinoIcons.gift,
-                                    color: Colors.green,
-                                    size: 24,
-                                  ),
+                                  child: Icon(CupertinoIcons.gift, color: Colors.green, size: 24),
                                 ),
                                 Expanded(
                                   child: Text(
@@ -312,11 +306,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     textAlign: TextAlign.start,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: josefinSansMedium,
-                                      fontSize: 17,
-                                    ),
+                                    style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 17),
                                   ),
                                 ),
                               ],
@@ -330,11 +320,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: josefinSansBold,
-                                fontSize: 14,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 14),
                             ),
                           ),
                           Expanded(
@@ -342,11 +328,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                             child: Text(
                               '${snapshot.data![index].code}',
                               textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: josefinSansMedium,
-                                fontSize: 16,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 16),
                             ),
                           ),
                         ],
@@ -371,15 +353,24 @@ class _ConcursByIDState extends State<ConcursByID> {
       appBar: MyAppBarNew(
         backArrow: true,
         iconRemove: false,
-        icon: Text('${widget.price} TMT', style: const TextStyle(color: Colors.white, fontFamily: josefinSansSemiBold, fontSize: 20)),
+        icon: Text(
+          '${widget.price} TMT',
+          style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
+        ),
         elevationWhite: true,
         name: widget.name,
         fontSize: 0.0,
       ),
       body: Consumer<getConcursByIDProvider>(
-        builder: (_, concurs, __) {
+        builder: (_, concurs, _) {
           if (concurs.isLoading == true) {
-            return Container(margin: const EdgeInsets.all(8), height: 220, width: Get.size.width, decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withOpacity(0.4)), child: Center(child: spinKit()));
+            return Container(
+              margin: const EdgeInsets.all(8),
+              height: 220,
+              width: Get.size.width,
+              decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withValues(alpha: 0.4)),
+              child: Center(child: spinKit()),
+            );
           } else {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -391,11 +382,7 @@ class _ConcursByIDState extends State<ConcursByID> {
                     child: AgreeButton(
                       onTap: () async {
                         if (concurs.concursCartById!.finishedDate.isBefore(DateTime.now())) {
-                          await Get.to(
-                            () => ConcursWinners(
-                              concursID: widget.id,
-                            ),
-                          );
+                          await Get.to(() => ConcursWinners(concursID: widget.id));
                         } else {
                           _showPurchaseDialog(context);
                         }

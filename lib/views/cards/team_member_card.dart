@@ -49,7 +49,7 @@ class TeamMemberCard extends StatelessWidget {
                     Text(
                       '${member.name  ?? ''} Team'  ?? '',
                       style: const TextStyle(
-                        fontFamily: josefinSansSemiBold,
+                        fontFamily: gilroySemiBold,
                         fontSize: 16,
                         color: Colors.white,
                       ),

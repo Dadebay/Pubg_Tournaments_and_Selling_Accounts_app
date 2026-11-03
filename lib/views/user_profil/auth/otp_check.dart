@@ -34,7 +34,7 @@ class OtpCheck extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 loginType ? 'loginWithGmail1'.tr : 'otpSubtitle'.tr,
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontFamily: josefinSansMedium),
+                style: const TextStyle(color: Colors.white, fontSize: 20, fontFamily: gilroyMedium),
               ),
             ),
             Form(key: otpCheck, child: CustomTextField(labelName: 'otp', controller: otpController, focusNode: otpFocusNode, requestfocusNode: otpFocusNode, borderRadius: true, isNumber: true)),

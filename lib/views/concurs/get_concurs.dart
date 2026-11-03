@@ -38,15 +38,9 @@ class _GetConcursScreenState extends State<GetConcursScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBarNew(
-        backArrow: true,
-        iconRemove: true,
-        elevationWhite: true,
-        name: 'Konkurs',
-        fontSize: 0.0,
-      ),
+      appBar: const MyAppBarNew(backArrow: true, iconRemove: true, elevationWhite: true, name: 'Konkurs', fontSize: 0.0),
       body: Consumer<getConcursProvider>(
-        builder: (_, concurs, __) {
+        builder: (_, concurs, _) {
           if (concurs.isLoading == true) {
             return Center(child: spinKit());
           } else {
@@ -93,11 +87,7 @@ class _ConcursCardState extends State<ConcursCard> {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ConcursByID(
-                id: widget.id,
-                name: widget.title,
-                price: widget.price,
-              ),
+              builder: (context) => ConcursByID(id: widget.id, name: widget.title, price: widget.price),
             ),
           );
         },
@@ -132,25 +122,25 @@ class _ConcursCardState extends State<ConcursCard> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(color: kPrimaryColorBlack, borderRadius: BorderRadius.only(bottomRight: Radius.circular(25))),
-                      child: Text(
-                        widget.startDate,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontFamily: josefinSansSemiBold,
-                        ),
+                      decoration: const BoxDecoration(
+                        color: kPrimaryColorBlack,
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(25)),
                       ),
+                      child: Text(widget.startDate, style: const TextStyle(fontSize: 12, fontFamily: gilroySemiBold)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8),
                       child: Text(
                         widget.title,
-                        style: const TextStyle(color: Colors.black, fontSize: 18, fontFamily: josefinSansBold),
+                        style: const TextStyle(color: Colors.black, fontSize: 18, fontFamily: gilroyBold),
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(color: kPrimaryColorBlack, borderRadius: BorderRadius.only(topRight: Radius.circular(25))),
+                      decoration: const BoxDecoration(
+                        color: kPrimaryColorBlack,
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(25)),
+                      ),
                       child: Countdown(
                         seconds: duration.inSeconds,
                         build: (BuildContext ctx, double time) {
@@ -162,7 +152,7 @@ class _ConcursCardState extends State<ConcursCard> {
                           return Text(
                             'endDate'.tr + textt,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12, fontFamily: josefinSansSemiBold, color: Colors.white),
+                            style: const TextStyle(fontSize: 12, fontFamily: gilroySemiBold, color: Colors.white),
                           );
                         },
                       ),
