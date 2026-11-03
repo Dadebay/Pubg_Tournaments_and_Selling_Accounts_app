@@ -8,6 +8,8 @@ import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/notification_bell.dart';
+import 'package:game_app/views/home_page/home_banner.dart';
 import 'package:game_app/views/home_page/new_pubg_types.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -91,6 +93,10 @@ class _NewHomePageState extends State<NewHomePage> {
         }
       }
     });
+    // The page can be left while the request runs.
+    if (!mounted) {
+      return;
+    }
     if (a == 3) {
       showPage = true;
     }
@@ -186,7 +192,7 @@ class _NewHomePageState extends State<NewHomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
-        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: true, name: appName, elevationWhite: false),
+        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: false, icon: NotificationBell(), name: appName, elevationWhite: false),
         body: SmartRefresher(
           footer: footer(),
           controller: _refreshController,
@@ -198,20 +204,7 @@ class _NewHomePageState extends State<NewHomePage> {
           header: const MaterialClassicHeader(color: kPrimaryColor),
           child: ListView(
             children: [
-              // FutureBuilder<List<BannerModel>>(
-              //   future: _futureBanners,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return SizedBox(height: size.height * 0.2, child: Center(child: spinKit()));
-              //     } else if (snapshot.hasError) {
-              //       return SizedBox(height: size.height * 0.2, child: Center(child: Text('bannerError'.tr)));
-              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              //       return const SizedBox.shrink();
-              //     }
-              //     return Banners(future: _futureBanners);
-              //   },
-              // ),
-
+              HomeBanner(future: _futureBanners),
               listViewName('pubgTypes'.tr, false, size),
               NewPubgTypes(),
               listViewName('accountsForSale'.tr, true, size),

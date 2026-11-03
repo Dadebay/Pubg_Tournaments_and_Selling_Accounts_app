@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/wallet/open_online_payment_url.dart';
 import 'package:http/http.dart' as http;
@@ -44,17 +45,15 @@ class UcModel {
     );
   }
 
-  Future addCart(List list) async {
-    final String? token = await Auth().getToken();
-    final response = await http.post(
-      Uri.parse('$serverURL/api/category/paymentFromPoint/'),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-      body: jsonEncode(list),
-    );
-    return response.statusCode;
+  /// Orders the UC items of [list] through `/carts/add-cart/` and answers with the
+  /// status code. Items that are not UC packages are not part of the shop API.
+  Future<int> addCart(List list, {String? pubgId}) async {
+    final items = [
+      for (final item in list)
+        if (item['status'] == 'uc') {'uc': item['id'] as int, 'count': item['count'] as int},
+    ];
+    final result = await UcdayyApi.addCart(items: items, pubgId: pubgId);
+    return result.statusCode;
   }
 
   Future addCartPlasticCARD(List list, bool buything, bool buykonkurs) async {
@@ -75,6 +74,25 @@ class UcModel {
         konkursBuy: buykonkurs,
       ),
     );
+  }
+
+  /// Every product of one category, following the pages of the answer.
+  /// Null when the request fails, so the page can offer a retry.
+  static Future<List<UcModel>?> getByCategory(int id) async {
+    final List<UcModel> items = [];
+    int page = 1;
+    while (true) {
+      final result = await UcdayyApi.getUcCategory(id, page: page > 1 ? page : null);
+      if (!result.ok) {
+        return page == 1 ? null : items;
+      }
+      items.addAll(apiItems(result.data).map(UcModel.fromJson));
+      final data = result.data;
+      if (data is! Map || data['next'] == null) {
+        return items;
+      }
+      page++;
+    }
   }
 
   Future<List<UcModel>> getUCS({int? category}) async {

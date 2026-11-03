@@ -6,7 +6,14 @@ import 'dart:io';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../repository/ucdayy_api.dart';
 import '../views/constants/constants.dart';
+
+/// The entries of a list answer: a bare list, or `{ results: [...] }` when paged.
+Iterable<Map<dynamic, dynamic>> _listOf(dynamic json) {
+  final list = json is Map ? json['results'] : json;
+  return list is List ? list.whereType<Map<dynamic, dynamic>>() : const [];
+}
 
 class HistoryOrderModel {
   final int? id;
@@ -16,34 +23,33 @@ class HistoryOrderModel {
   final String? pubgID;
   final String? note;
   final bool? ask;
-  HistoryOrderModel({this.id, this.ask, this.pubgID, this.status, this.created_date, this.note, this.price});
+
+  /// The order's UC items when the list answer carries them (same shape as the order detail).
+  final List<CartItems> items;
+  HistoryOrderModel({this.id, this.ask, this.pubgID, this.status, this.created_date, this.note, this.price, this.items = const []});
 
   factory HistoryOrderModel.fromJson(Map<dynamic, dynamic> json) {
-    return HistoryOrderModel(id: json['id'], status: json['status'] ?? 'pending', pubgID: json['pubg_id'] ?? 'pubg_id', ask: json['ask'] ?? false, price: json['price'].toString(), note: json['note'] ?? '', created_date: json['created_date']);
+    final rawItems = json['cart_items'] ?? json['items'];
+    return HistoryOrderModel(
+      id: json['id'],
+      status: '${json['status'] ?? 'pending'}',
+      pubgID: json['pubg_id']?.toString() ?? '',
+      ask: json['ask'] ?? false,
+      price: '${json['price'] ?? 0}',
+      note: json['note']?.toString() ?? '',
+      created_date: json['created_date']?.toString() ?? json['created_at']?.toString(),
+      items: rawItems is List ? rawItems.whereType<Map>().map((e) => CartItems.fromJson(Map<String, dynamic>.from(e))).toList() : const [],
+    );
   }
 
+  /// My orders from `/carts/` (paged: `{ results: [...] }`, or a bare list).
+  /// Throws when the request fails, so the page can show its error state.
   Future<List<HistoryOrderModel>> getOrders() async {
-    final token = await Auth().getToken();
-    final List<HistoryOrderModel> tournamentList = [];
-    final response = await http.get(
-      Uri.parse(
-        '$serverURL/api/carts/',
-      ),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final decoded = utf8.decode(response.bodyBytes);
-      final responseJson = json.decode(decoded);
-      for (final Map product in responseJson) {
-        tournamentList.add(HistoryOrderModel.fromJson(product));
-      }
-      return tournamentList;
-    } else {
-      return [];
+    final result = await UcdayyApi.getCarts(page: 1, pageSize: 100);
+    if (!result.ok) {
+      throw Exception(result.error ?? 'status ${result.statusCode}');
     }
+    return apiItems(result.data).map(HistoryOrderModel.fromJson).toList();
   }
 }
 
@@ -58,7 +64,7 @@ class BoughtGiftsModel {
     return BoughtGiftsModel(
       id: json['id'],
       phone: json['phone'] ?? '+99362990344',
-      code: json['code'] ?? false,
+      code: json['code']?.toString() ?? '',
       giftName: json['gift_name'].toString(),
     );
   }
@@ -78,7 +84,7 @@ class BoughtGiftsModel {
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded);
-      for (final Map product in responseJson) {
+      for (final product in _listOf(responseJson)) {
         tournamentList.add(BoughtGiftsModel.fromJson(product));
       }
       return tournamentList;
@@ -120,7 +126,7 @@ class BoughtThingsModel {
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded);
-      for (final Map product in responseJson) {
+      for (final product in _listOf(responseJson)) {
         testList.add(BoughtThingsModel.fromJson(product));
       }
       return testList;
@@ -145,7 +151,7 @@ class BoughtKonkursModel {
     return BoughtKonkursModel(
       id: json['id'],
       phone: json['phone'] ?? '+99362990344',
-      code: json['code'] ?? false,
+      code: json['code']?.toString() ?? '',
       konkursName: json['Konkurs_name'].toString(),
       price: json['price'].toString(),
       finishDate: json['finished_date'].toString(),
@@ -168,7 +174,7 @@ class BoughtKonkursModel {
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded);
-      for (final Map product in responseJson) {
+      for (final product in _listOf(responseJson)) {
         tournamentList.add(BoughtKonkursModel.fromJson(product));
       }
       return tournamentList;
@@ -187,7 +193,7 @@ class GetBoughtKonkursByIDModel {
 
   factory GetBoughtKonkursByIDModel.fromJson(Map<dynamic, dynamic> json) {
     return GetBoughtKonkursByIDModel(
-      code: json['code'] ?? false,
+      code: json['code']?.toString() ?? '',
       konkursName: json['kon_name'].toString(),
       price: json['kon_price'].toString(),
     );
@@ -208,7 +214,7 @@ class GetBoughtKonkursByIDModel {
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final responseJson = json.decode(decoded);
-      for (final Map product in responseJson) {
+      for (final product in _listOf(responseJson)) {
         tournamentList.add(GetBoughtKonkursByIDModel.fromJson(product));
       }
       return tournamentList;
@@ -231,34 +237,23 @@ class HistoryIDModel {
   factory HistoryIDModel.fromJson(Map<dynamic, dynamic> json) {
     return HistoryIDModel(
       id: json['id'],
-      pubgID: json['pubg_id'],
-      status: json['status'] ?? 'pending',
-      price: json['price'].toString(),
-      note: json['note'],
-      created_date: json['created_date'],
-      cartItems: ((json['cart_items'] ?? []) as List).map((json) => CartItems.fromJson(json)).toList(),
+      pubgID: json['pubg_id']?.toString(),
+      status: '${json['status'] ?? 'pending'}',
+      price: '${json['price'] ?? 0}',
+      note: json['note']?.toString(),
+      created_date: json['created_date']?.toString(),
+      cartItems: (json['cart_items'] is List ? json['cart_items'] as List : const []).whereType<Map>().map((e) => CartItems.fromJson(Map<String, dynamic>.from(e))).toList(),
     );
   }
 
+  /// One order from `/carts/get-cart/{id}/`.
   Future<HistoryIDModel> getOrderByID(int id) async {
-    final token = await Auth().getToken();
-
-    final response = await http.get(
-      Uri.parse(
-        '$serverURL/api/carts/get-cart/$id/',
-      ),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final decoded = utf8.decode(response.bodyBytes);
-      final responseJson = json.decode(decoded);
-      return HistoryIDModel.fromJson(responseJson);
-    } else {
-      return HistoryIDModel();
+    final result = await UcdayyApi.getCart(id);
+    final data = result.data;
+    if (!result.ok || data is! Map) {
+      throw Exception(result.error ?? 'status ${result.statusCode}');
     }
+    return HistoryIDModel.fromJson(data);
   }
 }
 
@@ -268,10 +263,23 @@ class CartItems {
   final List<Codes>? code;
   final String? ucName;
   final String? ucImage;
-  CartItems({this.id, this.code, this.count, this.ucImage, this.ucName});
+
+  /// The price of one piece when the order was made (`this_time_price`).
+  final String? unitPrice;
+  CartItems({this.id, this.code, this.count, this.ucImage, this.ucName, this.unitPrice});
 
   factory CartItems.fromJson(Map<String, dynamic> json) {
-    return CartItems(id: json['id'], code: ((json['codes'] ?? []) as List).map((json) => Codes.fromJson(json)).toList(), count: json['count'], ucImage: json['image'], ucName: json['name']);
+    // The product is either flat on the item or nested under `uc`.
+    final uc = json['uc'] is Map ? Map<String, dynamic>.from(json['uc'] as Map) : const <String, dynamic>{};
+    final codes = json['codes'];
+    return CartItems(
+      id: json['id'],
+      code: codes is List ? codes.whereType<Map>().map((e) => Codes.fromJson(Map<String, dynamic>.from(e))).toList() : const [],
+      count: json['count'] is int ? json['count'] as int : int.tryParse('${json['count']}'),
+      ucImage: (json['image'] ?? uc['image'])?.toString(),
+      ucName: (json['name'] ?? json['title'] ?? uc['title'] ?? uc['name'])?.toString(),
+      unitPrice: (json['this_time_price'] ?? uc['price'])?.toString(),
+    );
   }
 }
 

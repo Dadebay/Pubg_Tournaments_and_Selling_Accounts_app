@@ -8,6 +8,7 @@ import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/notification_bell.dart';
 import 'package:game_app/views/home_page/balance_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,6 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../models/user_models/auth_model.dart';
 import '../../models/user_models/user_sign_in_model.dart';
 import '../cards/home_page_card.dart';
+import 'home_banner.dart';
 import 'pubg_types.dart';
 
 class HomePage extends StatefulWidget {
@@ -52,6 +54,9 @@ class _HomePageState extends State<HomePage> {
   void _onRefresh() async {
     final token = await Auth().getToken();
     log('Token in HomePage initState: ${token.toString()}');
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _futureBanners = BannerModel().getBanners();
     });
@@ -85,13 +90,16 @@ class _HomePageState extends State<HomePage> {
   dynamic getData() async {
     int a = 0;
     await AboutUsModel().getAboutUs().then((value) {
-      print(value);
       for (var element in value) {
         if (element.pageShow == true) {
           a++;
         }
       }
     });
+    // The page can be left while the request runs.
+    if (!mounted) {
+      return;
+    }
     if (a == 3) {
       showPage = true;
     }
@@ -177,7 +185,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
-        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: true, name: appName, elevationWhite: false),
+        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: false, icon: NotificationBell(), name: appName, elevationWhite: false),
         body: SmartRefresher(
           footer: footer(),
           controller: _refreshController,
@@ -191,19 +199,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: ListView(
             children: [
-              // FutureBuilder<List<BannerModel>>(
-              //   future: _futureBanners,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return SizedBox(height: size.height * 0.2, child: Center(child: spinKit()));
-              //     } else if (snapshot.hasError) {
-              //       return SizedBox(height: size.height * 0.2, child: Center(child: Text('bannerError'.tr)));
-              //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              //       return const SizedBox.shrink();
-              //     }
-              //     return Banners(future: _futureBanners);
-              //   },
-              // ),
+              HomeBanner(future: _futureBanners),
               showPage == false ? const BalanceCard() : const SizedBox(),
               listViewName('pubgTypes'.tr, false, size),
               PubgTypes(),

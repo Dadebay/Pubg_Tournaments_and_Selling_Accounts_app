@@ -1,4 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:game_app/views/constants/balance_chip.dart';
+import 'package:game_app/views/constants/catalog_empty_state.dart';
+import 'package:game_app/views/constants/centered_header.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/constants/constants.dart';
@@ -27,146 +32,120 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
     });
   }
 
+  String get _title => widget.filter == 'final'
+      ? 'final_tournament'.tr
+      : widget.filter == 'yarym_final'
+      ? 'pol_final'.tr
+      : 'qarterFinals'.tr;
+
   @override
   Widget build(BuildContext context) {
     final String imageUrl = '$serverURL${widget.tournament.image}';
 
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          widget.filter == 'final'
-              ? 'final_tournament'.tr
-              : widget.filter == 'yarym_final'
-              ? 'pol_final'.tr
-              : 'qarterFinals'.tr,
-          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
-        ),
-      ),
-      body: Consumer<TeamMembersProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator(color: kPrimaryColor));
-          }
-
-          if (provider.errorMessage != null) {
-            return Center(
-              child: Text(provider.errorMessage!, style: const TextStyle(color: Colors.red)),
-            );
-          }
-
-          // Group members by quartturnir name
-          final Map<String, List<TeamMember>> groupedTeams = {};
-          for (var member in provider.teamMembers) {
-            final groupName = member.quartturnir?.name ?? '';
-            if (groupName.isNotEmpty) {
-              groupedTeams.putIfAbsent(groupName, () => []);
-              groupedTeams[groupName]!.add(member);
-            }
-          }
-
-          final sortedGroups = groupedTeams.keys.toList()..sort();
-
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Tournament Header
-                Image.network(
-                  imageUrl,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 150,
-                      color: Colors.grey[800],
-                      child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            CenteredHeader(title: _title, onBack: Get.back, trailing: const BalanceChip()),
+            Expanded(
+              child: Consumer<TeamMembersProvider>(
+                builder: (context, provider, child) {
+                  if (provider.isLoading) {
+                    return const Center(child: CircularProgressIndicator(color: kPrimaryColor));
+                  }
+                  if (provider.errorMessage != null) {
+                    return Center(
+                      child: CatalogEmptyState(icon: Icons.cloud_off_rounded, title: provider.errorMessage!, description: ''),
                     );
-                  },
-                ),
+                  }
 
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // Group members by quartturnir name
+                  final Map<String, List<TeamMember>> groupedTeams = {};
+                  for (final member in provider.teamMembers) {
+                    final groupName = member.quartturnir?.name ?? '';
+                    if (groupName.isNotEmpty) {
+                      groupedTeams.putIfAbsent(groupName, () => []);
+                      groupedTeams[groupName]!.add(member);
+                    }
+                  }
+                  final sortedGroups = groupedTeams.keys.toList()..sort();
+
+                  final cards = <Widget>[];
+                  if (widget.filter == 'final') {
+                    if (sortedGroups.isNotEmpty) {
+                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[0], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[0]]!.first, static_g: ''));
+                    }
+                  } else if (widget.filter == 'yarym_final') {
+                    for (var i = 0; i < 2 && i < sortedGroups.length; i++) {
+                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[i], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[i]]!.first, static_g: i == 0 ? '' : 'B2'));
+                    }
+                  } else {
+                    for (final groupName in sortedGroups) {
+                      final members = groupedTeams[groupName]!;
+                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: groupName, teamCount: members.length, tournament: widget.tournament, member: members.first, static_g: ''));
+                    }
+                  }
+
+                  return ListView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
                     children: [
-                      Text(
-                        widget.tournament.nameTm,
-                        style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 22, color: Colors.white),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Filters
-                      if (widget.filter == 'final')
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 1,
-                          itemBuilder: (context, index) {
-                            final groupName = sortedGroups[index];
-                            final members = groupedTeams[groupName]!;
-                            return QuarterGroupCard(filter: widget.filter, groupName: groupName, teamCount: 25, tournament: widget.tournament, member: members.first, static_g: '');
-                          },
-                        ),
-
-                      if (widget.filter == 'yarym_final')
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 2,
-                          itemBuilder: (context, index) {
-                            final groupName = sortedGroups[index];
-                            final members = groupedTeams[groupName]!;
-                            // final teams = ['B1', 'B2'];
-                            // final groupName = teams[index];
-                            // final member = provider.teamMembers[index];
-
-                            return QuarterGroupCard(filter: widget.filter, groupName: groupName, teamCount: 25, tournament: widget.tournament, member: members.first, static_g: index == 0 ? '' : 'B2');
-                          },
-                        ),
-
-                      if (widget.filter == 'tournament')
-                        if (sortedGroups.isEmpty)
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(32),
-                              child: Text('noGroupsFound'.tr, style: TextStyle(color: Colors.grey[400])),
-                            ),
-                          )
-                        else
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: sortedGroups.length,
-                            itemBuilder: (context, index) {
-                              final groupName = sortedGroups[index];
-                              final members = groupedTeams[groupName]!;
-
-                              return QuarterGroupCard(
-                                filter: widget.filter,
-                                groupName: groupName,
-                                teamCount: members.length,
-                                tournament: widget.tournament,
-                                member: members.first,
-                                static_g: '', // take first member
-                              );
-                            },
+                      _hero(imageUrl),
+                      const SizedBox(height: 18),
+                      if (cards.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Center(
+                            child: CatalogEmptyState(icon: Icons.groups_outlined, title: 'noGroupsFound'.tr, description: ''),
                           ),
+                        )
+                      else
+                        ...cards,
                     ],
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
+    );
+  }
+
+  /// The poster has its own lettering, so it is shown clean and the name goes below it.
+  Widget _hero(String imageUrl) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(26),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+          ),
+          child: AspectRatio(
+            aspectRatio: 1.9,
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
+              errorWidget: (context, url, error) => const ColoredBox(color: Color(0xFF1B1B1E)),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            widget.tournament.nameTm,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22, height: 1.1),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -204,10 +183,9 @@ class QuarterGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = [filter == 'final' ? Colors.green : Colors.orange, Colors.blue, Colors.green, Colors.purple, Colors.red, Colors.teal, Colors.pink, Colors.amber];
-
+    const colors = [Color(0xFFFFC83D), Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFFA78BFA), Color(0xFFFF5A5F), Color(0xFF2DD4BF), Color(0xFFF472B6), Color(0xFFFF9800)];
     final colorIndex = int.tryParse(groupName.replaceAll(RegExp(r'\D'), '')) ?? 0;
-    final color = colors[colorIndex % colors.length];
+    final color = filter == 'final' ? const Color(0xFF34D399) : colors[colorIndex % colors.length];
     final String start;
     final String finish;
     final String dataDay;
@@ -231,107 +209,77 @@ class QuarterGroupCard extends StatelessWidget {
         Get.to(() => TournamentDetailPage(filter: filter, tournament: tournament, groupName: groupName, members: member, static_g: static_g));
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 10),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [color.withValues(alpha: 0.25), color.withValues(alpha: 0.05)], begin: Alignment.centerLeft, end: Alignment.centerRight),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.4), width: 1.5),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF151517)]),
         ),
-        child: Row(
-          children: [
-            // Group Circle
-            Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-                border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
-              ),
-              child: Center(
-                child: Text(
-                  groupName,
-                  style: TextStyle(fontFamily: gilroySemiBold, fontSize: 26, color: color),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // A colored edge tells the groups apart without coloring the whole card.
+              Container(width: 5, color: color),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 54,
+                        height: 54,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), color: color.withValues(alpha: 0.15)),
+                        child: Text(groupName, style: TextStyle(fontFamily: gilroyBold, fontSize: 22, color: color)),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${'group'.tr}$groupName',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: Color(0xFF8E8E98), size: 14, strokeWidth: 1.8),
+                                const SizedBox(width: 5),
+                                Flexible(
+                                  child: Text(
+                                    '$dataDay · $start-$finish',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12.5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('$teamCount', style: TextStyle(fontFamily: gilroyBold, fontSize: 20, color: color, height: 1)),
+                          const SizedBox(height: 3),
+                          Text('Team'.tr, style: const TextStyle(fontFamily: gilroyMedium, fontSize: 11, color: Color(0xFF8E8E98), height: 1)),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white38, size: 20, strokeWidth: 2),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 16),
-
-            // Info Section
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${'group'.tr}$groupName',
-                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Icon(Icons.groups, size: 16, color: Colors.grey[400]),
-                      const SizedBox(width: 6),
-                      Text('$teamCount ${teamCount == 1 ? 'Team'.tr : 'Team'.tr}', style: TextStyle(color: Colors.grey[400], fontSize: 14)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Start Time
-                  Row(
-                    children: [
-                      Icon(Icons.calendar_month, size: 14, color: Colors.grey[400]),
-                      const SizedBox(width: 4),
-                      Text(dataDay, style: TextStyle(color: Colors.grey[400], fontSize: 12)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.play_arrow, size: 14, color: Colors.grey[400]),
-                      const SizedBox(width: 4),
-                      Text('Açyldy: $start', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-
-                  // Finish Time
-                  Row(
-                    children: [
-                      Icon(Icons.flag, size: 14, color: Colors.grey[400]),
-                      const SizedBox(width: 4),
-                      Text('Başlanýar: $finish', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Stage Label
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: color.withValues(alpha: 0.4)),
-                    ),
-                    child: Text(
-                      filter == 'yarym_final'
-                          ? 'pol_final'.tr
-                          : filter == 'final'
-                          ? 'final_tournament'.tr
-                          : 'qarterFinals'.tr,
-                      style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Arrow Icon
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
-              child: Icon(Icons.arrow_forward_ios, color: color, size: 18),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -4,7 +4,11 @@ import 'package:game_app/controllers/tournament_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/cards/new_tornament_card.dart';
+import 'package:game_app/views/constants/balance_chip.dart';
+import 'package:game_app/views/constants/catalog_empty_state.dart';
+import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/shimmer.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/home_page/paymant/data/tournament_provider.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +65,9 @@ class _TournamentPageState extends State<TournamentPage> {
     }
   }
 
-  TabBar tabbar() {
+  static const _listPadding = EdgeInsets.only(top: 4, bottom: 120);
+
+  Widget tabbar() {
     final List<Tab> tabs = [];
 
     // Always show 'tournament'
@@ -77,26 +83,40 @@ class _TournamentPageState extends State<TournamentPage> {
       tabs.add(Tab(text: 'prizeWinners'.tr));
     }
 
-    return TabBar(
-      isScrollable: widget.tournamentType == 2 ? false : true,
-      tabAlignment: widget.tournamentType == 2 ? TabAlignment.fill : TabAlignment.start,
-      labelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20),
-      unselectedLabelStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
-      labelColor: kPrimaryColor,
-      unselectedLabelColor: Colors.grey,
-      labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicatorColor: kPrimaryColor,
-      indicatorWeight: 2,
-      tabs: tabs,
+    return Container(
+      height: 46,
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1B1B1E),
+        borderRadius: BorderRadius.circular(23),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+      ),
+      child: TabBar(
+        isScrollable: widget.tournamentType != 2,
+        tabAlignment: widget.tournamentType == 2 ? TabAlignment.fill : TabAlignment.start,
+        dividerColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+        labelStyle: const TextStyle(fontFamily: gilroyBold, fontSize: 14),
+        unselectedLabelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 14),
+        labelColor: Colors.black,
+        unselectedLabelColor: Colors.white70,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 18),
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(19),
+          gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+        ),
+        tabs: tabs,
+      ),
     );
   }
 
   Widget page2(int length) {
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemExtent: 220,
+      padding: _listPadding,
       itemCount: length,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
@@ -109,7 +129,7 @@ class _TournamentPageState extends State<TournamentPage> {
     final provider = Provider.of<TournamentProvider>(context);
 
     if (provider.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return _skeleton();
     }
     if (provider.tournaments.isEmpty) {
       return emptyPage();
@@ -117,7 +137,7 @@ class _TournamentPageState extends State<TournamentPage> {
 
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      itemExtent: 220,
+      padding: _listPadding,
       itemCount: provider.tournaments.length,
       itemBuilder: (context, index) {
         final t = provider.tournaments[index];
@@ -129,7 +149,7 @@ class _TournamentPageState extends State<TournamentPage> {
   Widget page1(int length) {
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      itemExtent: 220,
+      padding: _listPadding,
       itemCount: length,
       itemBuilder: (context, index) {
         return TournamentCard(index: index, finised: false, tournamentType: widget.tournamentType, tournamentModel: TournamentModel.fromJson(controller.tournamentList[index]));
@@ -138,7 +158,27 @@ class _TournamentPageState extends State<TournamentPage> {
   }
 
   Widget emptyPage() {
-    return Center(child: noData('cannot_find_data_tournament'));
+    return Center(
+      child: CatalogEmptyState(
+        icon: widget.tournamentType == 1 ? Icons.emoji_events_outlined : Icons.sports_esports_outlined,
+        title: 'cannot_find_data_tournament'.tr,
+        description: '',
+      ),
+    );
+  }
+
+  Widget _skeleton() {
+    return Shimmer(
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+        children: [
+          const ShimmerBlock(height: 46, radius: 23),
+          const SizedBox(height: 14),
+          for (var i = 0; i < 3; i++) ...const [ShimmerBlock(height: 200, radius: 28), SizedBox(height: 16)],
+        ],
+      ),
+    );
   }
 
   void _onRefresh() async {
@@ -186,18 +226,25 @@ class _TournamentPageState extends State<TournamentPage> {
 
     return DefaultTabController(
       length: tabLength,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: MyAppBar(fontSize: 22.0, backArrow: true, iconRemove: false, icon: userAppBarMoney(), name: 'tournament', elevationWhite: true),
-          backgroundColor: kPrimaryColorBlack,
-          body: SmartRefresher(
-            footer: footer(),
-            controller: _refreshController,
-            onRefresh: _onRefresh,
-            enablePullDown: true,
-            enablePullUp: false,
-            header: const MaterialClassicHeader(color: kPrimaryColor),
-            child: widget.tournamentType == 1 ? _buildProviderBody() : _buildGetXBody(),
+      child: Scaffold(
+        backgroundColor: kPrimaryColorBlack,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              CenteredHeader(title: widget.tournamentType == 1 ? 'Turnir' : 'Lobbi', onBack: Get.back, trailing: const BalanceChip()),
+              Expanded(
+                child: SmartRefresher(
+                  footer: footer(),
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: const MaterialClassicHeader(color: kPrimaryColor),
+                  child: widget.tournamentType == 1 ? _buildProviderBody() : _buildGetXBody(),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -210,12 +257,12 @@ class _TournamentPageState extends State<TournamentPage> {
 
     // Show loading while fetching
     if (provider.isLoading) {
-      return Center(child: spinKit());
+      return _skeleton();
     }
 
     // Show error if there's an error message
     if (provider.errorMessage != null) {
-      return Center(child: Text(provider.errorMessage ?? 'cannot_find_data_tournament'));
+      return emptyPage();
     }
 
     // Show tabs once data is loaded
@@ -231,9 +278,9 @@ class _TournamentPageState extends State<TournamentPage> {
   Widget _buildGetXBody() {
     return Obx(() {
       if (controller.tournamentLoading.value == 0) {
-        return Center(child: spinKit());
+        return _skeleton();
       } else if (controller.tournamentLoading.value == 1) {
-        return const Center(child: Text('cannot_find_data_tournament'));
+        return emptyPage();
       }
 
       return Column(

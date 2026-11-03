@@ -3,13 +3,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:game_app/models/transfer.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/utils/api_logger.dart';
+import 'package:game_app/views/constants/constants.dart';
 import 'package:dio/dio.dart';
 
 class TransferProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
-  final Dio _dio = Dio();
+  final Dio _dio = ApiLog.newDio();
   List<Transfer> _transfers = [];
 
   bool get isLoading => _isLoading;
@@ -25,7 +27,7 @@ class TransferProvider with ChangeNotifier {
     _successMessage = null;
     notifyListeners();
 
-    final dio = Dio();
+    final dio = ApiLog.newDio();
     const url = 'http://216.250.11.240/api/sendpoint/';
     final token = await Auth().getToken();
 
@@ -93,7 +95,7 @@ class TransferProvider with ChangeNotifier {
       final token = await Auth().getToken();
 
       final response = await _dio.get(
-        'http://ucdayy.com.tm/api/sendpoint/',
+        '$serverURL/api/sendpoint/',
         options: Options(
           headers: {
             HttpHeaders.authorizationHeader: 'Bearer $token',

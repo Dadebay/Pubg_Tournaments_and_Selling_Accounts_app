@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
+import 'package:game_app/views/constants/catalog_empty_state.dart';
+import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
-import 'package:flutter/services.dart';
+const _gold = Color(0xFFFFC83D);
+const _green = Color(0xFF34D399);
 
+/// The registered team of a slot: its players, and, for the team's owner, the
+/// lobby id and the room code.
 class TeamRegistrationScreenDetail extends StatefulWidget {
   final TeamMember teamMember;
   final int tournamentId;
@@ -18,234 +25,171 @@ class TeamRegistrationScreenDetail extends StatefulWidget {
 
 class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDetail> {
   bool _isVisible = false;
+
+  /// The signed-in user owns this team when the team they registered has the same players.
+  bool _isOwner(GetMeModel user) {
+    final team = (user.teams != null && user.teams!.isNotEmpty) ? user.teams!.first : null;
+    final member = widget.teamMember;
+    if (team == null) {
+      return false;
+    }
+    final filled = (team.account?.isNotEmpty ?? false) && (team.user1?.isNotEmpty ?? false) && (team.user2?.isNotEmpty ?? false) && (team.user3?.isNotEmpty ?? false) && member.account.isNotEmpty && member.user1.isNotEmpty && member.user2.isNotEmpty && member.user3.isNotEmpty;
+    return filled && team.account == member.account && team.user1 == member.user1 && team.user2 == member.user2 && team.user3 == member.user3;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          widget.teamMember.name ?? '',
-          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
-        ),
-      ),
-      body: FutureBuilder<GetMeModel>(
-        future: GetMeModel().getMe(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While loading, show a loader
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            // If API call failed
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data == null) {
-            // If data is null
-            return const Center(child: Text('No user data available'));
-          }
-
-          final user = snapshot.data!; // now safe to use
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Card
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [kPrimaryColor.withValues(alpha: 0.2), kPrimaryColor.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: kPrimaryColor.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            CenteredHeader(title: widget.teamMember.name ?? '', onBack: Get.back),
+            Expanded(
+              child: FutureBuilder<GetMeModel>(
+                future: GetMeModel().getMe(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator(color: _gold));
+                  }
+                  if (snapshot.hasError || snapshot.data == null) {
+                    return Center(
+                      child: CatalogEmptyState(icon: Icons.cloud_off_rounded, title: 'errorLoadData'.tr, description: ''),
+                    );
+                  }
+                  final owner = _isOwner(snapshot.data!);
+                  final member = widget.teamMember;
+                  return ListView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
                     children: [
+                      _headerCard(owner),
+                      const SizedBox(height: 22),
+                      Text('Team Players'.tr, style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white)),
+                      const SizedBox(height: 12),
+                      _player('Player 1'.tr, member.account),
+                      _player('Player 2'.tr, member.user1),
+                      _player('Player 3'.tr, member.user2),
+                      _player('Player 4'.tr, member.user3),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: kPrimaryColor.withValues(alpha: 0.2), shape: BoxShape.circle),
-                        child: const Icon(Icons.group, color: kPrimaryColor, size: 32),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(color: _green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: _green.withValues(alpha: 0.3))),
+                        child: Row(
                           children: [
-                            Text(
-                              'Registered Team'.tr,
-                              style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            Text('View your team information'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                            Row(
-                              children: [
-                                const Text(
-                                  'LobbiID: ',
-                                  style: TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
-                                ),
-                                if (user.teams != null &&
-                                    user.teams!.isNotEmpty &&
-                                    user.teams!.first.account?.isNotEmpty == true &&
-                                    user.teams!.first.user1?.isNotEmpty == true &&
-                                    user.teams!.first.user2?.isNotEmpty == true &&
-                                    user.teams!.first.user3?.isNotEmpty == true &&
-                                    widget.teamMember.account.isNotEmpty == true &&
-                                    widget.teamMember.user1.isNotEmpty == true &&
-                                    widget.teamMember.user2.isNotEmpty == true &&
-                                    widget.teamMember.user3.isNotEmpty == true &&
-                                    user.teams!.first.account == widget.teamMember.account &&
-                                    user.teams!.first.user1 == widget.teamMember.user1 &&
-                                    user.teams!.first.user2 == widget.teamMember.user2 &&
-                                    user.teams!.first.user3 == widget.teamMember.user3)
-                                  CopyableText(lobbiId: widget.teamMember.quartturnir?.lobbiId),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                if (user.teams != null &&
-                                    user.teams!.isNotEmpty &&
-                                    user.teams!.first.account?.isNotEmpty == true &&
-                                    user.teams!.first.user1?.isNotEmpty == true &&
-                                    user.teams!.first.user2?.isNotEmpty == true &&
-                                    user.teams!.first.user3?.isNotEmpty == true &&
-                                    widget.teamMember.account.isNotEmpty == true &&
-                                    widget.teamMember.user1.isNotEmpty == true &&
-                                    widget.teamMember.user2.isNotEmpty == true &&
-                                    widget.teamMember.user3.isNotEmpty == true &&
-                                    user.teams!.first.account == widget.teamMember.account &&
-                                    user.teams!.first.user1 == widget.teamMember.user1 &&
-                                    user.teams!.first.user2 == widget.teamMember.user2 &&
-                                    user.teams!.first.user3 == widget.teamMember.user3)
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: kAccentColor, // button color
-                                      foregroundColor: Colors.black, // text color
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isVisible = !_isVisible;
-                                      });
-                                    },
-                                    child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr)),
-                                  ),
-                                const SizedBox(width: 10),
-                                if (_isVisible)
-                                  Text(
-                                    widget.teamMember.quartturnir?.code ?? 'Unknown Code',
-                                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
-                                  ),
-                              ],
+                            const Icon(Icons.check_circle_rounded, color: _green, size: 22),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text('Team successfully registered for tournament'.tr, style: const TextStyle(color: _green, fontFamily: gilroyMedium, fontSize: 13)),
                             ),
                           ],
                         ),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Account Info
-                _buildInfoCard(label: 'Account Name'.tr, value: widget.teamMember.name ?? '', icon: Icons.account_circle),
-                const SizedBox(height: 20),
-
-                // Players Section Header
-                Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 24,
-                      decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(2)),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Team Players'.tr,
-                      style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // Player 3
-                _buildInfoCard(label: 'Player 1'.tr, value: widget.teamMember.account, icon: Icons.person_outline),
-                const SizedBox(height: 20),
-
-                // Player 1
-                _buildInfoCard(label: 'Player 2'.tr, value: widget.teamMember.user1, icon: Icons.person),
-                const SizedBox(height: 20),
-
-                // Player 2
-                _buildInfoCard(label: 'Player 3'.tr, value: widget.teamMember.user2, icon: Icons.person_outline),
-                const SizedBox(height: 20),
-
-                // Player 3
-                _buildInfoCard(label: 'Player 4'.tr, value: widget.teamMember.user3, icon: Icons.person_outline),
-
-                const SizedBox(height: 32),
-
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.check_circle_outline, color: Colors.green[300], size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text('Team successfully registered for tournament'.tr, style: TextStyle(color: Colors.green[300], fontSize: 13)),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildInfoCard({required String label, required String value, required IconData icon}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-          decoration: BoxDecoration(
-            color: Colors.grey[900],
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey[800]!, width: 1),
-          ),
-          child: Row(
+  Widget _headerCard(bool owner) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: _gold.withValues(alpha: 0.28)),
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2A2416), Color(0xFF141416)]),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Icon(icon, color: kPrimaryColor, size: 22),
-              const SizedBox(width: 16),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.16), border: Border.all(color: _gold.withValues(alpha: 0.5))),
+                child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, color: _gold, size: 24, strokeWidth: 1.8)),
+              ),
+              const SizedBox(width: 14),
               Expanded(
-                child: Text(value, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Registered Team'.tr, style: const TextStyle(fontFamily: gilroyBold, fontSize: 20, color: Colors.white)),
+                    const SizedBox(height: 2),
+                    Text('View your team information'.tr, style: const TextStyle(fontFamily: gilroyRegular, fontSize: 14, color: Color(0xFFB8B8C0))),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      ],
+          if (owner) ...[
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Text('LobbiID: ', style: TextStyle(fontFamily: gilroyBold, fontSize: 16, color: _green)),
+                CopyableText(lobbiId: widget.teamMember.quartturnir?.lobbiId),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => setState(() => _isVisible = !_isVisible),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: _gold),
+                    child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr, style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 13, height: 1.1)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                if (_isVisible)
+                  Flexible(
+                    child: Text(
+                      '${widget.teamMember.quartturnir?.code ?? 'Unknown Code'}',
+                      style: const TextStyle(color: Color(0xFFFF5A5F), fontFamily: gilroyBold, fontSize: 15),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _player(String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF161618)]),
+      ),
+      child: Row(
+        children: [
+          const HugeIcon(icon: HugeIcons.strokeRoundedUser, color: _gold, size: 20, strokeWidth: 1.8),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12)),
+                const SizedBox(height: 2),
+                Text(value.isEmpty ? '-' : value, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16)),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -264,11 +208,12 @@ class CopyableText extends StatelessWidget {
       children: [
         Text(
           textToCopy,
-          style: const TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: _green, fontFamily: gilroyBold),
         ),
         const SizedBox(width: 6),
         IconButton(
-          icon: const Icon(Icons.copy, size: 20, color: Colors.grey),
+          visualDensity: VisualDensity.compact,
+          icon: const Icon(Icons.copy_rounded, size: 18, color: Colors.white54),
           onPressed: () {
             if (textToCopy.isNotEmpty) {
               Clipboard.setData(ClipboardData(text: textToCopy));

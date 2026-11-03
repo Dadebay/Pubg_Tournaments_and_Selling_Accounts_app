@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:game_app/provider/getkonkur.dart';
+import 'package:game_app/utils/api_logger.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:game_app/views/constants/notification_service.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/home_page/paymant/data/tournament_provider.dart';
@@ -26,7 +30,16 @@ Future<void> backgroundNotificationHandler(RemoteMessage message) async {
   return;
 }
 
-Future<void> main() async {
+void main() {
+  if (kDebugMode) {
+    // Every `http.get` / `http.post` of the app goes through the colored logger.
+    http.runWithClient(_main, () => LoggingClient(IOClient()));
+  } else {
+    _main();
+  }
+}
+
+Future<void> _main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   HttpOverrides.global = MyHttpOverrides();

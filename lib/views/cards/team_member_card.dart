@@ -1,6 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:game_app/models/team_member.dart';
-import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/constants.dart';
+import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
+const _gold = Color(0xFFFFC83D);
+
+/// A team slot of a group: its number, name, group badge and the players.
+/// An empty slot is marked "free" and invites the user to take it.
 class TeamMemberCard extends StatelessWidget {
   final TeamMember member;
   final int index;
@@ -13,13 +20,18 @@ class TeamMemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final players = [member.account, member.user1, member.user2, member.user3].where((e) => e.isNotEmpty).toList();
+    final free = member.user1.isEmpty && member.user2.isEmpty && member.user3.isEmpty;
+    final color = free ? const Color(0xFF34D399) : _gold;
+    final group = member.quartturnir?.name ?? '';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: free ? const Color(0xFF34D399).withValues(alpha: 0.35) : Colors.white.withValues(alpha: 0.07)),
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF161618)]),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,134 +39,61 @@ class TeamMemberCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: kPrimaryColor.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(
-                    color: kPrimaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.15), border: Border.all(color: color.withValues(alpha: 0.5))),
+                child: Text('${index + 1}', style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 16)),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${member.name  ?? ''} Team'  ?? '',
-                      style: const TextStyle(
-                        fontFamily: gilroySemiBold,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    if (member.user1.isEmpty || member.user2.isEmpty || member.user3.isEmpty)
-                      Text(
-                        'Bos'.tr,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red[400],
-                        ),
-                      ),
-                    // if (member.account.isNotEmpty)
-                    //   Text(
-                    //     member.account,
-                    //     style: TextStyle(
-                    //       fontSize: 12,
-                    //       color: Colors.grey[400],
-                    //     ),
-                    //   ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: member.quartturnir == 'A1' ? Colors.orange.withOpacity(0.2) : Colors.green.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
                 child: Text(
-                  member.quartturnir?.name ?? '',
-                  style: TextStyle(
-                    color: member.quartturnir == 'A1' ? Colors.orange : Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
+                  '${member.name ?? ''} Team',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontFamily: gilroyBold, fontSize: 17, color: Colors.white),
                 ),
               ),
+              if (free)
+                _pill('Bos'.tr, const Color(0xFF34D399))
+              else if (group.isNotEmpty)
+                _pill(group, _gold),
+              const SizedBox(width: 8),
+              HugeIcon(icon: free ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedArrowRight01, color: free ? const Color(0xFF34D399) : Colors.white38, size: 20, strokeWidth: 2),
             ],
           ),
-          if (member.user1.isNotEmpty || member.user2.isNotEmpty || member.user3.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(color: Colors.grey),
-                  const SizedBox(height: 8),
-                  if (member.account.isNotEmpty) _buildUserRow(Icons.person, member.account),
-                  if (member.user1.isNotEmpty) _buildUserRow(Icons.person, member.user1),
-                  if (member.user2.isNotEmpty) _buildUserRow(Icons.person, member.user2),
-                  if (member.user3.isNotEmpty) _buildUserRow(Icons.person, member.user3),
-                ],
-              ),
+          if (players.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [for (final name in players) _player(name)],
             ),
-          // if (member.halfturnir != null || member.finalturnir != null)
-          //   Padding(
-          //     padding: const EdgeInsets.only(top: 8),
-          //     child: Row(
-          //       children: [
-          //         if (member.halfturnir != null) _buildStageChip('Half', member.halfturnir!),
-          //         if (member.halfturnir != null && member.finalturnir != null) const SizedBox(width: 8),
-          //         if (member.finalturnir != null) _buildStageChip('Final', member.finalturnir!),
-          //       ],
-          //     ),
-          //   ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildUserRow(IconData icon, String username) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 14, color: Colors.grey[400]),
-          const SizedBox(width: 8),
-          Text(
-            username,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[300],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStageChip(String label, dynamic value) {
+  Widget _pill(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        '$label: $value',
-        style: const TextStyle(
-          color: Colors.blue,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12), border: Border.all(color: color.withValues(alpha: 0.4))),
+      child: Text(text, style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 12, height: 1.1)),
+    );
+  }
+
+  Widget _player(String name) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.07), borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Color(0xFFB8B8C0), size: 13, strokeWidth: 1.8),
+          const SizedBox(width: 6),
+          Text(name, style: const TextStyle(color: Color(0xFFE0E0E6), fontFamily: gilroySemiBold, fontSize: 13, height: 1.1)),
+        ],
       ),
     );
   }

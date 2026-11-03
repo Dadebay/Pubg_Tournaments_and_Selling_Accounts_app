@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+import 'centered_header.dart';
 import 'constants.dart';
 
 const _gold = Color(0xFFFFC83D);
@@ -107,7 +108,7 @@ class SegmentedTabs extends StatelessWidget {
 /// A page whose header scrolls away with the content while the tab bar stays
 /// pinned to the top: scrolling up hides the title and the tabs take its place.
 class CollapsingTabsPage extends StatelessWidget {
-  const CollapsingTabsPage({required this.title, required this.tabs, required this.selectedIndex, required this.onTabChanged, required this.body, this.subtitle, this.actions, this.onBack, this.onRefresh, this.bottomPadding = 0, super.key});
+  const CollapsingTabsPage({required this.title, required this.tabs, required this.selectedIndex, required this.onTabChanged, required this.body, this.subtitle, this.actions, this.onBack, this.onRefresh, this.bottomPadding = 0, this.titleSize = 26, this.centerTitle = false, super.key});
 
   /// Translation key of the page title.
   final String title;
@@ -123,6 +124,12 @@ class CollapsingTabsPage extends StatelessWidget {
   final Future<void> Function()? onRefresh;
   final double bottomPadding;
 
+  /// Font size of the page title.
+  final double titleSize;
+
+  /// Centers the title between the back button and the actions.
+  final bool centerTitle;
+
   @override
   Widget build(BuildContext context) {
     final scroll = CustomScrollView(
@@ -135,26 +142,35 @@ class CollapsingTabsPage extends StatelessWidget {
         ),
         // A plain box adapter, not SliverFillRemaining: that one asks its child for
         // intrinsic sizes, which a shrink-wrapped grid or a Stack cannot give.
-        SliverToBoxAdapter(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            switchInCurve: Curves.easeOutCubic,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween(begin: const Offset(0, 0.025), end: Offset.zero).animate(animation),
-                child: child,
+        // The body gets the viewport height left under the tabs as its minimum, so
+        // a `Center` in it (an empty or loading state) is centered in the page.
+        SliverLayoutBuilder(
+          builder: (context, constraints) {
+            final minHeight = (constraints.viewportMainAxisExtent - constraints.precedingScrollExtent - bottomPadding).clamp(0.0, double.infinity);
+            return SliverToBoxAdapter(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                switchInCurve: Curves.easeOutCubic,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween(begin: const Offset(0, 0.025), end: Offset.zero).animate(animation),
+                    child: child,
+                  ),
+                ),
+                layoutBuilder: (current, previous) => Stack(alignment: Alignment.topCenter, children: [...previous, ?current]),
+                child: KeyedSubtree(
+                  key: ValueKey(selectedIndex),
+                  child: Column(
+                    children: [
+                      ConstrainedBox(constraints: BoxConstraints(minHeight: minHeight), child: body),
+                      SizedBox(height: bottomPadding),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            layoutBuilder: (current, previous) => Stack(alignment: Alignment.topCenter, children: [...previous, ?current]),
-            child: KeyedSubtree(
-              key: ValueKey(selectedIndex),
-              child: Padding(
-                padding: EdgeInsets.only(bottom: bottomPadding),
-                child: body,
-              ),
-            ),
-          ),
+            );
+          },
         ),
       ],
     );
@@ -167,6 +183,9 @@ class CollapsingTabsPage extends StatelessWidget {
   }
 
   Widget _header() {
+    if (centerTitle) {
+      return CenteredHeader(title: title.tr, onBack: onBack, trailing: actions, size: titleSize);
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 6),
       child: Row(
@@ -190,7 +209,7 @@ class CollapsingTabsPage extends StatelessWidget {
                   title.tr,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 26),
+                  style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: titleSize),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
@@ -235,7 +254,7 @@ class _TabsHeader extends SliverPersistentHeaderDelegate {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.black,
           // A hairline appears only once content scrolls beneath the pinned tabs.

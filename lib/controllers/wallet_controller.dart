@@ -65,14 +65,18 @@ class WalletController extends GetxController {
     storage.write('cart', cartList);
   }
 
+  /// Shows [points] (a string such as "1000.00") as the balance; anything that
+  /// is not a number, e.g. from a failed request, shows 0.
+  void setMoneyFromPoints(String? points) {
+    userMoney.value = (points == null || double.tryParse(points) == null) ? '0' : points;
+  }
+
   dynamic getUserMoney() async {
     final token = await Auth().getToken();
     if (token == null) {
       userMoney.value = '0';
     } else {
-      await PostByIdModel().getMe().then((value) {
-        userMoney.value = value.points.toString();
-      });
+      await PostByIdModel().getMe().then((value) => setMoneyFromPoints(value.points));
     }
   }
 }

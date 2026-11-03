@@ -22,7 +22,10 @@ class BannerModel {
   });
 
   factory BannerModel.fromJson(Map<dynamic, dynamic> json) {
-    return BannerModel(id: json['id'], image: json['image'] ?? '', title: json['title'] ?? '', content: json['content'] ?? '', url: json['url'] ?? '');
+    final isRu = Get.locale?.languageCode == 'ru';
+    // The text may come per language (`title_tm` / `title_ru`) or as a plain field.
+    String text(String name) => '${json['${name}_${isRu ? 'ru' : 'tm'}'] ?? json[name] ?? ''}';
+    return BannerModel(id: json['id'], image: json['image']?.toString() ?? '', title: text('title'), content: json['content_tm'] != null || json['content_ru'] != null ? text('content') : '${json['content'] ?? json['description'] ?? ''}', url: json['url']?.toString() ?? '');
   }
 
   Future<List<BannerModel>> getBanners() async {
@@ -38,7 +41,9 @@ class BannerModel {
     );
     if (response.statusCode == 200) {
       final responseJson = json.decode(utf8.decode(response.bodyBytes));
-      for (final Map product in responseJson) {
+      // A bare list, or `{ results: [...] }` when paged.
+      final list = responseJson is Map ? responseJson['results'] : responseJson;
+      for (final product in list is List ? list.whereType<Map>() : const <Map>[]) {
         bannerList.add(BannerModel.fromJson(product));
       }
       return bannerList;

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:game_app/controllers/settings_controller.dart';
+import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/user_models/referal_model.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:http/http.dart' as http;
@@ -305,10 +306,10 @@ class GetMeModel {
       image: json['image'] ?? 'null',
       nickname: json['pubg_username'] ?? 'null',
       phone: json['phone'] ?? 'null',
-      points: json['points'] ?? 'null',
+      points: json['points']?.toString() ?? 'null',
       used_ref_code: json['used_ref_code'] ?? '',
       ref_code: json['ref_code'] ?? '',
-      pointsFromTurnir: json['points_from_turnir'] ?? 'null',
+      pointsFromTurnir: json['points_from_turnir']?.toString() ?? 'null',
       price: json['price'] ?? 'null',
       pubgId: json['pubg_id'] ?? 'null',
       updatedDate: json['updated_date'] ?? 'null',
@@ -317,6 +318,13 @@ class GetMeModel {
   }
 
   
+
+  /// Loads my account and shows its points as the balance of the app.
+  Future<GetMeModel> getMeAndBalance() async {
+    final me = await getMe();
+    Get.find<WalletController>().setMoneyFromPoints(me.points);
+    return me;
+  }
 
   Future<GetMeModel> getMe() async {
     final token = await Auth().getToken();

@@ -9,6 +9,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
   final Widget? icon;
   final bool iconRemove;
   final String name;
+  final double dividerOpacity;
 
   const MyAppBar({
     required this.fontSize,
@@ -17,6 +18,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
     required this.name,
     required this.elevationWhite,
     this.icon,
+    this.dividerOpacity = 1.0,
     super.key,
   });
 
@@ -75,7 +77,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
             ),
           ),
         ),
-        elevationWhite ? customDivider() : SizedBox.shrink(),
+        elevationWhite ? Opacity(opacity: dividerOpacity, child: customDivider()) : SizedBox.shrink(),
       ],
     );
   }

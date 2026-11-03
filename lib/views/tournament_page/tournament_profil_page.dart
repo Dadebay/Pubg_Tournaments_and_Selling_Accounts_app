@@ -6,7 +6,10 @@ import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/tournament_page/tab_page1.dart';
 import 'package:game_app/views/tournament_page/tab_page2.dart';
 
+import 'package:hugeicons/hugeicons.dart';
+
 import '../../controllers/settings_controller.dart';
+import '../constants/catalog_empty_state.dart';
 import '../constants/index.dart';
 import 'tab_page3.dart';
 
@@ -68,7 +71,7 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
             future: TournamentModel().getTournamentID(widget.tournamentId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: spinKit());
+                return const Center(child: CircularProgressIndicator(color: Color(0xFFFFC83D)));
               } else if (snapshot.hasError) {
                 return errorData(onTap: () {});
               } else if (snapshot.data == null) {
@@ -86,11 +89,8 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
                     model: snapshot.data!,
                   ),
                   snapshot.data!.participated_users!.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text('tournamentInfo13'.tr),
-                          ),
+                      ? Center(
+                          child: CatalogEmptyState(icon: Icons.groups_outlined, title: 'tournamentInfo13'.tr, description: ''),
                         )
                       : TabPage3(
                           tournamentType: widget.tournamentType,
@@ -111,78 +111,88 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
   SliverAppBar appBar() {
     return SliverAppBar(
       expandedHeight: 300,
-      floating: true,
       pinned: true,
       automaticallyImplyLeading: false,
       backgroundColor: kPrimaryColorBlack,
-      centerTitle: true,
+      surfaceTintColor: Colors.transparent,
       systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-      leading: GestureDetector(
-        onTap: () {
-          Get.back();
-        },
-        child: const Icon(
-          IconlyLight.arrowLeftCircle,
-          color: Colors.white,
-        ),
-      ),
-      flexibleSpace: Container(
-        color: kPrimaryColorBlack1,
-        height: Get.size.height,
-        width: Get.size.width,
-        child: Stack(
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.parallax,
+        background: Stack(
+          fit: StackFit.expand,
           children: [
             Hero(
               tag: widget.tag,
               child: CachedNetworkImage(
                 fadeInCurve: Curves.ease,
                 imageUrl: widget.image,
-                imageBuilder: (context, imageProvider) => Container(
-                  width: Get.size.width,
-                  decoration: BoxDecoration(
-                    color: kPrimaryColorBlack,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                placeholder: (context, url) => Center(child: spinKit()),
-                errorWidget: (context, url, error) => const Text('No Image'),
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
+                errorWidget: (context, url, error) => const ColoredBox(color: Color(0xFF1B1B1E)),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: kPrimaryColorBlack,
-                child: TabBar(
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicatorColor: kPrimaryColor,
-                  labelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20),
-                  unselectedLabelStyle: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
-                  labelColor: Colors.white,
-                  isScrollable: widget.finised ? false : true,
-                  indicatorWeight: 4,
-                  indicatorPadding: const EdgeInsets.only(
-                    top: 45,
-                  ),
-                  indicator: const BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-                  unselectedLabelColor: Colors.grey,
-                  tabs: [
-                    Tab(
-                      text: 'tournamentInfo1'.tr,
-                    ),
-                    Tab(
-                      text: 'tournamentInfo2'.tr,
-                    ),
-                    Tab(
-                      text: widget.finised ? 'tournamentInfo3'.tr : 'tournamentInfo4'.tr,
-                    ),
-                  ],
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x99000000), Color(0x00000000), Color(0xFF000000)],
+                  stops: [0, 0.45, 1],
                 ),
               ),
             ),
           ],
+        ),
+      ),
+      leadingWidth: 62,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: Center(
+          child: GestureDetector(
+            onTap: Get.back,
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black.withValues(alpha: 0.45),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+              ),
+              child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2)),
+            ),
+          ),
+        ),
+      ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(62),
+        child: Container(
+          height: 46,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1B1B1E),
+            borderRadius: BorderRadius.circular(23),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+          ),
+          child: TabBar(
+            dividerColor: Colors.transparent,
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelStyle: const TextStyle(fontFamily: gilroyBold, fontSize: 14),
+            unselectedLabelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 14),
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.white70,
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(19),
+              gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+            ),
+            tabs: [
+              Tab(text: 'tournamentInfo1'.tr),
+              Tab(text: 'tournamentInfo2'.tr),
+              Tab(text: widget.finised ? 'tournamentInfo3'.tr : 'tournamentInfo4'.tr),
+            ],
+          ),
         ),
       ),
     );

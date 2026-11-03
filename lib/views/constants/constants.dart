@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-const String serverURL = 'http://ucdayy.com.tm';
+/// The ucdayy mobile API (docs: /api/docs/). The old backend on port 80 has its
+/// own database, so balances and accounts set in the admin panel (port 9090)
+/// only exist here.
+const String serverURL = 'http://ucdayy.com.tm:8080';
 const Color backgroundColor = Color(0xfff2f2f2);
 const Color kPrimaryColor = Color(0xFFFF9800);
 const kAccentColor = Color(0xFFFFB74D);

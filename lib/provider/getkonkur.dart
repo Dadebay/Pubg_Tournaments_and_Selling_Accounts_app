@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:game_app/models/get_concurs_model.dart';
 import 'package:game_app/models/get_gifts_model.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/utils/api_logger.dart';
 import 'package:game_app/views/constants/index.dart';
 
 import '../models/con_catigory.dart';
@@ -16,7 +17,7 @@ class ConCatigoryProvider with ChangeNotifier {
   bool waiting = false;
   List<ConCatigory> conCatigory = [];
 
-  static Dio dio = Dio();
+  static Dio dio = ApiLog.newDio();
 
   Future<void> getConCatigory(BuildContext context) async {
     isLoading = true;
@@ -54,7 +55,7 @@ class getGiftsProvider with ChangeNotifier {
   bool waiting = false;
   List<GiftsMOdel> giftsCart = [];
 
-  static Dio dio = Dio();
+  static Dio dio = ApiLog.newDio();
 
   Future<void> getGiftsCart(BuildContext context) async {
     isLoading = true;
@@ -117,7 +118,7 @@ class getConcursProvider with ChangeNotifier {
   bool waiting = false;
   List<GEtConcursModel> concursCart = [];
 
-  static Dio dio = Dio();
+  static Dio dio = ApiLog.newDio();
 
   Future<void> getConcursCart(BuildContext context) async {
     isLoading = true;
@@ -155,7 +156,7 @@ class getConcursByIDProvider with ChangeNotifier {
   bool waiting = false;
   GEtConcursModel? concursCartById;
 
-  static Dio dio = Dio();
+  static Dio dio = ApiLog.newDio();
 
   Future<void> getConcursCartById(BuildContext context, String id) async {
     isLoading = true;
@@ -189,7 +190,7 @@ class postPaymentProvider with ChangeNotifier {
 
   PayModel? payModel;
 
-  static Dio dio = Dio();
+  static Dio dio = ApiLog.newDio();
 
   Future postPayment(String amount) async {
     isLoading = true;

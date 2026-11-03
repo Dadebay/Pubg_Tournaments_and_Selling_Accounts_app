@@ -3,14 +3,22 @@ import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
+import 'package:game_app/views/constants/centered_header.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
+
+const _gold = Color(0xFFFFC83D);
 
 class TeamRegistrationScreen extends StatefulWidget {
   final int tournamentId;
   final TeamMember? teamMember;
 
-  const TeamRegistrationScreen({required this.tournamentId, this.teamMember, super.key});
+  const TeamRegistrationScreen({
+    required this.tournamentId,
+    this.teamMember,
+    super.key,
+  });
 
   @override
   State<TeamRegistrationScreen> createState() => _TeamRegistrationScreenState();
@@ -72,7 +80,14 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     if (_formKey.currentState!.validate()) {
       final provider = Provider.of<TeamMembersProvider>(context, listen: false);
 
-      final success = await provider.registerTeam(tournamentId: widget.teamMember?.id ?? 0, account: _accountController.text.trim(), extra_name: _userController.text.trim(), user1: _user1Controller.text.trim(), user2: _user2Controller.text.trim(), user3: _user3Controller.text.trim());
+      final success = await provider.registerTeam(
+        tournamentId: widget.teamMember?.id ?? 0,
+        account: _accountController.text.trim(),
+        extra_name: _userController.text.trim(),
+        user1: _user1Controller.text.trim(),
+        user2: _user2Controller.text.trim(),
+        user3: _user3Controller.text.trim(),
+      );
 
       if (!mounted) return;
 
@@ -105,79 +120,171 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   }
 
   bool _isVisible = false;
+
+  String? _required(String? value, String message) =>
+      value == null || value.trim().isEmpty ? message.tr : null;
+
   @override
   Widget build(BuildContext context) {
+    final slot = widget.teamMember;
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          'Register Team'.tr,
-          style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
-        ),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Card
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [kPrimaryColor.withValues(alpha: 0.2), kPrimaryColor.withValues(alpha: 0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: kPrimaryColor.withValues(alpha: 0.3)),
-                ),
-                child: Row(
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            CenteredHeader(title: 'Register Team'.tr, onBack: Get.back),
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(color: kPrimaryColor.withValues(alpha: 0.2), shape: BoxShape.circle),
-                      child: const Icon(Icons.group_add, color: kPrimaryColor, size: 32),
+                    _headerCard(),
+                    const SizedBox(height: 20),
+                    _section(
+                      'Account Name'.tr,
+                      HugeIcons.strokeRoundedUserCircle,
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Topar hasaba alyş'.tr,
-                            style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 20, color: Colors.white),
+                    _buildTextField(
+                      controller: _accountController,
+                      hint: 'Your account name'.tr,
+                      icon: HugeIcons.strokeRoundedUserCircle,
+                      validator: (value) =>
+                          _required(value, 'Please enter account name'),
+                    ),
+                    const SizedBox(height: 22),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _section(
+                            'Team Players'.tr,
+                            HugeIcons.strokeRoundedUserGroup,
                           ),
-                          const SizedBox(height: 4),
-                          Text('Topary bir gezek hasaba alyp bolýar, dostlaryňyzy ýa-da tanyşlaryňyzy çagyryň'.tr, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: kAccentColor, // button color
-                                  foregroundColor: Colors.black, // text color
-                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                        ),
+                        if (slot != null && (slot.name ?? '').isNotEmpty)
+                          Text(
+                            '${slot.name} Team',
+                            style: const TextStyle(
+                              color: _gold,
+                              fontFamily: gilroyBold,
+                              fontSize: 14,
+                            ),
+                          ),
+                      ],
+                    ),
+                    _playerBox(
+                      number: 1,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _gold.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: _gold.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                currentUserId ?? 'Owner name'.tr,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: gilroySemiBold,
+                                  fontSize: 16,
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isVisible = !_isVisible;
-                                  });
-                                },
-                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr)),
                               ),
-                              const SizedBox(width: 10),
-                              if (_isVisible)
-                                Text(
-                                  widget.teamMember?.quartturnir?.code ?? 'Unknown Code',
-                                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 9,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _gold,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                'Player 1'.tr,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: gilroyBold,
+                                  fontSize: 11,
+                                  height: 1.1,
                                 ),
-                            ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    _playerBox(
+                      number: 2,
+                      child: _buildTextField(
+                        controller: _user1Controller,
+                        hint: 'Second player username'.tr,
+                        icon: HugeIcons.strokeRoundedUser,
+                        validator: (value) =>
+                            _required(value, 'Please enter player 1 username'),
+                      ),
+                    ),
+                    _playerBox(
+                      number: 3,
+                      child: _buildTextField(
+                        controller: _user2Controller,
+                        hint: 'Third player username'.tr,
+                        icon: HugeIcons.strokeRoundedUser,
+                        validator: (value) =>
+                            _required(value, 'Please enter player 2 username'),
+                      ),
+                    ),
+                    _playerBox(
+                      number: 4,
+                      child: _buildTextField(
+                        controller: _user3Controller,
+                        hint: 'Foths player username'.tr,
+                        icon: HugeIcons.strokeRoundedUser,
+                        validator: (value) =>
+                            _required(value, 'Please enter player 3 username'),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF60A5FA).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFF60A5FA).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline,
+                            color: Color(0xFF60A5FA),
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'All team members must have valid accounts'.tr,
+                              style: const TextStyle(
+                                color: Color(0xFF60A5FA),
+                                fontFamily: gilroyMedium,
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -185,228 +292,283 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
-
-              // Account field
-              _buildTextField(
-                controller: _accountController,
-                label: 'Account Name'.tr,
-                hint: 'Your account name'.tr,
-                icon: Icons.account_circle,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter account name'.tr;
-                  }
-                  return null;
-                },
+            ),
+            // The button stays in reach while the form scrolls.
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                10,
+                16,
+                12 + MediaQuery.paddingOf(context).bottom,
               ),
-              const SizedBox(height: 20),
-
-              // Players Section Header
-              Row(
-                children: [
-                  Container(
-                    width: 4,
-                    height: 24,
-                    decoration: BoxDecoration(color: kPrimaryColor, borderRadius: BorderRadius.circular(2)),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Team Players'.tr,
-                    style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 18, color: Colors.white),
-                  ),
-                ],
+              decoration: BoxDecoration(
+                color: kPrimaryColorBlack,
+                border: Border(
+                  top: BorderSide(color: Colors.white.withValues(alpha: 0.07)),
+                ),
               ),
-              const SizedBox(height: 20),
-
-              _buildInfoCard(label: 'Player 1'.tr, value: currentUserId ?? 'Owner name'.tr, icon: Icons.person),
-              const SizedBox(height: 20),
-              // User 1
-              _buildTextField(
-                controller: _user1Controller,
-                label: 'Player 2'.tr,
-                hint: 'Second player username'.tr,
-                icon: Icons.person,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter player 1 username'.tr;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // User 2
-              _buildTextField(
-                controller: _user2Controller,
-                label: 'Player 3'.tr,
-                hint: 'Third player username'.tr,
-                icon: Icons.person_outline,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter player 2 username'.tr;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // User 3
-              _buildTextField(
-                controller: _user3Controller,
-                label: 'Player 4'.tr,
-                hint: 'Foths player username'.tr,
-                icon: Icons.person_outline,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter player 3 username'.tr;
-                  }
-                  return null;
-                },
-              ),
-              // const SizedBox(height: 20),
-
-              // // User 3
-              // _buildTextField(
-              //   controller: _userController,
-              // label: 'Player 4'.tr,
-              // hint: 'Foths player username'.tr,
-              //   icon: Icons.person_outline,
-              //   validator: (value) {
-              //     if (value == null || value.trim().isEmpty) {
-              //       return 'Please enter player 4 username'.tr;
-              //     }
-              //     return null;
-              //   },
-              // ),
-              const SizedBox(height: 32),
-
-              // Submit Button
-              Consumer<TeamMembersProvider>(
+              child: Consumer<TeamMembersProvider>(
                 builder: (context, provider, child) {
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: provider.isRegistering ? null : _submitForm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimaryColor,
-                        disabledBackgroundColor: Colors.grey[700],
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
+                  final busy = provider.isRegistering;
+                  return GestureDetector(
+                    onTap: busy ? null : _submitForm,
+                    child: Container(
+                      height: 56,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        gradient: busy
+                            ? null
+                            : const LinearGradient(
+                                colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
+                              ),
+                        color: busy ? const Color(0xFF3A3A40) : null,
                       ),
-                      child: provider.isRegistering
-                          ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 3))
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(widget.teamMember != null ? Icons.edit : Icons.check_circle, color: Colors.black, size: 24),
-                                const SizedBox(width: 12),
-                                Text(
-                                  'Register Team'.tr,
-                                  style: const TextStyle(color: Colors.black, fontFamily: gilroySemiBold, fontSize: 18),
-                                ),
-                              ],
+                      child: busy
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                                strokeWidth: 3,
+                              ),
+                            )
+                          : Text(
+                              'Register Team'.tr,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: gilroyBold,
+                                fontSize: 18,
+                              ),
                             ),
                     ),
                   );
                 },
               ),
-
-              const SizedBox(height: 20),
-              // Info Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Colors.blue[300], size: 20),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text('All team members must have valid accounts'.tr, style: TextStyle(color: Colors.blue[300], fontSize: 13)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoCard({required String label, required String value, required IconData icon}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
+  Widget _headerCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: _gold.withValues(alpha: 0.28)),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF2A2416), Color(0xFF141416)],
         ),
-        const SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-          decoration: BoxDecoration(
-            color: Colors.grey[900],
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey[800]!, width: 1),
-          ),
-          child: Row(
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Icon(icon, color: kPrimaryColor, size: 22),
-              const SizedBox(width: 16),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _gold.withValues(alpha: 0.16),
+                  border: Border.all(color: _gold.withValues(alpha: 0.5)),
+                ),
+                child: const Center(
+                  child: HugeIcon(
+                    icon: HugeIcons.strokeRoundedUserGroup,
+                    color: _gold,
+                    size: 24,
+                    strokeWidth: 1.8,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
               Expanded(
-                child: Text(value, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                child: Text(
+                  'Topar hasaba alyş'.tr,
+                  style: const TextStyle(
+                    fontFamily: gilroyBold,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 12),
+          Text(
+            'Topary bir gezek hasaba alyp bolýar, dostlaryňyzy ýa-da tanyşlaryňyzy çagyryň'
+                .tr,
+            style: const TextStyle(
+              fontFamily: gilroyRegular,
+              fontSize: 14,
+              height: 1.4,
+              color: Color(0xFFB8B8C0),
+            ),
+          ),
+          const SizedBox(height: 14),
+          GestureDetector(
+            onTap: () => setState(() => _isVisible = !_isVisible),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: Row(
+                children: [
+                  const HugeIcon(
+                    icon: HugeIcons.strokeRoundedKey01,
+                    color: _gold,
+                    size: 18,
+                    strokeWidth: 1.8,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _isVisible
+                          ? '${widget.teamMember?.quartturnir?.code ?? 'Unknown Code'}'
+                          : '••••••',
+                      style: TextStyle(
+                        color: _isVisible
+                            ? const Color(0xFFFF5A5F)
+                            : Colors.white54,
+                        fontFamily: gilroyBold,
+                        fontSize: 16,
+                        letterSpacing: _isVisible ? 0.5 : 3,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    _isVisible ? 'Hide Code'.tr : 'Show Code'.tr,
+                    style: const TextStyle(
+                      color: _gold,
+                      fontFamily: gilroyBold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
+  Widget _section(String text, List<List<dynamic>> icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          HugeIcon(icon: icon, color: _gold, size: 20, strokeWidth: 1.8),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              fontFamily: gilroyBold,
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// A numbered row: the place of the player in the team and his field.
+  Widget _playerBox({required int number, required Widget child}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            margin: const EdgeInsets.only(top: 11, right: 10),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _gold.withValues(alpha: number == 1 ? 1 : 0.14),
+              border: Border.all(color: _gold.withValues(alpha: 0.5)),
+            ),
+            child: Text(
+              '$number',
+              style: TextStyle(
+                color: number == 1 ? Colors.black : _gold,
+                fontFamily: gilroyBold,
+                fontSize: 15,
+                height: 1,
+              ),
+            ),
+          ),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required List<List<dynamic>> icon,
+    String? Function(String?)? validator,
+  }) {
+    OutlineInputBorder border(Color color, [double width = 1]) =>
+        OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide(color: color, width: width),
+        );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600, fontFamily: gilroyMedium),
-        ),
-        const SizedBox(height: 10),
         TextFormField(
           controller: controller,
           validator: validator,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+          cursorColor: _gold,
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: gilroySemiBold,
+            fontSize: 16,
+          ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey[600], fontSize: 15),
-            prefixIcon: Icon(icon, color: kPrimaryColor, size: 22),
+            hintStyle: const TextStyle(
+              color: Color(0xFF6E6E78),
+              fontFamily: gilroyMedium,
+              fontSize: 15,
+            ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: HugeIcon(
+                icon: icon,
+                color: _gold,
+                size: 20,
+                strokeWidth: 1.8,
+              ),
+            ),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 0,
+              minHeight: 0,
+            ),
             filled: true,
-            fillColor: Colors.grey[900],
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.grey[800]!, width: 1),
+            fillColor: const Color(0xFF1B1B1E),
+            border: border(Colors.transparent),
+            enabledBorder: border(Colors.white.withValues(alpha: 0.08)),
+            focusedBorder: border(_gold, 1.5),
+            errorBorder: border(const Color(0xFFFF5A5F)),
+            focusedErrorBorder: border(const Color(0xFFFF5A5F), 1.5),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 17,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Colors.red, width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           ),
         ),
       ],

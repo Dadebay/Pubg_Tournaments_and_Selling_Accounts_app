@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'package:game_app/controllers/notification_badge_controller.dart';
 import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -14,12 +15,23 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final SettingsController controller = Get.put(SettingsController());
-  late Future<List<NotifcationModel>> _future = NotifcationModel().getNotifcations();
+  final NotificationBadgeController _badge = Get.isRegistered<NotificationBadgeController>() ? Get.find<NotificationBadgeController>() : Get.put(NotificationBadgeController(), permanent: true);
+
+  /// The newest notification seen before this visit; anything above it is new here.
+  late final int _seenBefore = _badge.lastSeenId;
+  late Future<List<NotifcationModel>> _future = _load();
+
+  /// Loads the list and counts it all as seen.
+  Future<List<NotifcationModel>> _load() async {
+    final items = await NotifcationModel().getNotifcations();
+    await _badge.markSeen(items);
+    return items;
+  }
 
   static const _gold = Color(0xFFFFC83D);
 
   Future<void> _refresh() async {
-    setState(() => _future = NotifcationModel().getNotifcations());
+    setState(() => _future = _load());
     await _future;
   }
 
@@ -47,7 +59,7 @@ class _NotificationPageState extends State<NotificationPage> {
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
               itemCount: items.length,
-              itemBuilder: (context, index) => _NotificationCard(model: items[index]),
+              itemBuilder: (context, index) => _NotificationCard(model: items[index], isNew: (items[index].id ?? 0) > _seenBefore),
             ),
           );
         },
@@ -58,9 +70,10 @@ class _NotificationPageState extends State<NotificationPage> {
 
 /// One notification: bell tile, title, date and a body that unfolds on tap.
 class _NotificationCard extends StatefulWidget {
-  const _NotificationCard({required this.model});
+  const _NotificationCard({required this.model, required this.isNew});
 
   final NotifcationModel model;
+  final bool isNew;
 
   @override
   State<_NotificationCard> createState() => _NotificationCardState();
@@ -104,7 +117,7 @@ class _NotificationCardState extends State<_NotificationCard> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
-            border: Border.all(color: _open ? _gold.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.07)),
+            border: Border.all(color: _open || widget.isNew ? _gold.withValues(alpha: widget.isNew ? 0.55 : 0.4) : Colors.white.withValues(alpha: 0.07)),
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
@@ -125,7 +138,19 @@ class _NotificationCardState extends State<_NotificationCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(model.title ?? '', style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 17)),
+                        Row(
+                          children: [
+                            Flexible(child: Text(model.title ?? '', style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 17))),
+                            if (widget.isNew) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(color: _gold, borderRadius: BorderRadius.circular(8)),
+                                child: Text('newLabel'.tr, style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 10.5, height: 1.1)),
+                              ),
+                            ],
+                          ],
+                        ),
                         if (_date.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Text(_date, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyRegular, fontSize: 13)),

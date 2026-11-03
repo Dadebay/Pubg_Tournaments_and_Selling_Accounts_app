@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -28,11 +28,8 @@ class ProfileSettings extends StatefulWidget {
 
 class _ProfileSettingsState extends State<ProfileSettings> {
   TextEditingController pubgNameController = TextEditingController();
-  FocusNode pubgNameFocusNode = FocusNode();
   TextEditingController phoneController = TextEditingController();
-  FocusNode phoneFocusNode = FocusNode();
   TextEditingController pubgIDController = TextEditingController();
-  FocusNode pubgIDFocusNode = FocusNode();
 
   File? selectedImage;
 
@@ -185,11 +182,17 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 }
 
 
+  static const _gold = Color(0xFFFFC83D);
+
+  bool get _hasNetworkImage => widget.image.isNotEmpty && widget.image != 'null';
+
+  String get _networkImageUrl => widget.image.startsWith('http') ? widget.image : '$serverURL${widget.image}';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: true, elevationWhite: true, name: 'profil'),
+      appBar: const MyAppBar(backArrow: true, fontSize: 0.0, iconRemove: true, elevationWhite: true, name: 'profil', dividerOpacity: 0.4),
       body: FutureBuilder<GetMeModel>(
         future: GetMeModel().getMe(),
         builder: (context, snapshot) {
@@ -201,264 +204,57 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             return const Center(child: Text('Empty'));
           }
           changeData(snapshot.data!.nickname!, snapshot.data!.phone!, snapshot.data!.pubgId!);
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Center(
-                    child: widget.image.toString() != 'null'
-                        ? GestureDetector(
-                            onTap: () {
-                              pickImage();
-                            },
-                            child: Center(
-                              child: Container(
-                                width: 120,
-                                height: 120,
-                                margin: const EdgeInsets.only(top: 25),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [BoxShadow(color: Colors.white30, blurRadius: 15.0, offset: Offset(1.0, 1.0), spreadRadius: 5.0)],
-                                ),
-                                child: ClipOval(
-                                  child: Material(
-                                    elevation: 3,
-                                    child: CachedNetworkImage(
-                                      fadeInCurve: Curves.ease,
-                                      imageUrl: '$serverURL${widget.image}',
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        width: Get.size.width,
-                                        decoration: BoxDecoration(
-                                          borderRadius: borderRadius20,
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      placeholder: (context, url) => Center(child: spinKit()),
-                                      errorWidget: (context, url, error) => noBannerImage(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : selectedImage != null
-                            ? GestureDetector(
-                                onTap: () {
-                                  pickImage();
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: 120,
-                                    height: 120,
-                                    margin: const EdgeInsets.only(top: 25),
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      boxShadow: [BoxShadow(color: Colors.white30, blurRadius: 15.0, offset: Offset(1.0, 1.0), spreadRadius: 5.0)],
-                                    ),
-                                    child: ClipOval(child: Material(elevation: 3, child: Image.file(selectedImage!, fit: BoxFit.cover))),
-                                  ),
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: () async {
-                                  await Permission.camera.request();
-                                  await Permission.photos.request();
-                                  await pickImage();
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: 120,
-                                    height: 120,
-                                    margin: const EdgeInsets.only(top: 25),
-                                    child: DottedBorder(
-                                      options: OvalDottedBorderOptions(
- padding: const EdgeInsets.all(6),
- strokeWidth: 2,
- color: kPrimaryColor,
- ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.add_circle_outline_sharp,
-                                          color: kPrimaryColor,
-                                          size: 35,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+          final teams = widget.medata.teams ?? [];
+          return SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: _avatar()),
+                const SizedBox(height: 28),
+                _card(
+                  children: [
+                    _infoRow(HugeIcons.strokeRoundedUser, 'signIn1', pubgNameController.text),
+                    _infoRow(HugeIcons.strokeRoundedIdentityCard, 'signIn2', pubgIDController.text),
+                    _infoRow(HugeIcons.strokeRoundedCall, 'userPhoneNumber', phoneController.text),
+                  ],
+                ),
+                if (teams.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 6, bottom: 12),
+                    child: Text('Teams', style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18)),
                   ),
-                  textpart('signIn1'),
-                  CustomTextField(
-                    labelName: '',
-                    controller: pubgNameController,
-                    borderRadius: true,
-                    focusNode: pubgNameFocusNode,
-                    requestfocusNode: phoneFocusNode,
-                    isNumber: false,
-                    disabled: true,
-                  ),
-                  textpart('signIn2'),
-                  CustomTextField(
-                    labelName: '',
-                    controller: pubgIDController,
-                    borderRadius: true,
-                    focusNode: pubgIDFocusNode,
-                    requestfocusNode: pubgNameFocusNode,
-                    isNumber: false,
-                    disabled: true,
-                  ),
-                  textpart('userPhoneNumber'),
-                  PhoneNumber(
-                    mineFocus: phoneFocusNode,
-                    controller: phoneController,
-                    requestFocus: pubgIDFocusNode,
-                    style: false,
-                    disabled: false,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(1),
-                    itemCount: widget.medata.teams!.length,
-                    itemBuilder: (context, index) {
-                      final team = widget.medata.teams![index];
-                      final teamName = team.name ?? 'Team ${team.id}';
-                      final users = [
-                        team.account,
-                        team.user1,
-                        team.user2,
-                        team.user3,
-                      ].where((u) => u != null && u.isNotEmpty).toList();
+                  for (var i = 0; i < teams.length; i++) _teamCard(teams[i], i),
+                ],
+                const SizedBox(height: 28),
+                Center(
+                  child: _saveButton(
+                    name: 'agree',
+                    onTap: () {
+                      if (selectedImage != null) {
+                        onTapp();
+                        Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
+                      } else {
+                        Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
+                        GetMeModel().shortUpdate(pubgUserId: pubgIDController.text, pubgUserName: pubgNameController.text).then((value) {
+                          if (value == 200) {
+                            getData();
+                            Get.back();
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white.withOpacity(0.15),
-                                Colors.white.withOpacity(0.05),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      teamName,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      users.join(', '),
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(0.8),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (team.quartturnir != null && team.quartturnir.toString().isNotEmpty)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    team.quartturnir?.name ?? '',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
+                            showSnackBar('copySucces', 'changedData', Colors.green);
+                            pubgNameController.clear();
+                            pubgIDController.clear();
+                          } else {
+                            showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
+                          }
+                          Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
+                        });
+                      }
                     },
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Center(
-                    child: AgreeButton(
-                      name: 'agree',
-                      onTap: () {
-                        if (selectedImage != null) {
-                          onTapp();
-                          Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
-                        } else {
-                          Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
-                          GetMeModel().shortUpdate(pubgUserId: pubgIDController.text, pubgUserName: pubgNameController.text).then((value) {
-                            if (value == 200) {
-                              getData();
-                              Get.back();
-                              
-                              showSnackBar('copySucces', 'changedData', Colors.green);
-                              pubgNameController.clear();
-                              pubgIDController.clear();
-                            } else {
-                              showSnackBar('noConnection3', 'tournamentInfo14', Colors.red);
-                            }
-                            Get.find<SettingsController>().agreeButton.value = !Get.find<SettingsController>().agreeButton.value;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
@@ -466,14 +262,184 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
-  Padding textpart(String name) {
+  /// Gold save button; shrinks to a spinner while the request runs.
+  Widget _saveButton({required String name, required VoidCallback onTap}) {
+    final controller = Get.find<SettingsController>();
+    return Obx(() {
+      final busy = controller.agreeButton.value;
+      return GestureDetector(
+        onTap: busy ? null : onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          height: 54,
+          width: busy ? 54 : double.infinity,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(busy ? 27 : 18),
+            color: Colors.black,
+            border: Border.all(color: _gold.withValues(alpha: 0.5)),
+          ),
+          child: busy
+              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2.5, color: _gold))
+              : Text(name.tr, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18)),
+        ),
+      );
+    });
+  }
+
+  /// Round photo with a camera badge; tapping it opens the gallery.
+  Widget _avatar() {
+    final Widget photo;
+    if (selectedImage != null) {
+      photo = Image.file(selectedImage!, fit: BoxFit.cover);
+    } else if (_hasNetworkImage) {
+      photo = CachedNetworkImage(
+        fadeInCurve: Curves.ease,
+        imageUrl: _networkImageUrl,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Center(child: spinKit()),
+        errorWidget: (context, url, error) => _avatarPlaceholder(),
+      );
+    } else {
+      photo = _avatarPlaceholder();
+    }
+    return GestureDetector(
+      onTap: () async {
+        if (!_hasNetworkImage && selectedImage == null) {
+          await Permission.camera.request();
+          await Permission.photos.request();
+        }
+        await pickImage();
+      },
+      child: SizedBox(
+        width: 136,
+        height: 136,
+        child: Stack(
+          children: [
+            Container(
+              width: 136,
+              height: 136,
+              padding: const EdgeInsets.all(1.2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+                
+              ),
+              child: ClipOval(child: SizedBox.expand(child: photo)),
+            ),
+            Positioned(
+              right: 2,
+              bottom: 2,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _gold,
+                  border: Border.all(color: kPrimaryColorBlack, width: 3),
+                ),
+                child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedCamera01, color: Color(0xFF1A1200), size: 20)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _avatarPlaceholder() {
+    return const ColoredBox(
+      color: Color(0xFF2C2C31),
+      child: Center(child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: _gold, size: 54)),
+    );
+  }
+
+  BoxDecoration get _cardDecoration => BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+      );
+
+  Widget _card({required List<Widget> children}) {
+    return Container(
+      decoration: _cardDecoration,
+      child: Column(
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) Divider(height: 1, indent: 70, color: Colors.white.withValues(alpha: 0.07)),
+            children[i],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(List<List<dynamic>> icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8, top: 30),
-      child: Text(
-        name.tr,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: gilroyBold),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(color: _gold.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(13)),
+            child: Center(child: HugeIcon(icon: icon, color: _gold, size: 22)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label.tr, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyMedium, fontSize: 12)),
+                const SizedBox(height: 3),
+                Text(value.isEmpty || value == 'null' ? '—' : value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16)),
+              ],
+            ),
+          ),
+          HugeIcon(icon: HugeIcons.strokeRoundedSquareLock01, size: 18, color: Colors.white.withValues(alpha: 0.25)),
+        ],
+      ),
+    );
+  }
+
+  Widget _teamCard(dynamic team, int index) {
+    final teamName = team.name ?? 'Team ${team.id}';
+    final users = [team.account, team.user1, team.user2, team.user3].where((u) => u != null && u.isNotEmpty).toList();
+    final stage = team.quartturnir?.name;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: _cardDecoration,
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: _gold.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+            child: Text('${index + 1}', style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 15)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$teamName', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 15)),
+                const SizedBox(height: 4),
+                Text(users.join(', '), style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroyMedium, fontSize: 12)),
+              ],
+            ),
+          ),
+          if (stage != null && '$stage'.isNotEmpty) ...[
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(color: const Color(0xFF3DA5FF).withValues(alpha: 0.18), borderRadius: BorderRadius.circular(12)),
+              child: Text('$stage', style: const TextStyle(color: Color(0xFF3DA5FF), fontFamily: gilroyMedium, fontSize: 12)),
+            ),
+          ],
+        ],
       ),
     );
   }

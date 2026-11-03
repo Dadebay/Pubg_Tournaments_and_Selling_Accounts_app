@@ -1,108 +1,127 @@
-import 'package:flutter_html/flutter_html.dart';
-import 'package:game_app/views/constants/index.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:game_app/models/best_players_model.dart';
+import 'package:game_app/views/constants/catalog_empty_state.dart';
+import 'package:game_app/views/constants/centered_header.dart';
+import 'package:game_app/views/constants/constants.dart';
+import 'package:game_app/views/constants/shimmer.dart';
+import 'package:game_app/views/other_users/other_user_product_profil.dart';
+import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 
-import '../../models/best_players_model.dart';
-import '../cards/best_players_card.dart';
+const _gold = Color(0xFFFFC83D);
+const _silver = Color(0xFFD5D9E0);
+const _bronze = Color(0xFFE0955A);
 
-class BestPlayers extends StatelessWidget {
+Color _rankColor(int index) => switch (index) {
+  0 => _gold,
+  1 => _silver,
+  2 => _bronze,
+  _ => Colors.white70,
+};
+
+/// "123.00" → "123", "12.5" → "12.5".
+String _pointsText(String? points) {
+  final value = double.tryParse(points ?? '');
+  if (value == null) return points ?? '0';
+  return value == value.roundToDouble()
+      ? '${value.toInt()}'
+      : value.toStringAsFixed(1);
+}
+
+String _nameOf(BestPlayersModel player) {
+  final name = player.pubgUsername ?? '';
+  return name.isEmpty ? 'Unknown' : name;
+}
+
+/// Empty when the player has no picture, so no request is made for it.
+String _imageOf(BestPlayersModel player) {
+  final image = player.image ?? '';
+  if (image.isEmpty) {
+    return '';
+  }
+  return image.startsWith('http') ? image : '$serverURL$image';
+}
+
+void _openProfile(BestPlayersModel player, int index) {
+  Get.to(
+    () => OtherUserProductProfil(
+      points: player.points,
+      name: _nameOf(player),
+      image: _imageOf(player),
+      index: index,
+    ),
+    transition: Transition.fadeIn,
+    duration: const Duration(milliseconds: 300),
+  );
+}
+
+/// The ranking of the best players: the first three on a podium, the rest as rows.
+class BestPlayers extends StatefulWidget {
   const BestPlayers({super.key});
+
+  @override
+  State<BestPlayers> createState() => _BestPlayersState();
+}
+
+class _BestPlayersState extends State<BestPlayers> {
+  late Future<List<BestPlayersModel>> _future = BestPlayersModel()
+      .getBestPlayers();
+
+  Future<void> _refresh() async {
+    final next = BestPlayersModel().getBestPlayers();
+    setState(() {
+      _future = next;
+    });
+    await next;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E27),
-      appBar: MyAppBar(
-        fontSize: 0,
-        backArrow: true,
-        iconRemove: false,
-        icon: Container(
-          decoration: BoxDecoration(color: kPrimaryColor.withOpacity(0.2), shape: BoxShape.circle),
-          // child: IconButton(
-          //   onPressed: () {
-          //     AddAccountModel().getConsts().then((value) {
-          //       showBestPlayerPrice(
-          //         context,
-          //         'placeTurnirGet.tr',
-          //         value['best_players_text'],
-          //       );
-          //     });
-          //   },
-          //   icon: const Icon(
-          //     Icons.info_outline,
-          //     color: kPrimaryColor,
-          //   ),
-          // ),
-        ),
-        name: 'bestPlayers2',
-        elevationWhite: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF0A0E27), Color(0xFF1a1f3a), kPrimaryColorBlack]),
-        ),
+      backgroundColor: kPrimaryColorBlack,
+      body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
-            topPart(),
+            CenteredHeader(title: 'bestPlayers2'.tr, onBack: Get.back),
             Expanded(
               child: FutureBuilder<List<BestPlayersModel>>(
-                future: BestPlayersModel().getBestPlayers(),
+                future: _future,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: spinKit());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Container(
-                        margin: const EdgeInsets.all(20),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.red.withOpacity(0.3)),
-                        ),
-                        child: Text(
-                          'errorLoadData'.tr,
-                          style: const TextStyle(fontFamily: gilroyMedium, color: Colors.red, fontSize: 16),
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.data.toString() == '[]') {
-                    return Center(
-                      child: Container(
-                        margin: const EdgeInsets.all(20),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
-                        ),
-                        child: Text(
-                          'errorLoadEmptyData'.tr,
-                          style: const TextStyle(fontFamily: gilroyMedium, color: Colors.white70, fontSize: 16),
-                        ),
-                      ),
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return _skeleton();
+                  if (snapshot.hasError) {
+                    return _message(
+                      Icons.cloud_off_rounded,
+                      'errorLoadData'.tr,
                     );
                   }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length - 1,
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    itemBuilder: (BuildContext context, int index) {
-                      return TweenAnimationBuilder(
-                        duration: Duration(milliseconds: 300 + (index * 50)),
-                        tween: Tween<double>(begin: 0, end: 1),
-                        builder: (context, double value, child) {
-                          return Transform.translate(
-                            offset: Offset(0, 20 * (1 - value)),
-                            child: Opacity(opacity: value, child: child),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: BestPlayersCard(index: index, image: '$serverURL${snapshot.data![index].image}', name: snapshot.data![index].pubgUsername!.isEmpty ? 'Unknoun' : snapshot.data![index].pubgUsername!, points: snapshot.data![index].points!, referalPage: false),
-                        ),
-                      );
-                    },
+                  final players = snapshot.data ?? const <BestPlayersModel>[];
+                  if (players.isEmpty) {
+                    return _message(
+                      Icons.emoji_events_outlined,
+                      'errorLoadEmptyData'.tr,
+                    );
+                  }
+                  return RefreshIndicator(
+                    color: _gold,
+                    backgroundColor: const Color(0xFF1C1C20),
+                    onRefresh: _refresh,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
+                      children: [
+                        _Podium(players: players.take(3).toList()),
+                        const SizedBox(height: 22),
+                        for (var i = 3; i < players.length; i++) ...[
+                          _PlayerRow(player: players[i], index: i),
+                          const SizedBox(height: 10),
+                        ],
+                      ],
+                    ),
                   );
                 },
               ),
@@ -113,100 +132,310 @@ class BestPlayers extends StatelessWidget {
     );
   }
 
-  Container topPart() {
+  Widget _message(IconData icon, String text) {
+    return RefreshIndicator(
+      color: _gold,
+      backgroundColor: const Color(0xFF1C1C20),
+      onRefresh: _refresh,
+      child: LayoutBuilder(
+        builder: (context, box) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          child: SizedBox(
+            height: box.maxHeight,
+            child: Center(
+              child: CatalogEmptyState(
+                icon: icon,
+                title: text,
+                description: '',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _skeleton() {
+    return Shimmer(
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        children: [
+          const ShimmerBlock(height: 250, radius: 26),
+          const SizedBox(height: 22),
+          for (var i = 0; i < 6; i++) ...const [
+            ShimmerBlock(height: 68, radius: 20),
+            SizedBox(height: 10),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _Avatar extends StatelessWidget {
+  const _Avatar({required this.url, required this.size, required this.color});
+
+  final String url;
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(2.5),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [kPrimaryColor.withOpacity(0.2), kPrimaryColor.withOpacity(0.05)]),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: kPrimaryColor.withOpacity(0.3), width: 1.5),
-        boxShadow: [BoxShadow(color: kPrimaryColor.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 5))],
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color, color.withValues(alpha: 0.35)],
+        ),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 16),
+        ],
+      ),
+      child: ClipOval(
+        child: url.isEmpty
+            ? const ColoredBox(
+                color: Color(0xFF232327),
+                child: Center(
+                  child: Icon(Icons.person_rounded, color: Colors.white38),
+                ),
+              )
+            : CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.cover,
+                fadeInDuration: const Duration(milliseconds: 200),
+                placeholder: (context, url) =>
+                    const ColoredBox(color: Color(0xFF232327)),
+                errorWidget: (context, url, error) => const ColoredBox(
+                  color: Color(0xFF232327),
+                  child: Center(
+                    child: Icon(Icons.person_rounded, color: Colors.white38),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+/// 2nd – 1st – 3rd, the winner standing higher and bigger.
+class _Podium extends StatelessWidget {
+  const _Podium({required this.players});
+
+  final List<BestPlayersModel> players;
+
+  @override
+  Widget build(BuildContext context) {
+    BestPlayersModel? at(int i) => i < players.length ? players[i] : null;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 22, 10, 18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: _gold.withValues(alpha: 0.28)),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF2A2416), Color(0xFF141416)],
+        ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Expanded(
-            flex: 2,
-            child: Text(
-              'No',
-              maxLines: 1,
-              style: TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 16, letterSpacing: 1),
-            ),
+          Expanded(
+            child: _PodiumSlot(player: at(1), index: 1, avatar: 66, lift: 22),
           ),
           Expanded(
-            flex: 3,
-            child: Text(
-              'userNamePlayers'.tr,
-              maxLines: 1,
-              style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 16, letterSpacing: 1),
-            ),
+            child: _PodiumSlot(player: at(0), index: 0, avatar: 88, lift: 0),
           ),
           Expanded(
-            flex: 2,
-            child: Text(
-              'userNamePlayers2'.tr,
-              maxLines: 1,
-              textAlign: TextAlign.end,
-              style: const TextStyle(color: kPrimaryColor, fontFamily: gilroyBold, fontSize: 16, letterSpacing: 1),
-            ),
+            child: _PodiumSlot(player: at(2), index: 2, avatar: 66, lift: 38),
           ),
         ],
       ),
     );
   }
+}
 
-  Future<Object?> showBestPlayerPrice(BuildContext context, String text, String text2) {
-    return showGeneralDialog(
-      transitionBuilder: (context, a1, a2, widget) {
-        final curvedValue = Curves.easeOutBack.transform(a1.value);
-        return Transform.scale(
-          scale: curvedValue,
-          child: Opacity(
-            opacity: a1.value,
-            child: AlertDialog(
-              backgroundColor: const Color(0xFF0A0E27),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(color: kPrimaryColor.withOpacity(0.5), width: 2),
-              ),
-              title: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [kPrimaryColor.withOpacity(0.2), kPrimaryColor.withOpacity(0.05)]),
-                  borderRadius: BorderRadius.circular(12),
+class _PodiumSlot extends StatelessWidget {
+  const _PodiumSlot({
+    required this.player,
+    required this.index,
+    required this.avatar,
+    required this.lift,
+  });
+
+  final BestPlayersModel? player;
+  final int index;
+  final double avatar;
+  final double lift;
+
+  @override
+  Widget build(BuildContext context) {
+    final player = this.player;
+    if (player == null) return const SizedBox.shrink();
+    final color = _rankColor(index);
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _openProfile(player, index),
+      child: Padding(
+        padding: EdgeInsets.only(top: lift),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (index == 0)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedCrown,
+                  color: _gold,
+                  size: 26,
+                  strokeWidth: 1.8,
                 ),
-                child: Text(
-                  text.tr,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: kPrimaryColor, fontSize: 24, fontFamily: gilroyBold, letterSpacing: 1.2),
-                ),
               ),
-              content: Container(
-                height: Get.size.height / 2,
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.03), borderRadius: BorderRadius.circular(15)),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Html(
-                      data: text2.tr,
-                      style: {'body': Style(fontFamily: gilroyMedium, fontSize: FontSize(18.0), textAlign: TextAlign.left, color: Colors.white70)},
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                _Avatar(url: _imageOf(player), size: avatar, color: color),
+                Positioned(
+                  bottom: -10,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                      border: Border.all(
+                        color: const Color(0xFF141416),
+                        width: 2,
+                      ),
+                    ),
+                    child: Text(
+                      '${index + 1}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: gilroyBold,
+                        fontSize: 13,
+                        height: 1,
+                      ),
                     ),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 18),
+            Text(
+              _nameOf(player),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: gilroyBold,
+                fontSize: index == 0 ? 17 : 15,
               ),
             ),
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.16),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: color.withValues(alpha: 0.4)),
+              ),
+              child: Text(
+                _pointsText(player.points),
+                style: TextStyle(
+                  color: color,
+                  fontFamily: gilroyBold,
+                  fontSize: 15,
+                  height: 1.1,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayerRow extends StatelessWidget {
+  const _PlayerRow({required this.player, required this.index});
+
+  final BestPlayersModel player;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _openProfile(player, index),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF232327), Color(0xFF161618)],
           ),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 400),
-      barrierDismissible: true,
-      barrierLabel: '',
-      barrierColor: Colors.black.withOpacity(0.7),
-      context: context,
-      pageBuilder: (context, animation1, animation2) {
-        return const SizedBox.shrink();
-      },
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 30,
+              child: Text(
+                '${index + 1}',
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontFamily: gilroyBold,
+                  fontSize: 17,
+                ),
+              ),
+            ),
+            _Avatar(url: _imageOf(player), size: 46, color: Colors.white24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                _nameOf(player),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: gilroySemiBold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: _gold.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Text(
+                _pointsText(player.points),
+                style: const TextStyle(
+                  color: _gold,
+                  fontFamily: gilroyBold,
+                  fontSize: 16,
+                  height: 1.1,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

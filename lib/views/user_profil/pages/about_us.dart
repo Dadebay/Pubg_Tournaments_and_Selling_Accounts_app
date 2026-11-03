@@ -2,7 +2,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/views/constants/app_bar.dart';
 import 'package:get/get.dart';
@@ -13,8 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../constants/constants.dart';
 import '../../constants/widgets.dart';
 
-// import '../../constants/index.dart';
-
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
 
@@ -23,21 +20,21 @@ class AboutUs extends StatefulWidget {
 }
 
 class _AboutUsState extends State<AboutUs> {
+  late Future<List<AboutUsModel>> _future = AboutUsModel().getAboutUs();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBar(backArrow: true, iconRemove: true, elevationWhite: true, name: 'aboutUs', fontSize: 0.0),
+      appBar: const MyAppBar(backArrow: true, iconRemove: true, elevationWhite: true, name: 'aboutUs', fontSize: 0.0, dividerOpacity: 0.4),
       body: FutureBuilder<List<AboutUsModel>>(
-        future: AboutUsModel().getAboutUs(),
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: spinKit());
           } else if (snapshot.hasError) {
             return errorData(
-              onTap: () {
-                AboutUsModel().getAboutUs();
-              },
+              onTap: () => setState(() => _future = AboutUsModel().getAboutUs()),
             );
           } else if (snapshot.data == null) {
             return emptyData();
@@ -45,16 +42,16 @@ class _AboutUsState extends State<AboutUs> {
           final items = snapshot.data!;
           return ListView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
             children: [
               _header(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               Text(
                 'contactInformation'.tr,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroySemiBold, fontSize: 14),
               ),
-              const SizedBox(height: 12),
-              for (final item in items) _contactCard(brand: _brandAsset(item.name ?? '', item.link ?? ''), phone: _isPhone(item.name ?? '', item.link ?? ''), icon: '$serverURL${item.icon}', name: item.name!, onTap: () => handleLink(item.link!)),
+              const SizedBox(height: 10),
+              _list(items),
             ],
           );
         },
@@ -62,46 +59,67 @@ class _AboutUsState extends State<AboutUs> {
     );
   }
 
-  static const _gold = Color(0xFFFFC83D);
-
-  /// The app's name on a navy card with a soft gold glow.
+  /// The app's logo, name and version, centred on the plain background.
   Widget _header() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 72,
+          height: 72,
+          child: Image.asset(
+            'assets/image/logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stack) => const HugeIcon(icon: HugeIcons.strokeRoundedGameController01, color: kPrimaryColor, size: 40),
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text('UC Dayy', style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24)),
+        const SizedBox(height: 2),
+        Text('1.0.1', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyMedium, fontSize: 14)),
+      ],
+    );
+  }
+
+  /// One flat card holding every contact as a row, with thin dividers.
+  Widget _list(List<AboutUsModel> items) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF2A2A2F), Color(0xFF151517)]),
-        border: Border.all(color: _gold.withValues(alpha: 0.25)),
-        boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.12), blurRadius: 30)],
-      ),
+      decoration: BoxDecoration(color: kPrimaryColorBlack1, borderRadius: BorderRadius.circular(16)),
       child: Column(
         children: [
-          Container(
-            width: 84,
-            height: 84,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.06),
-              border: Border.all(color: _gold.withValues(alpha: 0.5), width: 1.5),
-            ),
-            child: Image.asset(
-              'assets/image/logo.png',
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stack) => const Icon(IconlyBold.game, color: _gold, size: 36),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'UC Dayy',
-            style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 26),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '1.0.1',
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroyMedium, fontSize: 15),
-          ),
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0) Divider(height: 1, thickness: 1, indent: 68, color: Colors.white.withValues(alpha: 0.06)),
+            _row(items[i]),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _row(AboutUsModel item) {
+    final name = item.name ?? '';
+    final link = item.link ?? '';
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => handleLink(link),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            SizedBox(width: 36, child: Center(child: _logo(item, 28))),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16)),
+                  const SizedBox(height: 2),
+                  Text(_subtitle(link), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyMedium, fontSize: 13)),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded, color: Colors.white.withValues(alpha: 0.35), size: 22),
+          ],
+        ),
       ),
     );
   }
@@ -125,79 +143,45 @@ class _AboutUsState extends State<AboutUs> {
     return null;
   }
 
+  /// The link without its scheme, for the small line under the contact name.
+  String _subtitle(String link) {
+    return link.replaceFirst(RegExp(r'^(https?://|tel:|mailto:)'), '').replaceFirst(RegExp(r'^www\.'), '').replaceFirst(RegExp(r'/$'), '');
+  }
+
   bool _isPhone(String name, String link) {
     final key = '${name.toLowerCase()} ${link.toLowerCase()}';
     return link.startsWith('+') || link.startsWith('tel:') || key.contains('telefon') || key.contains('phone');
   }
 
-  Widget _contactCard({required String icon, required String name, required VoidCallback onTap, String? brand, bool phone = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(18),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-              child: Row(
-                children: [
-                  Container(
-                    width: 46,
-                    height: 46,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(14)),
-                    child: brand != null
-                        ? SvgPicture.asset(brand, fit: BoxFit.contain)
-                        : phone
-                        ? const HugeIcon(icon: HugeIcons.strokeRoundedCall02, color: _gold, size: 26)
-                        : CachedNetworkImage(
-                            imageUrl: icon,
-                            fadeInCurve: Curves.ease,
-                            fit: BoxFit.contain,
-                            placeholder: (context, url) => const SizedBox.shrink(),
-                            errorWidget: (context, url, error) => const Icon(IconlyLight.call, color: _gold),
-                          ),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 17, color: Colors.white),
-                    ),
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.14)),
-                    child: const Icon(IconlyLight.arrowRight2, color: _gold, size: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+  Widget _logo(AboutUsModel item, double size) {
+    final name = item.name ?? '';
+    final link = item.link ?? '';
+    final brand = _brandAsset(name, link);
+    if (brand != null) {
+      return SvgPicture.asset(brand, width: size, height: size, fit: BoxFit.contain);
+    }
+    if (_isPhone(name, link)) {
+      return HugeIcon(icon: HugeIcons.strokeRoundedCall02, color: kPrimaryColor, size: size);
+    }
+    return CachedNetworkImage(
+      imageUrl: '$serverURL${item.icon}',
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      placeholder: (context, url) => const SizedBox.shrink(),
+      errorWidget: (context, url, error) => HugeIcon(icon: HugeIcons.strokeRoundedLink01, color: kPrimaryColor, size: size),
     );
   }
 
-  void handleLink(String link) async {
+  Future<void> handleLink(String link) async {
     final Uri uri;
     if (link.startsWith('+') || link.startsWith('tel:')) {
       uri = Uri(scheme: 'tel', path: link.startsWith('tel:') ? link.substring(4) : link);
     } else {
       uri = Uri.parse(link);
     }
-    if (await canLaunch(uri.toString())) {
-      await launch(uri.toString());
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       showSnackBar('tournamentInfo14', 'errorLoadEmptyData', Colors.red);
     }

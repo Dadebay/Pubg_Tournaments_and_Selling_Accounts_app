@@ -110,40 +110,43 @@ class _TopUpScreenState extends State<TopUpScreen> {
 
   void _showCardTopUpDialog() {
     Get.dialog(
-      AlertDialog(
-        backgroundColor: kPrimaryColorBlack,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'online_p'.tr,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: gilroySemiBold,
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomTextField(
-              labelName: 'add_amount'.tr,
-              borderRadius: true,
-              controller: amountController,
-              focusNode: amountFocusNode,
-              requestfocusNode: amountFocusNode,
-              isNumber: true,
-            ),
-            const SizedBox(height: 20),
-            AgreeButton(
-              name: 'pay_m'.tr,
-              onTap: () {
-                if (amountController.text.isEmpty) {
-                  showSnackBar('Ýalňyşlyk', 'Möçberi giriziň', Colors.red);
-                } else {
-                  Get.back(); // close dialog
-                  addMoneyToCARD();
-                }
-              },
-            ),
-          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('online_p'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 21)),
+              const SizedBox(height: 18),
+              CustomTextField(
+                labelName: 'add_amount'.tr,
+                borderRadius: true,
+                controller: amountController,
+                focusNode: amountFocusNode,
+                requestfocusNode: amountFocusNode,
+                isNumber: true,
+              ),
+              const SizedBox(height: 20),
+              AgreeButton(
+                name: 'pay_m'.tr,
+                onTap: () {
+                  if (amountController.text.isEmpty) {
+                    showSnackBar('Ýalňyşlyk', 'Möçberi giriziň', Colors.red);
+                  } else {
+                    Get.back(); // close dialog
+                    addMoneyToCARD();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -157,57 +160,36 @@ class _TopUpScreenState extends State<TopUpScreen> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    const gold = Color(0xFFFFC83D);
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
       child: Container(
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
         ),
-        padding: const EdgeInsets.all(24),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, size: 32, color: color),
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(color: gold.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(18)),
+              child: Icon(icon, size: 28, color: gold),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F2937),
-                    ),
-                  ),
+                  Text(title, style: const TextStyle(fontSize: 18, fontFamily: gilroyBold, color: Colors.white)),
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
+                  Text(subtitle, style: TextStyle(fontSize: 14, fontFamily: gilroyMedium, color: Colors.white.withValues(alpha: 0.6))),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+            Icon(Icons.chevron_right_rounded, color: Colors.white.withValues(alpha: 0.35)),
           ],
         ),
       ),

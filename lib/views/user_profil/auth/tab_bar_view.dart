@@ -89,14 +89,6 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, top: 25),
-              child: Text(
-                'signInDialog'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 20),
-              ),
-            ),
             page ? CustomTextField(labelName: 'signIn1', controller: fullNameController, focusNode: fullNameFocusNode, requestfocusNode: idFocusNode, borderRadius: true, isNumber: false) : const SizedBox.shrink(),
             page
                 ? Padding(
@@ -105,7 +97,7 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
                   )
                 : const SizedBox.shrink(),
             Padding(
-              padding: page ? const EdgeInsets.symmetric(vertical: 10) : const EdgeInsets.symmetric(vertical: 25),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: PhoneNumber(
                 mineFocus: phoneNumberFocusNode,
                 controller: phoneNumberController,
@@ -114,7 +106,7 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 16,
             ),
             AgreeButton(
               onTap: page ? onTappSignIn : onTapp,
@@ -126,28 +118,96 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kPrimaryColorBlack,
-      appBar: MyAppBar(fontSize: 0.0, backArrow: true, iconRemove: true, name: page == false ? 'signIn'.tr : 'signUp'.tr, elevationWhite: true),
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Center(
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: ClipRRect(
-                  borderRadius: borderRadius30,
-                  child: Image.asset(
-                    logo,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+  static const _gold = Color(0xFFFFC83D);
+
+  /// The gamer picture, fading into the black page at the bottom.
+  Widget _hero(double height) {
+    return SizedBox(
+      height: height,
+      child: Stack(
+        children: [
+          // Warm glow behind the phone light of the picture.
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(center: const Alignment(0, 0.35), radius: 0.8, colors: [_gold.withValues(alpha: 0.28), Colors.transparent]),
               ),
             ),
+          ),
+          Positioned.fill(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 700),
+              curve: Curves.easeOutCubic,
+              builder: (context, t, child) => Opacity(
+                opacity: t,
+                child: Transform.translate(offset: Offset(0, 24 * (1 - t)), child: child),
+              ),
+              child: ShaderMask(
+                blendMode: BlendMode.dstIn,
+                shaderCallback: (rect) => const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.black, Colors.black, Colors.transparent], stops: [0, 0.62, 1]).createShader(rect),
+                child: Image.asset('assets/image/login_gamer.webp', fit: BoxFit.cover, alignment: Alignment.topCenter, filterQuality: FilterQuality.high, excludeFromSemantics: true),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 16,
+            top: 8,
+            child: GestureDetector(
+              onTap: Get.back,
+              child: Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black.withValues(alpha: 0.45), border: Border.all(color: Colors.white.withValues(alpha: 0.14))),
+                child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _header() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: Text(
+              page ? 'signUp'.tr : 'signIn'.tr,
+              key: ValueKey(page),
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 32, height: 1.1),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: 44,
+            height: 4,
+            decoration: BoxDecoration(color: _gold, borderRadius: BorderRadius.circular(2)),
+          ),
+          const SizedBox(height: 12),
+          Text('signInDialog'.tr, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 16, height: 1.3)),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final heroHeight = (size.width * 0.9).clamp(240.0, size.height * 0.42);
+    return Scaffold(
+      backgroundColor: kPrimaryColorBlack,
+      body: SafeArea(
+        bottom: false,
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 32),
+          children: [
+            _hero(heroHeight),
+            _header(),
             loginDesign(),
           ],
         ),
