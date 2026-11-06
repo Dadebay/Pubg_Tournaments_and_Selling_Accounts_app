@@ -62,24 +62,17 @@ class _PremiumPageState extends State<PremiumPage> {
         bottom: false,
         child: Column(
           children: [
-            CenteredHeader(
-              title: 'tournament'.tr,
-              trailing: const BalanceChip(),
-            ),
+            CenteredHeader(title: 'tournament'.tr, trailing: const BalanceChip()),
             Expanded(
               child: FutureBuilder<ApiResult>(
                 future: _future,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: _gold),
-                    );
+                    return const Center(child: CircularProgressIndicator(color: _gold));
                   }
                   final result = snapshot.data;
                   if (result == null || !result.ok) {
-                    final needsLogin =
-                        result != null &&
-                        (result.statusCode == 401 || result.statusCode == 403);
+                    final needsLogin = result != null && (result.statusCode == 401 || result.statusCode == 403);
                     return Stack(
                       children: [
                         _blurred(_content()),
@@ -99,23 +92,14 @@ class _PremiumPageState extends State<PremiumPage> {
                           duration: const Duration(milliseconds: 350),
                           switchInCurve: Curves.easeOutBack,
                           switchOutCurve: Curves.easeIn,
-                          transitionBuilder: (child, animation) =>
-                              FadeTransition(
-                                opacity: animation,
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0, 0.15),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: child,
-                                ),
-                              ),
-                          child: KeyedSubtree(
-                            key: ValueKey(_peeking),
-                            child: _peeking
-                                ? _peekBar(status)
-                                : _offerCard(status),
+                          transitionBuilder: (child, animation) => FadeTransition(
+                            opacity: animation,
+                            child: SlideTransition(
+                              position: Tween<Offset>(begin: const Offset(0, 0.15), end: Offset.zero).animate(animation),
+                              child: child,
+                            ),
                           ),
+                          child: KeyedSubtree(key: ValueKey(_peeking), child: _peeking ? _peekBar(status) : _offerCard(status)),
                         ),
                       ),
                     ],
@@ -133,11 +117,7 @@ class _PremiumPageState extends State<PremiumPage> {
     return IgnorePointer(
       child: blur
           ? ImageFiltered(
-              imageFilter: ImageFilter.blur(
-                sigmaX: 3,
-                sigmaY: 3,
-                tileMode: TileMode.decal,
-              ),
+              imageFilter: ImageFilter.blur(sigmaX: 3, sigmaY: 3, tileMode: TileMode.decal),
               child: child,
             )
           : child,
@@ -151,23 +131,12 @@ class _PremiumPageState extends State<PremiumPage> {
       decoration: _cardDecoration,
       child: Row(
         children: [
-          const HugeIcon(
-            icon: HugeIcons.strokeRoundedCrown,
-            color: _gold,
-            size: 22,
-            strokeWidth: 1.8,
-          ),
+          const HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 22, strokeWidth: 1.8),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              status.price > 0
-                  ? '${status.priceText} TMT'
-                  : 'premiumLockedTitle'.tr,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: gilroyBold,
-                fontSize: 17,
-              ),
+              status.price > 0 ? '${status.priceText} TMT' : 'premiumLockedTitle'.tr,
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 17),
             ),
           ),
           GestureDetector(
@@ -178,17 +147,11 @@ class _PremiumPageState extends State<PremiumPage> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(21),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
-                ),
+                gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
               ),
               child: Text(
                 'premiumBuy'.tr,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: gilroyBold,
-                  fontSize: 15,
-                ),
+                style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 15),
               ),
             ),
           ),
@@ -202,20 +165,11 @@ class _PremiumPageState extends State<PremiumPage> {
     return Positioned.fill(
       child: DecoratedBox(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0x00000000), Color(0x00000000), Color(0xCC000000)],
-            stops: [0, 0.35, 1],
-          ),
+          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x00000000), Color(0x00000000), Color(0xCC000000)], stops: [0, 0.35, 1]),
         ),
         child: Align(
           alignment: Alignment.bottomCenter,
-          child: SingleChildScrollView(
-            reverse: true,
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 96),
-            child: child,
-          ),
+          child: SingleChildScrollView(reverse: true, padding: const EdgeInsets.fromLTRB(16, 0, 16, 96), child: child),
         ),
       ),
     );
@@ -229,13 +183,7 @@ class _PremiumPageState extends State<PremiumPage> {
   }
 
   /// A round icon, a title, a line of explanation and one action.
-  Widget _stateCard({
-    required List<List<dynamic>> icon,
-    required String title,
-    String? text,
-    required String action,
-    required VoidCallback onAction,
-  }) {
+  Widget _stateCard({required List<List<dynamic>> icon, required String title, required String action, required VoidCallback onAction, String? text}) {
     return Container(
       padding: const EdgeInsets.fromLTRB(22, 26, 22, 22),
       decoration: _cardDecoration,
@@ -251,36 +199,21 @@ class _PremiumPageState extends State<PremiumPage> {
               border: Border.all(color: _gold.withValues(alpha: 0.5)),
             ),
             child: Center(
-              child: HugeIcon(
-                icon: icon,
-                color: _gold,
-                size: 34,
-                strokeWidth: 1.8,
-              ),
+              child: HugeIcon(icon: icon, color: _gold, size: 34, strokeWidth: 1.8),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: gilroyBold,
-              fontSize: 22,
-              height: 1.15,
-            ),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22, height: 1.15),
           ),
           if (text != null) ...[
             const SizedBox(height: 8),
             Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color(0xFFB8B8C0),
-                fontFamily: gilroyRegular,
-                fontSize: 14.5,
-                height: 1.4,
-              ),
+              style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 14.5, height: 1.4),
             ),
           ],
           const SizedBox(height: 20),
@@ -291,35 +224,18 @@ class _PremiumPageState extends State<PremiumPage> {
   }
 
   Widget _loginCard() {
-    return _stateCard(
-      icon: HugeIcons.strokeRoundedLockKey,
-      title: 'premiumLoginFirst'.tr,
-      text: 'premiumLoginText'.tr,
-      action: 'premiumLoginButton'.tr,
-      onAction: _openLogin,
-    );
+    return _stateCard(icon: HugeIcons.strokeRoundedLockKey, title: 'premiumLoginFirst'.tr, text: 'premiumLoginText'.tr, action: 'premiumLoginButton'.tr, onAction: _openLogin);
   }
 
   Widget _errorCard() {
-    return _stateCard(
-      icon: HugeIcons.strokeRoundedWifiOff01,
-      title: 'premiumLoadError'.tr,
-      action: 'premiumRetry'.tr,
-      onAction: _reload,
-    );
+    return _stateCard(icon: HugeIcons.strokeRoundedWifiOff01, title: 'premiumLoadError'.tr, action: 'premiumRetry'.tr, onAction: _reload);
   }
 
   BoxDecoration get _cardDecoration => BoxDecoration(
     borderRadius: BorderRadius.circular(30),
     border: Border.all(color: _gold.withValues(alpha: 0.4)),
-    gradient: const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF2E2718), Color(0xFF141416)],
-    ),
-    boxShadow: [
-      BoxShadow(color: _gold.withValues(alpha: 0.18), blurRadius: 30),
-    ],
+    gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2E2718), Color(0xFF141416)]),
+    boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.18), blurRadius: 30)],
   );
 
   Widget _offerCard(PremiumStatus status) {
@@ -338,34 +254,20 @@ class _PremiumPageState extends State<PremiumPage> {
               border: Border.all(color: _gold.withValues(alpha: 0.5)),
             ),
             child: const Center(
-              child: HugeIcon(
-                icon: HugeIcons.strokeRoundedCrown,
-                color: _gold,
-                size: 34,
-                strokeWidth: 1.8,
-              ),
+              child: HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 34, strokeWidth: 1.8),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'premiumLockedTitle'.tr,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: gilroyBold,
-              fontSize: 24,
-            ),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24),
           ),
           const SizedBox(height: 8),
           Text(
             'premiumLockedText'.tr,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFFB8B8C0),
-              fontFamily: gilroyRegular,
-              fontSize: 14.5,
-              height: 1.4,
-            ),
+            style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 14.5, height: 1.4),
           ),
           const SizedBox(height: 18),
           _perk(HugeIcons.strokeRoundedCrown, 'premiumPerkTournaments'.tr),
@@ -380,28 +282,16 @@ class _PremiumPageState extends State<PremiumPage> {
                   children: [
                     TextSpan(
                       text: status.priceText,
-                      style: const TextStyle(
-                        color: _gold,
-                        fontFamily: gilroyBold,
-                        fontSize: 34,
-                      ),
+                      style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 34),
                     ),
                     const TextSpan(
                       text: ' TMT',
-                      style: TextStyle(
-                        color: _gold,
-                        fontFamily: gilroySemiBold,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: _gold, fontFamily: gilroySemiBold, fontSize: 16),
                     ),
                     if (status.days > 0)
                       TextSpan(
                         text: '  /  ${status.days} ${'premiumDays'.tr}',
-                        style: const TextStyle(
-                          color: Colors.white60,
-                          fontFamily: gilroyMedium,
-                          fontSize: 15,
-                        ),
+                        style: const TextStyle(color: Colors.white60, fontFamily: gilroyMedium, fontSize: 15),
                       ),
                   ],
                 ),
@@ -412,11 +302,7 @@ class _PremiumPageState extends State<PremiumPage> {
             onPressed: () => setState(() => _peeking = true),
             child: Text(
               'premiumPeek'.tr,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontFamily: gilroySemiBold,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold, fontSize: 14),
             ),
           ),
         ],
@@ -432,28 +318,16 @@ class _PremiumPageState extends State<PremiumPage> {
           Container(
             width: 34,
             height: 34,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _gold.withValues(alpha: 0.12),
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.12)),
             child: Center(
-              child: HugeIcon(
-                icon: icon,
-                color: _gold,
-                size: 17,
-                strokeWidth: 1.8,
-              ),
+              child: HugeIcon(icon: icon, color: _gold, size: 17, strokeWidth: 1.8),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: gilroySemiBold,
-                fontSize: 14.5,
-              ),
+              style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 14.5),
             ),
           ),
         ],
@@ -470,26 +344,13 @@ class _PremiumPageState extends State<PremiumPage> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(27),
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
-          ),
+          gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
         ),
         child: busy
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                  strokeWidth: 3,
-                ),
-              )
+            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 3))
             : Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: gilroyBold,
-                  fontSize: 17,
-                ),
+                style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 17),
               ),
       ),
     );
@@ -501,46 +362,21 @@ class _PremiumPageState extends State<PremiumPage> {
       backgroundColor: const Color(0xFF1C1C20),
       onRefresh: _reload,
       child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         // Room for the navigation bar that covers the bottom of the page.
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
-          if (status != null && status.daysLeft > 0) ...[
-            _activeChip(status),
-            const SizedBox(height: 12),
-          ],
-          _Tile(
-            title: 'bestPlayers2'.tr,
-            image: 'assets/image/img3.jpg',
-            icon: HugeIcons.strokeRoundedAward01,
-            height: 150,
-            onTap: () => Get.to(() => const BestPlayers()),
-          ),
+          if (status != null && status.daysLeft > 0) ...[_activeChip(status), const SizedBox(height: 12)],
+          _Tile(title: 'bestPlayers2'.tr, image: 'assets/image/img3.jpg', icon: HugeIcons.strokeRoundedAward01, height: 150, onTap: () => Get.to(() => const BestPlayers())),
           const SizedBox(height: 14),
           Row(
             children: [
               Expanded(
-                child: _Tile(
-                  title: 'Turnir',
-                  image: 'assets/image/img1.jpg',
-                  icon: HugeIcons.strokeRoundedCrown,
-                  height: 190,
-                  onTap: () =>
-                      Get.to(() => const TournamentPage(tournamentType: 1)),
-                ),
+                child: _Tile(title: 'Turnir', image: 'assets/image/img1.jpg', icon: HugeIcons.strokeRoundedCrown, height: 190, onTap: () => Get.to(() => const TournamentPage(tournamentType: 1))),
               ),
               const SizedBox(width: 14),
               Expanded(
-                child: _Tile(
-                  title: 'Lobbi',
-                  image: 'assets/image/img2.jpg',
-                  icon: HugeIcons.strokeRoundedGift,
-                  height: 190,
-                  onTap: () =>
-                      Get.to(() => const TournamentPage(tournamentType: 2)),
-                ),
+                child: _Tile(title: 'Lobbi', image: 'assets/image/img2.jpg', icon: HugeIcons.strokeRoundedGift, height: 190, onTap: () => Get.to(() => const TournamentPage(tournamentType: 2))),
               ),
             ],
           ),
@@ -587,8 +423,7 @@ class _PremiumCountdownState extends State<_PremiumCountdown> {
   @override
   void didUpdateWidget(_PremiumCountdown old) {
     super.didUpdateWidget(old);
-    if (old.status.until != widget.status.until ||
-        old.status.daysLeft != widget.status.daysLeft) {
+    if (old.status.until != widget.status.until || old.status.daysLeft != widget.status.daysLeft) {
       _setEnd();
     }
   }
@@ -612,52 +447,31 @@ class _PremiumCountdownState extends State<_PremiumCountdown> {
 
   @override
   Widget build(BuildContext context) {
-    final units = [
-      (_left.inDays, 'premiumDays'.tr),
-      (_left.inHours % 24, 'premiumHours'.tr),
-      (_left.inMinutes % 60, 'premiumMinutes'.tr),
-      (_left.inSeconds % 60, 'premiumSeconds'.tr),
-    ];
+    final units = [(_left.inDays, 'premiumDays'.tr), (_left.inHours % 24, 'premiumHours'.tr), (_left.inMinutes % 60, 'premiumMinutes'.tr), (_left.inSeconds % 60, 'premiumSeconds'.tr)];
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: _gold.withValues(alpha: 0.3)),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF2A2416), Color(0xFF141416)],
-        ),
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2A2416), Color(0xFF141416)]),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const HugeIcon(
-                icon: HugeIcons.strokeRoundedCrown,
-                color: _gold,
-                size: 20,
-                strokeWidth: 1.8,
-              ),
+              const HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 20, strokeWidth: 1.8),
               const SizedBox(width: 8),
               Text(
                 'premiumDaysLeft'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: gilroySemiBold,
-                  fontSize: 14,
-                ),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 14),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              for (var i = 0; i < units.length; i++) ...[
-                if (i > 0) const SizedBox(width: 8),
-                Expanded(child: _box(units[i].$1, units[i].$2)),
-              ],
+              for (var i = 0; i < units.length; i++) ...[if (i > 0) const SizedBox(width: 8), Expanded(child: _box(units[i].$1, units[i].$2))],
             ],
           ),
         ],
@@ -668,30 +482,17 @@ class _PremiumCountdownState extends State<_PremiumCountdown> {
   Widget _box(int value, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: BoxDecoration(
-        color: _gold.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(14),
-      ),
+      decoration: BoxDecoration(color: _gold.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(14)),
       child: Column(
         children: [
           Text(
             value.toString().padLeft(2, '0'),
-            style: const TextStyle(
-              color: _gold,
-              fontFamily: gilroyBold,
-              fontSize: 24,
-              height: 1,
-            ),
+            style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 24, height: 1),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFFB8B8C0),
-              fontFamily: gilroyMedium,
-              fontSize: 11,
-              height: 1,
-            ),
+            style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 11, height: 1),
           ),
         ],
       ),
@@ -701,13 +502,7 @@ class _PremiumCountdownState extends State<_PremiumCountdown> {
 
 /// A picture tile: the title at the bottom over a dark fade, an icon and an arrow.
 class _Tile extends StatelessWidget {
-  const _Tile({
-    required this.title,
-    required this.image,
-    required this.icon,
-    required this.height,
-    required this.onTap,
-  });
+  const _Tile({required this.title, required this.image, required this.icon, required this.height, required this.onTap});
 
   final String title;
   final String image;
@@ -725,13 +520,7 @@ class _Tile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
           border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 18,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 18, offset: const Offset(0, 8))],
         ),
         child: Stack(
           fit: StackFit.expand,
@@ -739,16 +528,7 @@ class _Tile extends StatelessWidget {
             Image.asset(image, fit: BoxFit.cover, cacheWidth: 900),
             const DecoratedBox(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0x22000000),
-                    Color(0x00000000),
-                    Color(0xDD000000),
-                  ],
-                  stops: [0, 0.35, 1],
-                ),
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x22000000), Color(0x00000000), Color(0xDD000000)], stops: [0, 0.35, 1]),
               ),
             ),
             Positioned(
@@ -763,12 +543,7 @@ class _Tile extends StatelessWidget {
                   border: Border.all(color: _gold.withValues(alpha: 0.5)),
                 ),
                 child: Center(
-                  child: HugeIcon(
-                    icon: icon,
-                    color: _gold,
-                    size: 20,
-                    strokeWidth: 1.8,
-                  ),
+                  child: HugeIcon(icon: icon, color: _gold, size: 20, strokeWidth: 1.8),
                 ),
               ),
             ),
@@ -780,12 +555,7 @@ class _Tile extends StatelessWidget {
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: gilroyBold,
-                  fontSize: 24,
-                  height: 1.1,
-                ),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1.1),
               ),
             ),
             Positioned(
@@ -794,17 +564,9 @@ class _Tile extends StatelessWidget {
               child: Container(
                 width: 34,
                 height: 34,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.16),
-                ),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.16)),
                 child: const Center(
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedArrowUpRight01,
-                    color: Colors.white,
-                    size: 18,
-                    strokeWidth: 2,
-                  ),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowUpRight01, color: Colors.white, size: 18, strokeWidth: 2),
                 ),
               ),
             ),
@@ -830,12 +592,7 @@ class _CashbackBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         child: AspectRatio(
           aspectRatio: 2,
-          child: Image.asset(
-            'assets/image/cashback_banner.webp',
-            fit: BoxFit.cover,
-            cacheWidth: 1200,
-            filterQuality: FilterQuality.high,
-          ),
+          child: Image.asset('assets/image/cashback_banner.webp', fit: BoxFit.cover, cacheWidth: 1200, filterQuality: FilterQuality.high),
         ),
       ),
     );

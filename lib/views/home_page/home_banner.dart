@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:game_app/models/home_page_model.dart';
+import 'package:game_app/utils/banner_action.dart';
 import 'package:game_app/views/constants/shimmer.dart';
 import 'package:game_app/views/home_page/banner_profil.dart';
 import 'package:get/get.dart';
@@ -79,12 +80,21 @@ class _HomeBannerState extends State<HomeBanner> {
     );
   }
 
+  /// A banner with an action opens that page; a plain link opens in the browser;
+  /// one with neither shows its own detail page.
+  Future<void> _open(BannerModel banner, String title, String image, String content) async {
+    if (await BannerAction.open(banner)) {
+      return;
+    }
+    await Get.to(() => BannerProfileView(title, image, content));
+  }
+
   Widget _card(BannerModel banner) {
     final title = banner.title ?? '';
     final content = banner.content ?? '';
     final image = _imageUrl(banner.image);
     return GestureDetector(
-      onTap: () => Get.to(() => BannerProfileView(title, image, content)),
+      onTap: () => _open(banner, title, image, content),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 6),
         clipBehavior: Clip.antiAlias,
@@ -116,7 +126,12 @@ class _HomeBannerState extends State<HomeBanner> {
                 left: 16,
                 right: 16,
                 bottom: 14,
-                child: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18, height: 1.15)),
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18, height: 1.15),
+                ),
               ),
           ],
         ),

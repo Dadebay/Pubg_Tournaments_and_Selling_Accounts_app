@@ -2,6 +2,7 @@
 
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/views/other_pages/show_all_acconts.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -33,27 +34,16 @@ SnackbarController showSnackBar(String title, String subtitle, Color color) {
 Padding divider() {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    child: Divider(
-      color: backgroundColor.withOpacity(0.4),
-      thickness: 2,
-    ),
+    child: Divider(color: backgroundColor.withOpacity(0.4), thickness: 2),
   );
 }
 
 Widget dividerr() {
-  return Container(
-    color: Colors.grey[300],
-    width: double.infinity,
-    height: 1,
-  );
+  return Container(color: Colors.grey[300], width: double.infinity, height: 1);
 }
 
 Divider customDivider() {
-  return const Divider(
-    thickness: 1,
-    color: backgroundColor,
-    height: 1,
-  );
+  return const Divider(thickness: 1, color: backgroundColor, height: 1);
 }
 
 Widget spinKit() {
@@ -71,17 +61,14 @@ Widget userAppBarMoney() {
           if (Get.find<WalletController>().userMoney != null) {
             a = double.parse(Get.find<WalletController>().userMoney.toString());
           }
-          return Text(a.toStringAsFixed(1), style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 23));
+          return Text(
+            a.toStringAsFixed(1),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 23),
+          );
         }),
         const Padding(
-          padding: EdgeInsets.only(
-            left: 5,
-            right: 5,
-          ),
-          child: Icon(
-            IconlyLight.wallet,
-            color: Colors.white,
-          ),
+          padding: EdgeInsets.only(left: 5, right: 5),
+          child: Icon(IconlyLight.wallet, color: Colors.white),
         ),
       ],
     ),
@@ -98,12 +85,14 @@ Column errorData({required Function() onTap}) {
         'errorLoadData'.tr,
         style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
       ),
-      const SizedBox(
-        height: 15,
-      ),
+      const SizedBox(height: 15),
       ElevatedButton(
         onPressed: onTap,
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.white, shape: const RoundedRectangleBorder(borderRadius: borderRadius5), elevation: 0),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+          elevation: 0,
+        ),
         child: Text(
           'noConnection3'.tr,
           style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold, fontSize: 16),
@@ -120,9 +109,7 @@ Column emptyData() {
     mainAxisSize: MainAxisSize.min,
     children: [
       Lottie.asset(noDataLottie, width: 350, height: 350),
-      const SizedBox(
-        height: 15,
-      ),
+      const SizedBox(height: 15),
       Text(
         'errorLoadEmptyData'.tr,
         style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
@@ -151,9 +138,7 @@ ListView waitingData() {
         margin: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
         height: 170,
         decoration: BoxDecoration(borderRadius: borderRadius15, color: kPrimaryColorBlack1.withOpacity(0.4)),
-        child: Center(
-          child: spinKit(),
-        ),
+        child: Center(child: spinKit()),
       );
     },
   );
@@ -185,16 +170,17 @@ Padding listViewName(String text, bool icon, Size size) {
           style: TextStyle(color: Colors.white, fontSize: size.width >= 800 ? 30 : 24, fontFamily: gilroyBold),
         ),
         icon
-            ? IconButton(
-                onPressed: () {
-                  Get.to(
-                    () => const ShowAllAccounts(name: 'accountsForSale'),
-                  );
-                },
-                icon: Icon(
-                  IconlyLight.arrowRightCircle,
-                  color: Colors.white,
-                  size: size.width >= 800 ? 35 : 25,
+            ? GestureDetector(
+                onTap: () => Get.to(() => const ShowAllAccounts(name: 'accountsForSale')),
+                child: Container(
+                  width: size.width >= 800 ? 48 : 38,
+                  height: size.width >= 800 ? 48 : 38,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.85), width: 1.6),
+                  ),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white, size: size.width >= 800 ? 26 : 20, strokeWidth: 2),
                 ),
               )
             : const SizedBox.shrink(),
@@ -210,9 +196,7 @@ CustomFooter footer() {
       if (mode == LoadStatus.idle) {
         body = const Text('');
       } else if (mode == LoadStatus.loading) {
-        body = const CircularProgressIndicator(
-          color: kPrimaryColor,
-        );
+        body = const CircularProgressIndicator(color: kPrimaryColor);
       } else if (mode == LoadStatus.failed) {
         body = const Text('Load Failed!Click retry!');
       } else if (mode == LoadStatus.canLoading) {
@@ -220,10 +204,7 @@ CustomFooter footer() {
       } else {
         body = const Text('No more Data');
       }
-      return SizedBox(
-        height: 55.0,
-        child: Center(child: body),
-      );
+      return SizedBox(height: 55.0, child: Center(child: body));
     },
   );
 }

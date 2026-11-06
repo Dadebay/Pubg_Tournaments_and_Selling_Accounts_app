@@ -1,14 +1,9 @@
 /// Models of the lucky wheel (`/api/games/lucky/`). The answers are read
 /// leniently: numbers may arrive as numbers or as strings.
-double _num(dynamic value) =>
-    value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
+double _num(dynamic value) => value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
 
 class LuckyPrize {
-  const LuckyPrize({
-    required this.id,
-    required this.label,
-    required this.points,
-  });
+  const LuckyPrize({required this.id, required this.label, required this.points});
 
   final int id;
 
@@ -20,27 +15,15 @@ class LuckyPrize {
     final points = _num(json['points']);
     final label = '${json['label'] ?? ''}'.trim();
     return LuckyPrize(
-      id: json['id'] is int
-          ? json['id'] as int
-          : int.tryParse('${json['id']}') ?? 0,
-      label: label.isEmpty
-          ? '${points == points.roundToDouble() ? points.toInt() : points} TMT'
-          : label,
+      id: json['id'] is int ? json['id'] as int : int.tryParse('${json['id']}') ?? 0,
+      label: label.isEmpty || double.tryParse(label) != null ? '${points == points.roundToDouble() ? points.toInt() : points} TMT' : label,
       points: points,
     );
   }
 }
 
 class LuckyGame {
-  const LuckyGame({
-    required this.id,
-    required this.title,
-    required this.status,
-    required this.winners,
-    required this.winnersLeft,
-    required this.prizes,
-    this.spinPrice,
-  });
+  const LuckyGame({required this.id, required this.title, required this.status, required this.winners, required this.winnersLeft, required this.prizes, this.spinPrice});
 
   final int id;
   final String title;
@@ -59,20 +42,12 @@ class LuckyGame {
   factory LuckyGame.fromJson(Map<dynamic, dynamic> json) {
     final prizes = json['prizes'];
     return LuckyGame(
-      id: json['id'] is int
-          ? json['id'] as int
-          : int.tryParse('${json['id']}') ?? 0,
+      id: json['id'] is int ? json['id'] as int : int.tryParse('${json['id']}') ?? 0,
       title: '${json['title'] ?? json['name'] ?? ''}',
       status: '${json['status'] ?? ''}'.toLowerCase(),
-      winners: json['winners'] == null
-          ? null
-          : int.tryParse('${json['winners']}'),
-      winnersLeft: json['winners_left'] == null
-          ? null
-          : int.tryParse('${json['winners_left']}'),
-      prizes: prizes is List
-          ? prizes.whereType<Map>().map(LuckyPrize.fromJson).toList()
-          : const [],
+      winners: json['winners'] == null ? null : int.tryParse('${json['winners']}'),
+      winnersLeft: json['winners_left'] == null ? null : int.tryParse('${json['winners_left']}'),
+      prizes: prizes is List ? prizes.whereType<Map>().map(LuckyPrize.fromJson).toList() : const [],
       spinPrice: json['spin_price'] == null ? null : _num(json['spin_price']),
     );
   }
@@ -80,12 +55,7 @@ class LuckyGame {
 
 /// `GET /games/lucky/`: the games to show and the player's cashback.
 class LuckyData {
-  const LuckyData({
-    required this.cashback,
-    required this.spinsLeft,
-    required this.spinPrice,
-    required this.games,
-  });
+  const LuckyData({required this.cashback, required this.spinsLeft, required this.spinPrice, required this.games});
 
   final double cashback;
 
@@ -96,20 +66,14 @@ class LuckyData {
 
   factory LuckyData.fromJson(dynamic json) {
     final map = json is Map ? json : const <dynamic, dynamic>{};
-    final raw =
-        map['games'] ?? map['results'] ?? (json is List ? json : const []);
-    final games = raw is List
-        ? raw.whereType<Map>().map(LuckyGame.fromJson).toList()
-        : <LuckyGame>[];
+    // The server answers with one `game` object (without an id) or a list.
+    final raw = map['games'] ?? map['results'] ?? (map['game'] is Map ? [map['game']] : null) ?? (json is List ? json : const []);
+    final games = raw is List ? raw.whereType<Map>().map(LuckyGame.fromJson).toList() : <LuckyGame>[];
     final cashback = _num(map['cashback']);
     return LuckyData(
       cashback: cashback,
-      spinsLeft: map['spins_left'] == null
-          ? cashback.floor()
-          : (int.tryParse('${map['spins_left']}') ?? cashback.floor()),
-      spinPrice: map['spin_price'] == null
-          ? (games.isEmpty ? null : games.first.spinPrice)
-          : _num(map['spin_price']),
+      spinsLeft: map['spins_left'] == null ? cashback.floor() : (int.tryParse('${map['spins_left']}') ?? cashback.floor()),
+      spinPrice: map['spin_price'] == null ? (games.isEmpty ? null : games.first.spinPrice) : _num(map['spin_price']),
       games: games,
     );
   }
@@ -117,37 +81,31 @@ class LuckyData {
 
 /// `POST /games/lucky/{id}/spin/`.
 class LuckySpinResult {
-  const LuckySpinResult({
-    required this.won,
-    required this.points,
-    required this.prizeLabel,
-    required this.prizeIndex,
-    required this.cashback,
-    required this.pointsBalance,
-  });
+  const LuckySpinResult({required this.won, required this.points, required this.prizeLabel, required this.prizeIndex, required this.prizeId, required this.cashback, required this.pointsBalance});
 
   final bool won;
   final double points;
   final String? prizeLabel;
 
-  /// The slice the wheel has to stop on.
+  /// The slice the wheel has to stop on, or -1 when the server did not say.
   final int prizeIndex;
+
+  /// Id of the won slice, when the server sends the prize object with one.
+  final int? prizeId;
   final double cashback;
   final double? pointsBalance;
 
   factory LuckySpinResult.fromJson(Map<dynamic, dynamic> json) {
     final prize = json['prize'];
+    final cashback = json['cashback'] ?? json['cashback_left'];
     return LuckySpinResult(
       won: json['won'] == true,
       points: _num(json['points']),
-      prizeLabel: prize is Map
-          ? '${prize['label'] ?? ''}'
-          : (prize == null ? null : '$prize'),
-      prizeIndex: int.tryParse('${json['prize_index']}') ?? 0,
-      cashback: _num(json['cashback']),
-      pointsBalance: json['points_balance'] == null
-          ? null
-          : _num(json['points_balance']),
+      prizeLabel: prize is Map ? '${prize['label'] ?? ''}' : (prize == null ? null : '$prize'),
+      prizeIndex: int.tryParse('${json['prize_index']}') ?? -1,
+      prizeId: prize is Map ? int.tryParse('${prize['id']}') : null,
+      cashback: _num(cashback),
+      pointsBalance: json['points_balance'] == null ? null : _num(json['points_balance']),
     );
   }
 }

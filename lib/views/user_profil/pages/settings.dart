@@ -6,7 +6,9 @@ import 'dart:io';
 import 'package:game_app/connection_check.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
+import 'package:game_app/utils/support_push.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/support/support_chat_page.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -24,6 +26,17 @@ class _SettingsState extends State<Settings> {
   static const _red = Color(0xFFFF5A5F);
 
   @override
+  void initState() {
+    super.initState();
+    SupportPush.refreshUnread();
+  }
+
+  Future<void> _openSupport() async {
+    await Get.to(() => const SupportChatPage());
+    await SupportPush.refreshUnread();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isTm = Get.locale!.toLanguageTag() == 'tr';
     return Scaffold(
@@ -36,6 +49,8 @@ class _SettingsState extends State<Settings> {
           _hero(),
           _label('select_language'),
           _group([_row(icon: HugeIcons.strokeRoundedLanguageSquare, title: isTm ? 'Türkmen dili' : 'Rus dili', trailing: _flag(isTm ? tmIcon : ruIcon), onTap: changeLanguage)]),
+          _label('support'),
+          _group([_row(icon: HugeIcons.strokeRoundedCustomerSupport, title: 'support'.tr, trailing: _supportTrailing(), onTap: _openSupport)]),
           _label('share'),
           _group([_row(icon: HugeIcons.strokeRoundedShare08, title: 'share'.tr, trailing: _chevron(), onTap: _shareApp)]),
           const SizedBox(height: 8),
@@ -141,6 +156,28 @@ class _SettingsState extends State<Settings> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _supportTrailing() {
+    return ValueListenableBuilder<int>(
+      valueListenable: SupportPush.unread,
+      builder: (context, unread, _) {
+        if (unread <= 0) {
+          return _chevron();
+        }
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(color: _red, borderRadius: BorderRadius.circular(12)),
+              child: Text('$unread', style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 12)),
+            ),
+            _chevron(),
+          ],
+        );
+      },
     );
   }
 

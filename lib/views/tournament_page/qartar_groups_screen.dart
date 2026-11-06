@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/views/constants/balance_chip.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/centered_header.dart';
@@ -40,7 +40,7 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = '$serverURL${widget.tournament.image}';
+    final imageUrl = tournamentImageUrl(widget.tournament.image);
 
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
@@ -75,11 +75,22 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                   final cards = <Widget>[];
                   if (widget.filter == 'final') {
                     if (sortedGroups.isNotEmpty) {
-                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[0], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[0]]!.first, static_g: ''));
+                      cards.add(
+                        QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[0], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[0]]!.first, static_g: ''),
+                      );
                     }
                   } else if (widget.filter == 'yarym_final') {
                     for (var i = 0; i < 2 && i < sortedGroups.length; i++) {
-                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[i], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[i]]!.first, static_g: i == 0 ? '' : 'B2'));
+                      cards.add(
+                        QuarterGroupCard(
+                          filter: widget.filter,
+                          groupName: sortedGroups[i],
+                          teamCount: 25,
+                          tournament: widget.tournament,
+                          member: groupedTeams[sortedGroups[i]]!.first,
+                          static_g: i == 0 ? '' : 'B2',
+                        ),
+                      );
                     }
                   } else {
                     for (final groupName in sortedGroups) {
@@ -127,11 +138,9 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
           ),
           child: AspectRatio(
             aspectRatio: 1.9,
-            child: CachedNetworkImage(
+            child: TournamentImage(
               imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
-              errorWidget: (context, url, error) => const ColoredBox(color: Color(0xFF1B1B1E)),
+              fallbackAsset: tournamentFallbackAsset(finished: false, id: widget.tournament.id),
             ),
           ),
         ),
@@ -232,7 +241,10 @@ class QuarterGroupCard extends StatelessWidget {
                         height: 54,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), color: color.withValues(alpha: 0.15)),
-                        child: Text(groupName, style: TextStyle(fontFamily: gilroyBold, fontSize: 22, color: color)),
+                        child: Text(
+                          groupName,
+                          style: TextStyle(fontFamily: gilroyBold, fontSize: 22, color: color),
+                        ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -267,9 +279,15 @@ class QuarterGroupCard extends StatelessWidget {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('$teamCount', style: TextStyle(fontFamily: gilroyBold, fontSize: 20, color: color, height: 1)),
+                          Text(
+                            '$teamCount',
+                            style: TextStyle(fontFamily: gilroyBold, fontSize: 20, color: color, height: 1),
+                          ),
                           const SizedBox(height: 3),
-                          Text('Team'.tr, style: const TextStyle(fontFamily: gilroyMedium, fontSize: 11, color: Color(0xFF8E8E98), height: 1)),
+                          Text(
+                            'Team'.tr,
+                            style: const TextStyle(fontFamily: gilroyMedium, fontSize: 11, color: Color(0xFF8E8E98), height: 1),
+                          ),
                         ],
                       ),
                       const SizedBox(width: 12),

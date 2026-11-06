@@ -22,14 +22,7 @@ class _NewTournamentPageState extends State<NewTournamentPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: MyAppBar(
-          fontSize: 22.0,
-          backArrow: false,
-          icon: userAppBarMoney(),
-          iconRemove: false,
-          name: 'tournament',
-          elevationWhite: true,
-        ),
+        appBar: MyAppBar(fontSize: 22.0, backArrow: false, icon: userAppBarMoney(), iconRemove: false, name: 'tournament', elevationWhite: true),
         backgroundColor: kPrimaryColorBlack,
         body: Column(
           children: [

@@ -2,6 +2,7 @@
 
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/cards/tournament_banner.dart';
+import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/views/tournament_page/tournament_profil_page.dart';
 
 import '../constants/index.dart';
@@ -21,10 +22,13 @@ class TournamentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = '$serverURL${tournamentModel.image}';
+    final imageUrl = tournamentImageUrl(tournamentModel.image);
+    final fallbackAsset = tournamentFallbackAsset(finished: finised, id: tournamentModel.id ?? index);
+    final heroTag = 'tournament-$tournamentType-${tournamentModel.id ?? index}-$finised';
     return TournamentBanner(
       imageUrl: imageUrl,
-      heroTag: imageUrl,
+      fallbackAsset: fallbackAsset,
+      heroTag: heroTag,
       title: tournamentModel.title ?? '',
       startDate: DateTime.tryParse(tournamentModel.start_date ?? ''),
       price: tournamentModel.price,
@@ -32,7 +36,7 @@ class TournamentCard extends StatelessWidget {
       map: tournamentModel.map,
       badge: finised ? 'endTournament'.tr : null,
       onTap: () => Get.to(
-        () => TournamentProfilPage(tag: imageUrl, finised: finised, tournamentType: tournamentType, image: imageUrl, tournamentId: tournamentModel.id!, winners: tournamentModel),
+        () => TournamentProfilPage(tag: heroTag, finised: finised, tournamentType: tournamentType, image: imageUrl, tournamentId: tournamentModel.id!, winners: tournamentModel),
       ),
     );
   }

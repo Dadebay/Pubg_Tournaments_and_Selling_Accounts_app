@@ -33,7 +33,15 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
     if (team == null) {
       return false;
     }
-    final filled = (team.account?.isNotEmpty ?? false) && (team.user1?.isNotEmpty ?? false) && (team.user2?.isNotEmpty ?? false) && (team.user3?.isNotEmpty ?? false) && member.account.isNotEmpty && member.user1.isNotEmpty && member.user2.isNotEmpty && member.user3.isNotEmpty;
+    final filled =
+        (team.account?.isNotEmpty ?? false) &&
+        (team.user1?.isNotEmpty ?? false) &&
+        (team.user2?.isNotEmpty ?? false) &&
+        (team.user3?.isNotEmpty ?? false) &&
+        member.account.isNotEmpty &&
+        member.user1.isNotEmpty &&
+        member.user2.isNotEmpty &&
+        member.user3.isNotEmpty;
     return filled && team.account == member.account && team.user1 == member.user1 && team.user2 == member.user2 && team.user3 == member.user3;
   }
 
@@ -66,7 +74,10 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                     children: [
                       _headerCard(owner),
                       const SizedBox(height: 22),
-                      Text('Team Players'.tr, style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white)),
+                      Text(
+                        'Team Players'.tr,
+                        style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white),
+                      ),
                       const SizedBox(height: 12),
                       _player('Player 1'.tr, member.account),
                       _player('Player 2'.tr, member.user1),
@@ -75,13 +86,20 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                       const SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(color: _green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: _green.withValues(alpha: 0.3))),
+                        decoration: BoxDecoration(
+                          color: _green.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: _green.withValues(alpha: 0.3)),
+                        ),
                         child: Row(
                           children: [
                             const Icon(Icons.check_circle_rounded, color: _green, size: 22),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: Text('Team successfully registered for tournament'.tr, style: const TextStyle(color: _green, fontFamily: gilroyMedium, fontSize: 13)),
+                              child: Text(
+                                'Team successfully registered for tournament'.tr,
+                                style: const TextStyle(color: _green, fontFamily: gilroyMedium, fontSize: 13),
+                              ),
                             ),
                           ],
                         ),
@@ -114,17 +132,29 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.16), border: Border.all(color: _gold.withValues(alpha: 0.5))),
-                child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, color: _gold, size: 24, strokeWidth: 1.8)),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _gold.withValues(alpha: 0.16),
+                  border: Border.all(color: _gold.withValues(alpha: 0.5)),
+                ),
+                child: const Center(
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, color: _gold, size: 24, strokeWidth: 1.8),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Registered Team'.tr, style: const TextStyle(fontFamily: gilroyBold, fontSize: 20, color: Colors.white)),
+                    Text(
+                      'Registered Team'.tr,
+                      style: const TextStyle(fontFamily: gilroyBold, fontSize: 20, color: Colors.white),
+                    ),
                     const SizedBox(height: 2),
-                    Text('View your team information'.tr, style: const TextStyle(fontFamily: gilroyRegular, fontSize: 14, color: Color(0xFFB8B8C0))),
+                    Text(
+                      'View your team information'.tr,
+                      style: const TextStyle(fontFamily: gilroyRegular, fontSize: 14, color: Color(0xFFB8B8C0)),
+                    ),
                   ],
                 ),
               ),
@@ -134,7 +164,10 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
             const SizedBox(height: 16),
             Row(
               children: [
-                const Text('LobbiID: ', style: TextStyle(fontFamily: gilroyBold, fontSize: 16, color: _green)),
+                const Text(
+                  'LobbiID: ',
+                  style: TextStyle(fontFamily: gilroyBold, fontSize: 16, color: _green),
+                ),
                 CopyableText(lobbiId: widget.teamMember.quartturnir?.lobbiId),
               ],
             ),
@@ -146,7 +179,10 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: _gold),
-                    child: Text(_isVisible ? 'Hide Code'.tr : 'Show Code'.tr, style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 13, height: 1.1)),
+                    child: Text(
+                      _isVisible ? 'Hide Code'.tr : 'Show Code'.tr,
+                      style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 13, height: 1.1),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -182,9 +218,15 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12)),
+                Text(
+                  label,
+                  style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12),
+                ),
                 const SizedBox(height: 2),
-                Text(value.isEmpty ? '-' : value, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16)),
+                Text(
+                  value.isEmpty ? '-' : value,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16),
+                ),
               ],
             ),
           ),

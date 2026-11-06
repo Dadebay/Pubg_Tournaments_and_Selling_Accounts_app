@@ -244,7 +244,6 @@ class _WheelNavBarState extends State<WheelNavBar> with SingleTickerProviderStat
       final fabFrac = (1 - absA / _stepRad).clamp(0.0, 1.0);
       final itemSize = ui.lerpDouble(_iconBoxSize, _fabSize, fabFrac)!;
       final iconSize = ui.lerpDouble(23.0, 27.0, fabFrac)!;
-      final bgColor = Color.lerp(Colors.transparent, kPrimaryColor, fabFrac)!;
       final iconColor = Color.lerp(_unselected, Colors.white, fabFrac)!;
       final iconBottomPad = ui.lerpDouble(12.0, 0.0, fabFrac)!;
       final r = ui.lerpDouble(_pathR, _selectedR, fabFrac)!;

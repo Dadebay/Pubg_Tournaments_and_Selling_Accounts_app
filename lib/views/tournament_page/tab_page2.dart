@@ -11,10 +11,7 @@ import 'package:hugeicons/hugeicons.dart';
 class TabPage2 extends StatelessWidget {
   final TournamentModel model;
 
-  const TabPage2({
-    required this.model,
-    super.key,
-  });
+  const TabPage2({required this.model, super.key});
 
   static const _medals = [Color(0xFFFFC83D), Color(0xFFD5D9E0), Color(0xFFE0955A)];
 
@@ -25,6 +22,57 @@ class TabPage2 extends StatelessWidget {
       return value ?? '';
     }
     return number == number.roundToDouble() ? '${number.toInt()}' : number.toStringAsFixed(1);
+  }
+
+  /// The winner of place [index]; winners come in place order. Null until the tournament has results.
+  Winners? _winner(int index) {
+    final winners = model.winners;
+    if (winners == null || index >= winners.length) {
+      return null;
+    }
+    return (winners[index].account_nickname ?? '').isEmpty ? null : winners[index];
+  }
+
+  /// Avatar and nickname of the winner, with the place label underneath.
+  Widget _winnerInfo(Winners winner, int index, Color color) {
+    final image = winner.account_image ?? '';
+    const fallback = Center(
+      child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.white38, size: 18),
+    );
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: 40,
+            height: 40,
+            color: const Color(0xFF2B2B30),
+            child: image.isEmpty ? fallback : Image.network('$serverURL/$image', fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => fallback),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                winner.account_nickname ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 15),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '${index + 1}. ${'tournamentInfo2'.tr}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Color(0xFF9A9AA3), fontFamily: gilroyMedium, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -42,17 +90,14 @@ class TabPage2 extends StatelessWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 10),
       itemBuilder: (BuildContext context, int index) {
         final medal = index < 3 ? _medals[index] : null;
+        final winner = _winner(index);
         final color = medal ?? Colors.white70;
         return Container(
           padding: const EdgeInsets.fromLTRB(14, 12, 18, 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: (medal ?? Colors.white).withValues(alpha: medal == null ? 0.07 : 0.35)),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [medal == null ? const Color(0xFF232327) : medal.withValues(alpha: 0.16), const Color(0xFF161618)],
-            ),
+            gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [medal == null ? const Color(0xFF232327) : medal.withValues(alpha: 0.16), const Color(0xFF161618)]),
           ),
           child: Row(
             children: [
@@ -60,7 +105,11 @@ class TabPage2 extends StatelessWidget {
                 width: 42,
                 height: 42,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.16), border: Border.all(color: color.withValues(alpha: 0.5))),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.16),
+                  border: Border.all(color: color.withValues(alpha: 0.5)),
+                ),
                 child: index == 0
                     ? HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: color, size: 20, strokeWidth: 1.8)
                     : Text(
@@ -70,12 +119,14 @@ class TabPage2 extends StatelessWidget {
               ),
               const SizedBox(width: 14),
               Expanded(
-                child: Text(
-                  '${index + 1}. ${'tournamentInfo2'.tr}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14),
-                ),
+                child: winner == null
+                    ? Text(
+                        '${index + 1}. ${'tournamentInfo2'.tr}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14),
+                      )
+                    : _winnerInfo(winner, index, color),
               ),
               Text(
                 _amount(awards[index].award),

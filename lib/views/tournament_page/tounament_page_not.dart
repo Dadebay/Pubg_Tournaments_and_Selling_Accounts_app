@@ -277,287 +277,127 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
 
   // Information categories with translation keys
   List<Map<String, dynamic>> getInformationCategories() => [
-        {
-          'titleKey': 'safetyTitle',
-          'icon': Icons.security,
-          'color': Colors.blue,
-          'image': 'assets/images/safety_info.png',
-          'shortKey': 'safetyShort',
-          'fullKey': 'safetyFull',
-          'tips': [
-            {
-              'titleKey': 'playTimeTitle',
-              'descKey': 'playTimeDesc',
-              'icon': Icons.schedule,
-            },
-            {
-              'titleKey': 'talkParentsTitle',
-              'descKey': 'talkParentsDesc',
-              'icon': Icons.family_restroom,
-            },
-            {
-              'titleKey': 'onlineFriendsTitle',
-              'descKey': 'onlineFriendsDesc',
-              'icon': Icons.privacy_tip,
-            },
-            {
-              'titleKey': 'reportBadTitle',
-              'descKey': 'reportBadDesc',
-              'icon': Icons.report,
-            },
-            {
-              'titleKey': 'voiceChatTitle',
-              'descKey': 'voiceChatDesc',
-              'icon': Icons.mic_off,
-            },
-          ],
-        },
-        {
-          'titleKey': 'beginnerTitle',
-          'icon': Icons.lightbulb,
-          'color': Colors.orange,
-          'image': 'assets/images/beginner_tips.png',
-          'shortKey': 'beginnerShort',
-          'fullKey': 'beginnerFull',
-          'tips': [
-            {
-              'titleKey': 'landSafeTitle',
-              'descKey': 'landSafeDesc',
-              'icon': Icons.location_on,
-            },
-            {
-              'titleKey': 'learnControlsTitle',
-              'descKey': 'learnControlsDesc',
-              'icon': Icons.gamepad,
-            },
-            {
-              'titleKey': 'stickTeamTitle',
-              'descKey': 'stickTeamDesc',
-              'icon': Icons.groups,
-            },
-            {
-              'titleKey': 'watchCircleTitle',
-              'descKey': 'watchCircleDesc',
-              'icon': Icons.circle,
-            },
-            {
-              'titleKey': 'listenTitle',
-              'descKey': 'listenDesc',
-              'icon': Icons.headphones,
-            },
-          ],
-        },
-        {
-          'titleKey': 'teamworkTitle',
-          'icon': Icons.people,
-          'color': Colors.green,
-          'image': 'assets/images/teamwork_guide.png',
-          'shortKey': 'teamworkShort',
-          'fullKey': 'teamworkFull',
-          'tips': [
-            {
-              'titleKey': 'shareItemsTitle',
-              'descKey': 'shareItemsDesc',
-              'icon': Icons.volunteer_activism,
-            },
-            {
-              'titleKey': 'communicateTitle',
-              'descKey': 'communicateDesc',
-              'icon': Icons.chat_bubble,
-            },
-            {
-              'titleKey': 'reviveTitle',
-              'descKey': 'reviveDesc',
-              'icon': Icons.medical_services,
-            },
-            {
-              'titleKey': 'markMapTitle',
-              'descKey': 'markMapDesc',
-              'icon': Icons.push_pin,
-            },
-            {
-              'titleKey': 'bePositiveTitle',
-              'descKey': 'bePositiveDesc',
-              'icon': Icons.thumb_up,
-            },
-          ],
-        },
-        {
-          'titleKey': 'survivalTitle',
-          'icon': Icons.shield,
-          'color': Colors.purple,
-          'image': 'assets/images/survival_skills.png',
-          'shortKey': 'survivalShort',
-          'fullKey': 'survivalFull',
-          'tips': [
-            {
-              'titleKey': 'useCoverTitle',
-              'descKey': 'useCoverDesc',
-              'icon': Icons.nature,
-            },
-            {
-              'titleKey': 'moveCarefulTitle',
-              'descKey': 'moveCarefulDesc',
-              'icon': Icons.directions_run,
-            },
-            {
-              'titleKey': 'checkSurroundTitle',
-              'descKey': 'checkSurroundDesc',
-              'icon': Icons.visibility,
-            },
-            {
-              'titleKey': 'manageBackpackTitle',
-              'descKey': 'manageBackpackDesc',
-              'icon': Icons.backpack,
-            },
-            {
-              'titleKey': 'healSafeTitle',
-              'descKey': 'healSafeDesc',
-              'icon': Icons.healing,
-            },
-          ],
-        },
-        {
-          'titleKey': 'healthyTitle',
-          'icon': Icons.favorite,
-          'color': Colors.red,
-          'image': 'assets/images/healthy_gaming.png',
-          'shortKey': 'healthyShort',
-          'fullKey': 'healthyFull',
-          'tips': [
-            {
-              'titleKey': 'goodPostureTitle',
-              'descKey': 'goodPostureDesc',
-              'icon': Icons.airline_seat_recline_normal,
-            },
-            {
-              'titleKey': 'eyeCareTitle',
-              'descKey': 'eyeCareDesc',
-              'icon': Icons.remove_red_eye,
-            },
-            {
-              'titleKey': 'stayActiveTitle',
-              'descKey': 'stayActiveDesc',
-              'icon': Icons.directions_bike,
-            },
-            {
-              'titleKey': 'eatDrinkTitle',
-              'descKey': 'eatDrinkDesc',
-              'icon': Icons.restaurant,
-            },
-            {
-              'titleKey': 'sleepWellTitle',
-              'descKey': 'sleepWellDesc',
-              'icon': Icons.bedtime,
-            },
-          ],
-        },
-        {
-          'titleKey': 'controlsTitle',
-          'icon': Icons.sports_esports,
-          'color': Colors.teal,
-          'image': 'assets/images/controls_guide.png',
-          'shortKey': 'controlsShort',
-          'fullKey': 'controlsFull',
-          'tips': [
-            {
-              'titleKey': 'moveJoystickTitle',
-              'descKey': 'moveJoystickDesc',
-              'icon': Icons.control_camera,
-            },
-            {
-              'titleKey': 'lookAroundTitle',
-              'descKey': 'lookAroundDesc',
-              'icon': Icons.rotate_90_degrees_ccw,
-            },
-            {
-              'titleKey': 'shootButtonTitle',
-              'descKey': 'shootButtonDesc',
-              'icon': Icons.radio_button_checked,
-            },
-            {
-              'titleKey': 'jumpCrouchTitle',
-              'descKey': 'jumpCrouchDesc',
-              'icon': Icons.height,
-            },
-            {
-              'titleKey': 'interactTitle',
-              'descKey': 'interactDesc',
-              'icon': Icons.touch_app,
-            },
-          ],
-        },
-        {
-          'titleKey': 'mapTitle',
-          'icon': Icons.map,
-          'color': Colors.brown,
-          'image': 'assets/images/map_knowledge.png',
-          'shortKey': 'mapShort',
-          'fullKey': 'mapFull',
-          'tips': [
-            {
-              'titleKey': 'hotZonesTitle',
-              'descKey': 'hotZonesDesc',
-              'icon': Icons.local_fire_department,
-            },
-            {
-              'titleKey': 'quietAreasTitle',
-              'descKey': 'quietAreasDesc',
-              'icon': Icons.home,
-            },
-            {
-              'titleKey': 'highGroundTitle',
-              'descKey': 'highGroundDesc',
-              'icon': Icons.landscape,
-            },
-            {
-              'titleKey': 'safeRoutesTitle',
-              'descKey': 'safeRoutesDesc',
-              'icon': Icons.route,
-            },
-            {
-              'titleKey': 'zoneAwarenessTitle',
-              'descKey': 'zoneAwarenessDesc',
-              'icon': Icons.circle_outlined,
-            },
-          ],
-        },
-        {
-          'titleKey': 'sportsmanshipTitle',
-          'icon': Icons.emoji_events,
-          'color': Colors.amber,
-          'image': 'assets/images/sportsmanship.png',
-          'shortKey': 'sportsmanshipShort',
-          'fullKey': 'sportsmanshipFull',
-          'tips': [
-            {
-              'titleKey': 'respectTitle',
-              'descKey': 'respectDesc',
-              'icon': Icons.handshake,
-            },
-            {
-              'titleKey': 'noBadWordsTitle',
-              'descKey': 'noBadWordsDesc',
-              'icon': Icons.speaker_notes_off,
-            },
-            {
-              'titleKey': 'acceptDefeatTitle',
-              'descKey': 'acceptDefeatDesc',
-              'icon': Icons.sports_kabaddi,
-            },
-            {
-              'titleKey': 'celebrateFairTitle',
-              'descKey': 'celebrateFairDesc',
-              'icon': Icons.celebration,
-            },
-            {
-              'titleKey': 'helpNewTitle',
-              'descKey': 'helpNewDesc',
-              'icon': Icons.support_agent,
-            },
-          ],
-        },
-      ];
+    {
+      'titleKey': 'safetyTitle',
+      'icon': Icons.security,
+      'color': Colors.blue,
+      'image': 'assets/images/safety_info.png',
+      'shortKey': 'safetyShort',
+      'fullKey': 'safetyFull',
+      'tips': [
+        {'titleKey': 'playTimeTitle', 'descKey': 'playTimeDesc', 'icon': Icons.schedule},
+        {'titleKey': 'talkParentsTitle', 'descKey': 'talkParentsDesc', 'icon': Icons.family_restroom},
+        {'titleKey': 'onlineFriendsTitle', 'descKey': 'onlineFriendsDesc', 'icon': Icons.privacy_tip},
+        {'titleKey': 'reportBadTitle', 'descKey': 'reportBadDesc', 'icon': Icons.report},
+        {'titleKey': 'voiceChatTitle', 'descKey': 'voiceChatDesc', 'icon': Icons.mic_off},
+      ],
+    },
+    {
+      'titleKey': 'beginnerTitle',
+      'icon': Icons.lightbulb,
+      'color': Colors.orange,
+      'image': 'assets/images/beginner_tips.png',
+      'shortKey': 'beginnerShort',
+      'fullKey': 'beginnerFull',
+      'tips': [
+        {'titleKey': 'landSafeTitle', 'descKey': 'landSafeDesc', 'icon': Icons.location_on},
+        {'titleKey': 'learnControlsTitle', 'descKey': 'learnControlsDesc', 'icon': Icons.gamepad},
+        {'titleKey': 'stickTeamTitle', 'descKey': 'stickTeamDesc', 'icon': Icons.groups},
+        {'titleKey': 'watchCircleTitle', 'descKey': 'watchCircleDesc', 'icon': Icons.circle},
+        {'titleKey': 'listenTitle', 'descKey': 'listenDesc', 'icon': Icons.headphones},
+      ],
+    },
+    {
+      'titleKey': 'teamworkTitle',
+      'icon': Icons.people,
+      'color': Colors.green,
+      'image': 'assets/images/teamwork_guide.png',
+      'shortKey': 'teamworkShort',
+      'fullKey': 'teamworkFull',
+      'tips': [
+        {'titleKey': 'shareItemsTitle', 'descKey': 'shareItemsDesc', 'icon': Icons.volunteer_activism},
+        {'titleKey': 'communicateTitle', 'descKey': 'communicateDesc', 'icon': Icons.chat_bubble},
+        {'titleKey': 'reviveTitle', 'descKey': 'reviveDesc', 'icon': Icons.medical_services},
+        {'titleKey': 'markMapTitle', 'descKey': 'markMapDesc', 'icon': Icons.push_pin},
+        {'titleKey': 'bePositiveTitle', 'descKey': 'bePositiveDesc', 'icon': Icons.thumb_up},
+      ],
+    },
+    {
+      'titleKey': 'survivalTitle',
+      'icon': Icons.shield,
+      'color': Colors.purple,
+      'image': 'assets/images/survival_skills.png',
+      'shortKey': 'survivalShort',
+      'fullKey': 'survivalFull',
+      'tips': [
+        {'titleKey': 'useCoverTitle', 'descKey': 'useCoverDesc', 'icon': Icons.nature},
+        {'titleKey': 'moveCarefulTitle', 'descKey': 'moveCarefulDesc', 'icon': Icons.directions_run},
+        {'titleKey': 'checkSurroundTitle', 'descKey': 'checkSurroundDesc', 'icon': Icons.visibility},
+        {'titleKey': 'manageBackpackTitle', 'descKey': 'manageBackpackDesc', 'icon': Icons.backpack},
+        {'titleKey': 'healSafeTitle', 'descKey': 'healSafeDesc', 'icon': Icons.healing},
+      ],
+    },
+    {
+      'titleKey': 'healthyTitle',
+      'icon': Icons.favorite,
+      'color': Colors.red,
+      'image': 'assets/images/healthy_gaming.png',
+      'shortKey': 'healthyShort',
+      'fullKey': 'healthyFull',
+      'tips': [
+        {'titleKey': 'goodPostureTitle', 'descKey': 'goodPostureDesc', 'icon': Icons.airline_seat_recline_normal},
+        {'titleKey': 'eyeCareTitle', 'descKey': 'eyeCareDesc', 'icon': Icons.remove_red_eye},
+        {'titleKey': 'stayActiveTitle', 'descKey': 'stayActiveDesc', 'icon': Icons.directions_bike},
+        {'titleKey': 'eatDrinkTitle', 'descKey': 'eatDrinkDesc', 'icon': Icons.restaurant},
+        {'titleKey': 'sleepWellTitle', 'descKey': 'sleepWellDesc', 'icon': Icons.bedtime},
+      ],
+    },
+    {
+      'titleKey': 'controlsTitle',
+      'icon': Icons.sports_esports,
+      'color': Colors.teal,
+      'image': 'assets/images/controls_guide.png',
+      'shortKey': 'controlsShort',
+      'fullKey': 'controlsFull',
+      'tips': [
+        {'titleKey': 'moveJoystickTitle', 'descKey': 'moveJoystickDesc', 'icon': Icons.control_camera},
+        {'titleKey': 'lookAroundTitle', 'descKey': 'lookAroundDesc', 'icon': Icons.rotate_90_degrees_ccw},
+        {'titleKey': 'shootButtonTitle', 'descKey': 'shootButtonDesc', 'icon': Icons.radio_button_checked},
+        {'titleKey': 'jumpCrouchTitle', 'descKey': 'jumpCrouchDesc', 'icon': Icons.height},
+        {'titleKey': 'interactTitle', 'descKey': 'interactDesc', 'icon': Icons.touch_app},
+      ],
+    },
+    {
+      'titleKey': 'mapTitle',
+      'icon': Icons.map,
+      'color': Colors.brown,
+      'image': 'assets/images/map_knowledge.png',
+      'shortKey': 'mapShort',
+      'fullKey': 'mapFull',
+      'tips': [
+        {'titleKey': 'hotZonesTitle', 'descKey': 'hotZonesDesc', 'icon': Icons.local_fire_department},
+        {'titleKey': 'quietAreasTitle', 'descKey': 'quietAreasDesc', 'icon': Icons.home},
+        {'titleKey': 'highGroundTitle', 'descKey': 'highGroundDesc', 'icon': Icons.landscape},
+        {'titleKey': 'safeRoutesTitle', 'descKey': 'safeRoutesDesc', 'icon': Icons.route},
+        {'titleKey': 'zoneAwarenessTitle', 'descKey': 'zoneAwarenessDesc', 'icon': Icons.circle_outlined},
+      ],
+    },
+    {
+      'titleKey': 'sportsmanshipTitle',
+      'icon': Icons.emoji_events,
+      'color': Colors.amber,
+      'image': 'assets/images/sportsmanship.png',
+      'shortKey': 'sportsmanshipShort',
+      'fullKey': 'sportsmanshipFull',
+      'tips': [
+        {'titleKey': 'respectTitle', 'descKey': 'respectDesc', 'icon': Icons.handshake},
+        {'titleKey': 'noBadWordsTitle', 'descKey': 'noBadWordsDesc', 'icon': Icons.speaker_notes_off},
+        {'titleKey': 'acceptDefeatTitle', 'descKey': 'acceptDefeatDesc', 'icon': Icons.sports_kabaddi},
+        {'titleKey': 'celebrateFairTitle', 'descKey': 'celebrateFairDesc', 'icon': Icons.celebration},
+        {'titleKey': 'helpNewTitle', 'descKey': 'helpNewDesc', 'icon': Icons.support_agent},
+      ],
+    },
+  ];
 
   void _showFullInformation(Map<String, dynamic> category) {
     showModalBottomSheet(
@@ -577,10 +417,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
               margin: const EdgeInsets.symmetric(vertical: 12),
               width: 40,
               height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[600],
-                borderRadius: BorderRadius.circular(2),
-              ),
+              decoration: BoxDecoration(color: Colors.grey[600], borderRadius: BorderRadius.circular(2)),
             ),
 
             Expanded(
@@ -594,25 +431,14 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: category['color'].withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            category['icon'],
-                            color: category['color'],
-                            size: 32,
-                          ),
+                          decoration: BoxDecoration(color: category['color'].withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+                          child: Icon(category['icon'], color: category['color'], size: 32),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Text(
                             t(category['titleKey']),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -629,92 +455,54 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
                           height: 150,
-                          decoration: BoxDecoration(
-                            color: category['color'].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            category['icon'],
-                            size: 60,
-                            color: category['color'].withOpacity(0.5),
-                          ),
+                          decoration: BoxDecoration(color: category['color'].withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                          child: Icon(category['icon'], size: 60, color: category['color'].withOpacity(0.5)),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
 
                     // Full Description
-                    Text(
-                      t(category['fullKey']),
-                      style: TextStyle(
-                        color: Colors.grey[300],
-                        fontSize: 16,
-                        height: 1.5,
-                      ),
-                    ),
+                    Text(t(category['fullKey']), style: TextStyle(color: Colors.grey[300], fontSize: 16, height: 1.5)),
                     const SizedBox(height: 24),
 
                     // Tips List
-                    ...List.generate(
-                      (category['tips'] as List).length,
-                      (index) {
-                        final tip = category['tips'][index];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: category['color'].withOpacity(0.3),
-                              width: 1,
+                    ...List.generate((category['tips'] as List).length, (index) {
+                      final tip = category['tips'][index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: category['color'].withOpacity(0.3), width: 1),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(color: category['color'].withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+                              child: Icon(tip['icon'], color: category['color'], size: 24),
                             ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: category['color'].withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  tip['icon'],
-                                  color: category['color'],
-                                  size: 24,
-                                ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    t(tip['titleKey']),
+                                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(t(tip['descKey']), style: TextStyle(color: Colors.grey[400], fontSize: 14, height: 1.4)),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      t(tip['titleKey']),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      t(tip['descKey']),
-                                      style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontSize: 14,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
 
                     const SizedBox(height: 20),
                   ],
@@ -731,14 +519,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const MyAppBar(
-          fontSize: 22.0,
-          backArrow: false,
-          icon: SizedBox(),
-          iconRemove: false,
-          name: 'Lobbi',
-          elevationWhite: true,
-        ),
+        appBar: const MyAppBar(fontSize: 22.0, backArrow: false, icon: SizedBox(), iconRemove: false, name: 'Lobbi', elevationWhite: true),
         backgroundColor: kPrimaryColorBlack,
         body: Column(
           children: [
@@ -747,11 +528,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue[900]!, Colors.purple[900]!],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: LinearGradient(colors: [Colors.blue[900]!, Colors.purple[900]!], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -763,23 +540,13 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                       Expanded(
                         child: Text(
                           t('headerTitle'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    t('headerDescription'),
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
-                    ),
-                  ),
+                  Text(t('headerDescription'), style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14)),
                 ],
               ),
             ),
@@ -788,12 +555,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.85,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.85, crossAxisSpacing: 12, mainAxisSpacing: 12),
                 itemCount: getInformationCategories().length,
                 itemBuilder: (context, index) {
                   final category = getInformationCategories()[index];
@@ -804,10 +566,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                       decoration: BoxDecoration(
                         color: Colors.grey[900],
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: category['color'].withOpacity(0.3),
-                          width: 2,
-                        ),
+                        border: Border.all(color: category['color'].withOpacity(0.3), width: 2),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -815,15 +574,8 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                           // Icon
                           Container(
                             padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: category['color'].withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              category['icon'],
-                              color: category['color'],
-                              size: 40,
-                            ),
+                            decoration: BoxDecoration(color: category['color'].withOpacity(0.2), shape: BoxShape.circle),
+                            child: Icon(category['icon'], color: category['color'], size: 40),
                           ),
                           const SizedBox(height: 12),
 
@@ -833,11 +585,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                             child: Text(
                               t(category['titleKey']),
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -850,41 +598,24 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 11,
-                              ),
+                              style: TextStyle(color: Colors.grey[400], fontSize: 11),
                             ),
                           ),
                           const SizedBox(height: 12),
 
                           // Tap to learn badge
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: category['color'].withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(color: category['color'].withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   t('tapToLearn'),
-                                  style: TextStyle(
-                                    color: category['color'],
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(color: category['color'], fontSize: 10, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(width: 4),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: category['color'],
-                                  size: 12,
-                                ),
+                                Icon(Icons.arrow_forward, color: category['color'], size: 12),
                               ],
                             ),
                           ),
@@ -900,10 +631,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green[900],
-                borderRadius: BorderRadius.circular(12),
-              ),
+              decoration: BoxDecoration(color: Colors.green[900], borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
                   Icon(Icons.verified_user, color: Colors.green[200]),
@@ -911,11 +639,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
                   Expanded(
                     child: Text(
                       t('bottomReminder'),
-                      style: TextStyle(
-                        color: Colors.green[100],
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(color: Colors.green[100], fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],

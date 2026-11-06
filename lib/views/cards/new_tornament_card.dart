@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/cards/tournament_banner.dart';
-import 'package:game_app/views/constants/constants.dart';
+import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/tournament_page/qartar_groups_screen.dart';
 import 'package:game_app/views/tournament_page/winners_screen.dart';
@@ -19,10 +19,11 @@ class NewTournamentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = '$serverURL${tournament.image}';
+    final imageUrl = tournamentImageUrl(tournament.image);
     return TournamentBanner(
       imageUrl: imageUrl,
-      heroTag: imageUrl,
+      fallbackAsset: tournamentFallbackAsset(finished: finised, id: tournament.id),
+      heroTag: 'tournament-$tournamentType-${tournament.id}-$finised',
       title: tournament.nameTm,
       startDate: tournament.startDate,
       price: tournament.price,

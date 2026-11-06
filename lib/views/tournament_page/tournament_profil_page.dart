@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/controllers/tournament_controller.dart';
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/tournament_page/tab_page1.dart';
@@ -20,15 +20,7 @@ class TournamentProfilPage extends StatefulWidget {
   final bool finised;
   final int tournamentType;
   final TournamentModel winners;
-  const TournamentProfilPage({
-    required this.tag,
-    required this.image,
-    required this.tournamentId,
-    required this.finised,
-    required this.tournamentType,
-    required this.winners,
-    super.key,
-  });
+  const TournamentProfilPage({required this.tag, required this.image, required this.tournamentId, required this.finised, required this.tournamentType, required this.winners, super.key});
 
   @override
   State<TournamentProfilPage> createState() => _TournamentProfilPageState();
@@ -79,26 +71,13 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
               }
               return TabBarView(
                 children: [
-                  TabPage1(
-                    finised: widget.finised,
-                    model: snapshot.data!,
-                    buttonName: buttonName,
-                    tournamentType: widget.tournamentType,
-                  ),
-                  TabPage2(
-                    model: snapshot.data!,
-                  ),
+                  TabPage1(finised: widget.finised, model: snapshot.data!, buttonName: buttonName, tournamentType: widget.tournamentType),
+                  TabPage2(model: snapshot.data!),
                   snapshot.data!.participated_users!.isEmpty
                       ? Center(
                           child: CatalogEmptyState(icon: Icons.groups_outlined, title: 'tournamentInfo13'.tr, description: ''),
                         )
-                      : TabPage3(
-                          tournamentType: widget.tournamentType,
-                          finised: widget.finised,
-                          model: snapshot.data!,
-                          tournamentId: widget.tournamentId,
-                          teams: TeamUsers(),
-                        ),
+                      : TabPage3(tournamentType: widget.tournamentType, finised: widget.finised, model: snapshot.data!, tournamentId: widget.tournamentId, teams: TeamUsers()),
                 ],
               );
             },
@@ -123,22 +102,14 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
           children: [
             Hero(
               tag: widget.tag,
-              child: CachedNetworkImage(
-                fadeInCurve: Curves.ease,
+              child: TournamentImage(
                 imageUrl: widget.image,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
-                errorWidget: (context, url, error) => const ColoredBox(color: Color(0xFF1B1B1E)),
+                fallbackAsset: tournamentFallbackAsset(finished: widget.finised, id: widget.tournamentId),
               ),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0x99000000), Color(0x00000000), Color(0xFF000000)],
-                  stops: [0, 0.45, 1],
-                ),
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x99000000), Color(0x00000000), Color(0xFF000000)], stops: [0, 0.45, 1]),
               ),
             ),
           ],
@@ -158,7 +129,9 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
                 color: Colors.black.withValues(alpha: 0.45),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
-              child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2)),
+              child: const Center(
+                child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2),
+              ),
             ),
           ),
         ),

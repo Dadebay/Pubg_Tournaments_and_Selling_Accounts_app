@@ -30,7 +30,6 @@ class BestPlayersCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     final rankColor = _getRankColor(index);
     final isTopThree = index < 3;
 

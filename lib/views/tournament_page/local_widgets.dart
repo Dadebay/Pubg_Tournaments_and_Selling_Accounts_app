@@ -9,6 +9,9 @@ import '../../models/add_account_model.dart';
 import '../../models/tournament_model.dart';
 import '../../models/user_models/auth_model.dart';
 import '../../models/user_models/user_sign_in_model.dart';
+
+import 'package:hugeicons/hugeicons.dart';
+
 import '../constants/index.dart';
 
 final List names = ['Turnir', 'Lobbi', 'bestPlayers2'.tr];
@@ -290,201 +293,186 @@ class SkewCut1 extends CustomClipper<Path> {
   bool shouldReclip(SkewCut1 oldClipper) => false;
 }
 
-dynamic subscribeTurnir({required String price, required int id, required int tournamentType, required TournamentModel turnir}) {
-  Get.defaultDialog(
-    title: 'correctData'.tr,
-    backgroundColor: kPrimaryColorBlack,
-    titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-    radius: 15,
-    titlePadding: const EdgeInsets.only(top: 15),
-    content: FutureBuilder<GetMeModel>(
-      future: GetMeModel().getMe(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: spinKit());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error'));
-        } else if (snapshot.data == null) {
-          return const Center(child: Text('Empty'));
-        }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+/// Confirmation dialog shell: icon, title, message, [body] and a gold confirm button with a cancel link.
+void _showConfirmDialog({required Widget body, required VoidCallback onConfirm, String? message}) {
+  const gold = Color(0xFFFFC83D);
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF121214)]),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Text(
-                'correctData1'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
+            Container(
+              width: 60,
+              height: 60,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: gold.withValues(alpha: 0.14),
+                border: Border.all(color: gold.withValues(alpha: 0.45)),
               ),
+              child: const HugeIcon(icon: HugeIcons.strokeRoundedUserCheck01, color: gold, size: 28, strokeWidth: 1.8),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 8, right: 8, bottom: 8),
-              child: Text(
-                '${'accountDetaile1'.tr} ${snapshot.data!.nickname}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
+            const SizedBox(height: 16),
+            Text(
+              'correctData'.tr,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 21),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '${'accountDetaile2'.tr} ${snapshot.data!.pubgId}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
+            const SizedBox(height: 8),
+            Text(
+              message ?? 'correctData1'.tr,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14, height: 1.3),
             ),
-            if (price.toString() != 'null')
-              Padding(
-                padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                child: Text(
-                  '${'accountDetaile5'.tr} $price TMT',
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
+            const SizedBox(height: 18),
+            body,
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: onConfirm,
+              child: Container(
+                height: 52,
+                width: double.infinity,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(26),
+                  gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
                 ),
-              )
-            else
-              const SizedBox.shrink(),
-            AgreeButton(
-              name: 'agree',
-              onTap: () {
-                // Get.back();
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SellctTeam(turnir: turnir)));
-
-                // participateTournament(id: id, tournamentType: tournamentType, price: price);
-              },
+                child: Text(
+                  'agree'.tr,
+                  style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 17),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: Get.back,
+              child: Text(
+                'cancel'.tr,
+                style: const TextStyle(color: Colors.white54, fontFamily: gilroySemiBold, fontSize: 15),
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     ),
+  );
+}
+
+Widget _dialogRow(String label, String value, {bool highlight = false, bool last = false}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 13),
+    decoration: BoxDecoration(
+      border: last ? null : Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.07))),
+    ),
+    child: Row(
+      children: [
+        Text(
+          label.replaceAll(':', '').trim(),
+          style: const TextStyle(color: Color(0xFF9A9AA3), fontFamily: gilroyMedium, fontSize: 14),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: highlight ? const Color(0xFFFFC83D) : Colors.white, fontFamily: gilroyBold, fontSize: 16),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// The player's PUBG name and id (and the price when there is one) inside the confirmation dialog.
+Widget _accountSummary(String price) {
+  final hasPrice = price.toString() != 'null';
+  return FutureBuilder<GetMeModel>(
+    future: GetMeModel().getMe(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Center(child: spinKit()),
+        );
+      } else if (snapshot.hasError || snapshot.data == null) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Text('Error', style: TextStyle(color: Colors.white70)),
+        );
+      }
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          color: Colors.white.withValues(alpha: 0.05),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        ),
+        child: Column(
+          children: [
+            _dialogRow('accountDetaile1'.tr, '${snapshot.data!.nickname}'),
+            _dialogRow('accountDetaile2'.tr, '${snapshot.data!.pubgId}', last: !hasPrice),
+            if (hasPrice) _dialogRow('accountDetaile5'.tr, '$price TMT', highlight: true, last: true),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+dynamic subscribeTurnir({required String price, required int id, required int tournamentType, required TournamentModel turnir}) {
+  _showConfirmDialog(
+    body: _accountSummary(price),
+    onConfirm: () {
+      Get.back();
+      Get.to(() => SellctTeam(turnir: turnir));
+    },
   );
 }
 
 dynamic subscribeTurnirAlart({required String price}) {
-  Get.defaultDialog(
-    title: 'correctData'.tr,
-    backgroundColor: kPrimaryColorBlack,
-    titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-    radius: 15,
-    titlePadding: const EdgeInsets.only(top: 15),
-    content: FutureBuilder<dynamic>(
+  _showConfirmDialog(
+    message: '',
+    body: FutureBuilder<dynamic>(
       future: AddAccountModel().getConsts(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: spinKit());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error'));
-        } else if (snapshot.data == null) {
-          return const Center(child: Text('Empty'));
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Center(child: spinKit()),
+          );
+        } else if (snapshot.hasError || snapshot.data == null) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Text('Error', style: TextStyle(color: Colors.white70)),
+          );
         }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Text(
-                'correctData1'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                snapshot.data!['text_three'],
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
-            ),
-            AgreeButton(
-              name: 'agree',
-              onTap: () {
-                Get.back();
-                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => SellctTeam(turnir: turnir)));
-
-                // participateTournament(id: id, tournamentType: tournamentType, price: price);
-              },
-            ),
-          ],
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.white.withValues(alpha: 0.05)),
+          child: Text(
+            '${snapshot.data!['text_three']}',
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 15, height: 1.35),
+          ),
         );
       },
     ),
+    onConfirm: Get.back,
   );
 }
 
 dynamic subscribeTurnirPost({required String price, required int id, required String tournamentType}) {
-  Get.defaultDialog(
-    title: 'correctData'.tr,
-    backgroundColor: kPrimaryColorBlack,
-    titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-    radius: 15,
-    titlePadding: const EdgeInsets.only(top: 15),
-    content: FutureBuilder<GetMeModel>(
-      future: GetMeModel().getMe(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: spinKit());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error'));
-        } else if (snapshot.data == null) {
-          return const Center(child: Text('Empty'));
-        }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Text(
-                'correctData1'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 8, right: 8, bottom: 8),
-              child: Text(
-                '${'accountDetaile1'.tr} ${snapshot.data!.nickname}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '${'accountDetaile2'.tr} ${snapshot.data!.pubgId}',
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-              ),
-            ),
-            if (price.toString() != 'null')
-              Padding(
-                padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                child: Text(
-                  '${'accountDetaile5'.tr} $price TMT',
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
-                ),
-              )
-            else
-              const SizedBox.shrink(),
-            AgreeButton(
-              name: 'agree',
-              onTap: () {
-                // participateTournament(id: id, tournamentType: tournamentType, price: price);
-              },
-            ),
-          ],
-        );
-      },
-    ),
-  );
+  _showConfirmDialog(body: _accountSummary(price), onConfirm: () {});
 }
 
 dynamic participateTournament({required int id, required int tournamentType, required String price}) {

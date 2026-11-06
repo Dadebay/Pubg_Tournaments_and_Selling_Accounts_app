@@ -3,71 +3,26 @@
 import 'package:flutter/material.dart';
 
 import '../../models/tournament_model.dart';
-import '../cards/empty_users_card.dart';
 import '../cards/gatnashyanlar_card.dart';
 
+/// A winning team: the shared team card with the gold crown.
 // ignore: must_be_immutable
-class WinnersAll extends StatefulWidget {
-  late Winners winners;
-  late Awards awards;
-  TeamUsers team_users;
+class WinnersAll extends StatelessWidget {
+  final Winners winners;
+  final TeamUsers team_users;
+  final int usersCount;
 
-  late Teams teamUsers;
-  late int usersCount;
+  const WinnersAll({required this.winners, required this.usersCount, required this.team_users, super.key});
 
-  WinnersAll({required this.winners, required this.usersCount, required this.team_users, super.key});
-
-  @override
-  State<WinnersAll> createState() => _WinnersAllState();
-}
-
-class _WinnersAllState extends State<WinnersAll> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // color: _selectedIndex == widget.team.id!.toInt() ? Colors.white : Colors.grey,
-      color: Colors.grey[800],
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25)), side: BorderSide(width: 1, color: Colors.black26)),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Team: ',
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  widget.winners.team_number.toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              // height: 310,
-              width: double.infinity,
-              child: Column(
-                children: [
-                  for (var i = 0; i < widget.usersCount; i++)
-                    widget.winners.teamUsers!.length >= i + 1
-                        ? GatnashyanlarCard(
-                            teamUsers: widget.winners.teamUsers![i],
-                            teamID: '',
-                            showButton: false,
-                            turnirID: '',
-                          )
-                        : const EmptyUsersCard(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+    final users = winners.teamUsers ?? const <TeamUsers>[];
+    return TeamShell(
+      number: winners.team_number,
+      filled: users.length,
+      total: usersCount,
+      winner: true,
+      children: [for (var i = 0; i < usersCount; i++) users.length >= i + 1 ? GatnashyanlarCard(teamUsers: users[i], teamID: '', showButton: false, turnirID: '') : const TeamEmptySlot()],
     );
   }
 }

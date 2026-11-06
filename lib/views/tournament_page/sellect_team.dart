@@ -28,19 +28,9 @@ class _SellctTeamState extends State<SellctTeam> {
 
   void backTurnir() {
     setState(() {
-      Timer(
-        const Duration(seconds: 3),
-        () {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const BottomNavBar(
-                showPages: false,
-              ),
-            ),
-            (route) => false,
-          );
-        },
-      );
+      Timer(const Duration(seconds: 3), () {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const BottomNavBar(showPages: false)), (route) => false);
+      });
     });
   }
 
@@ -66,27 +56,27 @@ class _SellctTeamState extends State<SellctTeam> {
         children: [
           Column(
             children: List.generate(widget.turnir.type == 'squad' ? 3 : 1, (index) {
-              return CustomTextField(labelName: '${index + 2} - ${'buySQUAD4'.tr}', borderRadius: true, controller: controllers[index], focusNode: focusNode[index], requestfocusNode: focusNode[index + 1], isNumber: false);
+              return CustomTextField(
+                labelName: '${index + 2} - ${'buySQUAD4'.tr}',
+                borderRadius: true,
+                controller: controllers[index],
+                focusNode: focusNode[index],
+                requestfocusNode: focusNode[index + 1],
+                isNumber: false,
+              );
             }),
           ),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           AgreeButton(
             onTap: () async {
               if (widget.turnir.type == 'squad') {
                 await TournamentModel()
-                    .participateTournamentSQUAD(
-                  teamId: selectedTeam,
-                  pubgID1: controllers[0].text.toString(),
-                  pubgID2: controllers[1].text.toString(),
-                  pubgID3: controllers[2].text.toString(),
-                )
+                    .participateTournamentSQUAD(teamId: selectedTeam, pubgID1: controllers[0].text.toString(), pubgID2: controllers[1].text.toString(), pubgID3: controllers[2].text.toString())
                     .then((value) {
-                  if (value == 200) {
-                    backTurnir();
-                  }
-                });
+                      if (value == 200) {
+                        backTurnir();
+                      }
+                    });
               } else {
                 await TournamentModel().participateTournamentDUAL(teamId: selectedTeam, pubgID1: controllers[0].text.toString()).then((value) {
                   if (value == 200) {
@@ -167,10 +157,10 @@ class _SellctTeamState extends State<SellctTeam> {
               usersCount: widget.turnir.type! == 'solo'
                   ? 1
                   : widget.turnir.type! == 'duo'
-                      ? 2
-                      : widget.turnir.type! == 'squad'
-                          ? 4
-                          : 0,
+                  ? 2
+                  : widget.turnir.type! == 'squad'
+                  ? 4
+                  : 0,
             ),
           );
         },

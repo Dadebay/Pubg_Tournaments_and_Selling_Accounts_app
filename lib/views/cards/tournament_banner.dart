@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
+
+import 'tournament_image.dart';
 
 const _gold = Color(0xFFFFC83D);
 
@@ -11,6 +12,7 @@ const _gold = Color(0xFFFFC83D);
 class TournamentBanner extends StatelessWidget {
   const TournamentBanner({
     required this.imageUrl,
+    required this.fallbackAsset,
     required this.title,
     required this.onTap,
     this.startDate,
@@ -23,6 +25,7 @@ class TournamentBanner extends StatelessWidget {
   });
 
   final String imageUrl;
+  final String fallbackAsset;
   final String title;
   final VoidCallback onTap;
   final DateTime? startDate;
@@ -48,16 +51,7 @@ class TournamentBanner extends StatelessWidget {
       if (mode != null && mode!.isNotEmpty) mode!,
       if (map != null && map!.isNotEmpty) map!,
     ];
-    Widget picture = CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      fadeInDuration: const Duration(milliseconds: 200),
-      placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
-      errorWidget: (context, url, error) => const ColoredBox(
-        color: Color(0xFF1B1B1E),
-        child: Center(child: Icon(Icons.image_not_supported_outlined, color: Colors.white24, size: 36)),
-      ),
-    );
+    Widget picture = TournamentImage(imageUrl: imageUrl, fallbackAsset: fallbackAsset);
     if (heroTag != null) picture = Hero(tag: heroTag!, child: picture);
 
     return GestureDetector(

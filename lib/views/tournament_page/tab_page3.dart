@@ -14,14 +14,7 @@ class TabPage3 extends StatefulWidget {
   final TeamUsers teams;
   final int tournamentId;
 
-  const TabPage3({
-    required this.model,
-    required this.finised,
-    required this.tournamentType,
-    required this.teams,
-    required this.tournamentId,
-    super.key,
-  });
+  const TabPage3({required this.model, required this.finised, required this.tournamentType, required this.teams, required this.tournamentId, super.key});
 
   @override
   State<TabPage3> createState() => _TabPage3State();
@@ -71,12 +64,14 @@ class _TabPage3State extends State<TabPage3> {
   Widget build(BuildContext context) {
     final itemCount = widget.model.winners!.isEmpty ? teamUsers.length : widget.model.winners!.length;
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 40),
       itemCount: itemCount,
       itemBuilder: (BuildContext context, int index) {
         if (widget.model.winners!.isEmpty && dt1.isBefore(dt2)) {
           return Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Gatnashyanlatr(
               teams: teamUsers[index],
               usersCount: getUsersCount(widget.model.type!),
@@ -89,12 +84,8 @@ class _TabPage3State extends State<TabPage3> {
         if (widget.model.winners!.isNotEmpty) {
           return Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: WinnersAll(
-              winners: widget.model.winners![index],
-              team_users: widget.teams,
-              usersCount: getUsersCount(widget.model.type!),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            child: WinnersAll(winners: widget.model.winners![index], team_users: widget.teams, usersCount: getUsersCount(widget.model.type!)),
           );
         }
         return Container();

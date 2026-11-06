@@ -7,8 +7,10 @@ import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
+import 'package:game_app/utils/support_push.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/constants/notification_bell.dart';
+import 'package:game_app/views/constants/support_chat_button.dart';
 import 'package:game_app/views/home_page/home_banner.dart';
 import 'package:game_app/views/home_page/new_pubg_types.dart';
 import 'package:http/http.dart' as http;
@@ -35,6 +37,8 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   void initState() {
     super.initState();
+    SupportPush.subscribe();
+    SupportPush.markHomeReady();
     getMe();
     _futureBanners = BannerModel().getBanners();
 
@@ -110,7 +114,10 @@ class _NewHomePageState extends State<NewHomePage> {
       return null;
     }
     try {
-      final response = await http.get(Uri.parse('$serverURL/api/accounts/get-my-account/'), headers: <String, String>{HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', HttpHeaders.authorizationHeader: 'Bearer $token'});
+      final response = await http.get(
+        Uri.parse('$serverURL/api/accounts/get-my-account/'),
+        headers: <String, String>{HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', HttpHeaders.authorizationHeader: 'Bearer $token'},
+      );
       if (response.statusCode == 200) {
         final decoded = utf8.decode(response.bodyBytes);
         final responseJson = json.decode(decoded);
@@ -192,7 +199,7 @@ class _NewHomePageState extends State<NewHomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
-        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: false, icon: NotificationBell(), name: appName, elevationWhite: false),
+        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: false, icon: NotificationBell(), leadingIcon: SupportChatButton(), name: appName, elevationWhite: false),
         body: SmartRefresher(
           footer: footer(),
           controller: _refreshController,
@@ -228,7 +235,12 @@ class _NewHomePageState extends State<NewHomePage> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(8.0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: size.width >= 800 ? 3 : (size.width >= 600 ? 2 : 1), childAspectRatio: size.width >= 800 ? (3 / 4.5) : (size.width >= 600 ? (2 / 3.2) : (1 / 0.6)), mainAxisSpacing: 10, crossAxisSpacing: 10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: size.width >= 800 ? 3 : (size.width >= 600 ? 2 : 1),
+                    mainAxisExtent: 188,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 8,
+                  ),
                   itemBuilder: (BuildContext context, int index) {
                     return HomePageCard(vip: postsController.list[index].vip!, model: postsController.list[index]);
                   },

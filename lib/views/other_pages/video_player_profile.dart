@@ -113,7 +113,7 @@ class VideoPLayerMine extends StatefulWidget {
 }
 
 class _VideoPLayerMineState extends State<VideoPLayerMine> {
-  late VideoPlayerController _videoPlayerController;
+  VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
   bool _isLoading = true;
   bool _hasError = false;
@@ -133,12 +133,13 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
       final convertedUrl = _convertVideoUrl(widget.videoURL!);
       debugPrint('Loading video: $convertedUrl');
 
-      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(convertedUrl));
+      final controller = VideoPlayerController.networkUrl(Uri.parse(convertedUrl));
+      _videoPlayerController = controller;
 
-      await _videoPlayerController.initialize();
+      await controller.initialize();
 
       _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
+        videoPlayerController: controller,
         autoPlay: true,
         looping: true,
         allowFullScreen: true,
@@ -148,11 +149,17 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
         autoInitialize: true,
       );
 
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _isLoading = false;
       });
     } catch (e) {
       debugPrint('Error initializing video: $e');
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _isLoading = false;
         _hasError = true;
@@ -162,8 +169,8 @@ class _VideoPLayerMineState extends State<VideoPLayerMine> {
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
     _chewieController?.dispose();
+    _videoPlayerController?.dispose();
     super.dispose();
   }
 

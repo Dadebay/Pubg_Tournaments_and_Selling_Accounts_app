@@ -7,15 +7,12 @@ analyzer:
     - build/**
     - android/**
     - ios/**
-  plugins:
-    - dart_code_metrics
 
 linter:
   rules:
     - always_declare_return_types
     - always_put_control_body_on_new_line
     - always_put_required_named_parameters_first
-    - avoid_returning_null_for_future
     - avoid_slow_async_io
     - avoid_type_to_string
     - comment_references

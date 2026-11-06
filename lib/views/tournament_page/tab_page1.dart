@@ -18,13 +18,7 @@ class TabPage1 extends StatelessWidget {
   final int tournamentType;
   final TournamentModel model;
 
-  const TabPage1({
-    required this.finised,
-    required this.tournamentType,
-    required this.buttonName,
-    required this.model,
-    super.key,
-  });
+  const TabPage1({required this.finised, required this.tournamentType, required this.buttonName, required this.model, super.key});
   String formatDateString(String dateString) {
     final DateTime parsedDate = DateTime.parse(dateString);
 
@@ -39,6 +33,7 @@ class TabPage1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final price = double.tryParse(model.price ?? '');
     final priceText = price == null ? null : (price == price.roundToDouble() ? '${price.toInt()}' : price.toStringAsFixed(1));
+    final description = Get.locale?.languageCode == 'tr' ? model.description_tm ?? '' : model.description_ru ?? '';
     return Stack(
       children: [
         SingleChildScrollView(
@@ -48,18 +43,12 @@ class TabPage1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      model.title.toString(),
-                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 26, height: 1.1),
-                    ),
-                  ),
-                  if (priceText != null) ...[
-                    const SizedBox(width: 12),
+                  _statusChip(),
+                  const Spacer(),
+                  if (priceText != null)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
                         gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
@@ -69,10 +58,14 @@ class TabPage1 extends StatelessWidget {
                         style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 15, height: 1.1),
                       ),
                     ),
-                  ],
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
+              Text(
+                model.title.toString(),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 28, height: 1.1),
+              ),
+              const SizedBox(height: 18),
               Row(
                 children: [
                   Expanded(child: _infoTile(HugeIcons.strokeRoundedGameController03, 'tournamentInfo5'.tr, model.mode ?? '-')),
@@ -85,33 +78,40 @@ class TabPage1 extends StatelessWidget {
                 children: [
                   Expanded(flex: 3, child: _infoTile(HugeIcons.strokeRoundedCalendar03, 'tournamentInfo7'.tr, formatDateString(model.start_date.toString()))),
                   const SizedBox(width: 10),
-                  Expanded(
-                    flex: 2,
-                    child: _infoTile(
-                      HugeIcons.strokeRoundedFlag01,
-                      'tournamentInfo8'.tr,
-                      finised ? 'tournamentInfo9'.tr : 'tournamentInfo10'.tr,
-                      color: finised ? const Color(0xFFFF5A5F) : const Color(0xFF34D399),
-                    ),
-                  ),
+                  Expanded(flex: 2, child: _infoTile(HugeIcons.strokeRoundedUserMultiple, 'tournamentInfo4'.tr, '${model.participated_users?.length ?? 0}')),
                 ],
               ),
-              const SizedBox(height: 18),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-                  color: const Color(0xFF1B1B1E),
+              if (description.trim().isNotEmpty) ...[
+                const SizedBox(height: 22),
+                Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 18,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(2), color: const Color(0xFFFFC83D)),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'tournamentInfo15'.tr.replaceAll(':', ''),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18),
+                    ),
+                  ],
                 ),
-                child: Html(
-                  data: Get.locale?.languageCode == 'tr' ? model.description_tm ?? '' : model.description_ru ?? '',
-                  style: {
-                    'body': Style(fontFamily: gilroyRegular, fontSize: FontSize(16.0), color: Colors.white70, textAlign: TextAlign.left, lineHeight: const LineHeight(1.4)),
-                  },
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+                    color: const Color(0xFF1B1B1E),
+                  ),
+                  child: Html(
+                    data: description,
+                    style: {'body': Style(fontFamily: gilroyRegular, fontSize: FontSize(16.0), color: Colors.white70, textAlign: TextAlign.left, lineHeight: const LineHeight(1.4))},
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
@@ -129,17 +129,9 @@ class TabPage1 extends StatelessWidget {
                   showSnackBar('Üns beriň!', 'Ulgama Giriň!', Colors.red);
                 } else {
                   if (buttonName != 'tournamentInfo12') {
-                    subscribeTurnir(
-                      price: model.price!,
-                      id: model.id!,
-                      tournamentType: tournamentType,
-                      turnir: model,
-                    );
+                    subscribeTurnir(price: model.price!, id: model.id!, tournamentType: tournamentType, turnir: model);
                   } else {
-                    await TournamentModel().checkStatus(
-                      tournamentID: model.id!,
-                      value: true,
-                    );
+                    await TournamentModel().checkStatus(tournamentID: model.id!, value: true);
                   }
                 }
                 settingsController.agreeButton.value = !settingsController.agreeButton.value;
@@ -151,37 +143,71 @@ class TabPage1 extends StatelessWidget {
     );
   }
 
-  Widget _infoTile(List<List<dynamic>> icon, String label, String value, {Color color = const Color(0xFFFFC83D)}) {
+  Widget _statusChip() {
+    final color = finised ? const Color(0xFFFF5A5F) : const Color(0xFF34D399);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: color.withValues(alpha: 0.14),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+          ),
+          const SizedBox(width: 7),
+          Text(
+            finised ? 'tournamentInfo9'.tr : 'tournamentInfo10'.tr,
+            style: TextStyle(color: color, fontFamily: gilroySemiBold, fontSize: 13),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoTile(List<List<dynamic>> icon, String label, String value) {
+    const gold = Color(0xFFFFC83D);
+    return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
         gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF161618)]),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              HugeIcon(icon: icon, color: color, size: 18, strokeWidth: 1.8),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  label,
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: gold.withValues(alpha: 0.14)),
+            child: HugeIcon(icon: icon, color: gold, size: 19, strokeWidth: 1.8),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label.replaceAll(':', '').trim(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12),
+                  style: const TextStyle(color: Color(0xFF9A9AA3), fontFamily: gilroyMedium, fontSize: 11),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: color == const Color(0xFFFFC83D) ? Colors.white : color, fontFamily: gilroyBold, fontSize: 15, height: 1.15),
+                const SizedBox(height: 3),
+                Text(
+                  value,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 14, height: 1.15),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -194,11 +220,7 @@ class TabPage1 extends StatelessWidget {
       child: Text(
         name.tr,
         textAlign: TextAlign.left,
-        style: const TextStyle(
-          color: Colors.white70,
-          fontSize: 18,
-          fontFamily: gilroyRegular,
-        ),
+        style: const TextStyle(color: Colors.white70, fontSize: 18, fontFamily: gilroyRegular),
       ),
     );
   }
@@ -213,11 +235,7 @@ class TabPage1 extends StatelessWidget {
             child: Text(
               name1.tr,
               textAlign: TextAlign.left,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
-                fontFamily: gilroyRegular,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 18, fontFamily: gilroyRegular),
             ),
           ),
           Expanded(
@@ -226,11 +244,7 @@ class TabPage1 extends StatelessWidget {
               name2.tr,
               maxLines: 2,
               textAlign: TextAlign.left,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontFamily: gilroySemiBold,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 18, fontFamily: gilroySemiBold),
             ),
           ),
         ],

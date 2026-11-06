@@ -1,226 +1,130 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:game_app/views/constants/index.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/get_posts_model.dart';
 
-class TabbarPage1 extends StatefulWidget {
+const _gold = Color(0xFFFFC83D);
+
+/// The info of an account: only its description, laid out line by line. A line with
+/// `name: value` becomes a label and a value, any other line gets a gold bullet and
+/// blank lines are gaps, so a long list reads like the post it came from.
+class TabbarPage1 extends StatelessWidget {
   final GetPostsAccountModel model;
 
-  const TabbarPage1({
-    required this.model,
-    super.key,
-  });
-
-  @override
-  State<TabbarPage1> createState() => _TabbarPage1State();
-}
-
-class _TabbarPage1State extends State<TabbarPage1> {
-  bool showAlarts = false;
-
-  Future getConstsPhone() async {
-    final response = await http.get(
-      Uri.parse('$serverURL/api/about/consts/'),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final decoded = utf8.decode(response.bodyBytes);
-      final data = json.decode(response.body);
-
-      final String phone = data['text_three'];
-      unawaited(phone != ''
-          ? showDialog(
-              context: context,
-              builder: (ctxt) => AlertDialog(
-                backgroundColor: kPrimaryColorBlack,
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                title: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
-                    child: Column(
-                      children: [
-                        const Text('Ünus Beriň!'),
-                        Container(
-                          color: Colors.white,
-                          height: 1,
-                          width: 115,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          data['text_three'],
-                          style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: gilroyRegular),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
-          // ignore: require_trailing_commas
-          : null);
-
-      return json.decode(decoded);
-    } else {
-      return false;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getConstsPhone();
-  }
+  const TabbarPage1({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
+    final lines = (model.desc ?? '').replaceAll('\r', '').split('\n');
+    final rows = <Widget>[];
+    for (final raw in lines) {
+      final line = raw.trim();
+      if (line.isEmpty) {
+        if (rows.isNotEmpty) {
+          rows.add(const SizedBox(height: 10));
+        }
+        continue;
+      }
+      final split = RegExp(r'^([^:：]{2,28})\s*[:：]\s*(.+)$').firstMatch(line);
+      if (split != null) {
+        rows.add(_pair(split.group(1)!.trim(), split.group(2)!.trim()));
+      } else {
+        rows.add(_bullet(line.replaceFirst(RegExp(r'^[-•*▪●◆➤>\s]+'), '')));
+      }
+    }
+    // The basics first, so the section is never nearly empty: PUBG name, id and the date.
+    final created = model.createdAt ?? '';
+    final basics = <Widget>[
+      if ((model.pubgUserName ?? '').trim().isNotEmpty && model.pubgUserName != 'null') _pair('accountDetaile1'.tr.replaceAll(':', '').trim(), model.pubgUserName!.trim()),
+      if ((model.pubgID ?? '').trim().isNotEmpty && '${model.pubgID}' != 'null') _pair('accountDetaile2'.tr.replaceAll(':', '').trim(), '${model.pubgID}'.trim()),
+      if (created.length >= 10) _pair('accountDetaile6'.tr.replaceAll(':', '').trim(), created.substring(0, 10)),
+    ];
     return ListView(
-      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      // Room for the buy bar that sits over the bottom of the page.
+      padding: EdgeInsets.fromLTRB(16, 14, 16, 130 + MediaQuery.paddingOf(context).bottom),
       children: [
-        infoPartText('accountDetaile1', widget.model.pubgUserName ?? '', false),
-        infoPartText('accountDetaile2', widget.model.pubgID ?? '', false),
-        infoPartText('accountDetaile5', widget.model.price!, true),
-        infoPartText('accountDetaile6', widget.model.createdAt!.substring(0, 10), false),
-        // infoPartText('verifed', widget.model.user!.verified == true ? 'yes' : 'no', false),
-        // infoPartText('points', widget.model.user!.points.toString(), false),
-        // infoPartText('pointsFromTurnir', widget.model.pubgType!.toString(), false),
-        // infoPartText('referalKod', widget.model.user!.referalCode!, false),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, bottom: 25, top: 15),
-          child: Text(
-            'accountDetaile11'.tr,
-            maxLines: 2,
-            textAlign: TextAlign.start,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular, fontSize: 20),
+        if (rows.isNotEmpty || basics.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              color: const Color(0xFF1B1B1E),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 18,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(2), color: _gold),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'accountInfo'.tr,
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 19),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                ...basics,
+                if (basics.isNotEmpty && rows.isNotEmpty) ...[const SizedBox(height: 4), Container(height: 1, color: _gold.withValues(alpha: 0.2)), const SizedBox(height: 14)],
+                ...rows,
+              ],
+            ),
           ),
-        ),
-        // infoPartText('accountDetaile7', widget.model.user!.firsName ?? '', false),
-        infoPartText('accountDetaile9', widget.model.phone ?? '', false),
-        Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
-          child: AgreeButton(
-            name: 'popUP1',
-            onTap: () async {
-              await launch('tel://${widget.model.phone}');
-            },
-          ),
-        ),
       ],
     );
   }
 
-  Padding infoPartText(String text1, String text2, bool price) {
+  Widget _bullet(String text) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 15, bottom: 25),
+      padding: const EdgeInsets.only(bottom: 9),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              text1.tr,
-              maxLines: 2,
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 20),
-            ),
+          Container(
+            width: 7,
+            height: 7,
+            margin: const EdgeInsets.only(top: 8, right: 12),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: _gold),
           ),
           Expanded(
-            child: price
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        text2,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: gilroySemiBold,
-                        ),
-                      ),
-                      const Text(
-                        ' TMT',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontFamily: gilroySemiBold,
-                        ),
-                      ),
-                    ],
-                  )
-                : Text(
-                    text2,
-                    maxLines: 8,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
-                  ),
+            child: Text(
+              text,
+              style: const TextStyle(color: Color(0xFFE6E6EA), fontFamily: gilroyMedium, fontSize: 16, height: 1.3),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Padding infoPartTextAlart(String text1, String text2, bool price) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 15, bottom: 25),
+  Widget _pair(String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: Colors.white.withValues(alpha: 0.05)),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 4,
             child: Text(
-              text1.tr,
-              maxLines: 2,
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 20),
+              label,
+              style: const TextStyle(color: Color(0xFF9A9AA3), fontFamily: gilroyMedium, fontSize: 15, height: 1.25),
             ),
           ),
+          const SizedBox(width: 10),
           Expanded(
-            child: price
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        text2,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontFamily: gilroySemiBold,
-                        ),
-                      ),
-                      const Text(
-                        ' TMT',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontFamily: gilroySemiBold,
-                        ),
-                      ),
-                    ],
-                  )
-                : Text(
-                    text2,
-                    maxLines: 8,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.red, fontFamily: gilroySemiBold, fontSize: 18),
-                  ),
+            flex: 5,
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16, height: 1.25),
+            ),
           ),
         ],
       ),

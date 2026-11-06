@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:game_app/models/team_winers.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/constants/balance_chip.dart';
@@ -72,11 +71,7 @@ class _WinnersScreenState extends State<WinnersScreen> {
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
-        children: [
-          _tournamentCard(widget.tournament),
-          const SizedBox(height: 20),
-          for (var i = 0; i < winners.length; i++) _winnerRow(winners[i], i),
-        ],
+        children: [_tournamentCard(widget.tournament), const SizedBox(height: 20), for (var i = 0; i < winners.length; i++) _winnerRow(winners[i], i)],
       ),
     );
   }
@@ -100,8 +95,14 @@ class _WinnersScreenState extends State<WinnersScreen> {
               Container(
                 width: 52,
                 height: 52,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.16), border: Border.all(color: _gold.withValues(alpha: 0.5))),
-                child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 26, strokeWidth: 1.8)),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _gold.withValues(alpha: 0.16),
+                  border: Border.all(color: _gold.withValues(alpha: 0.5)),
+                ),
+                child: const Center(
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 26, strokeWidth: 1.8),
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -116,7 +117,10 @@ class _WinnersScreenState extends State<WinnersScreen> {
                     ),
                     if (tournament.map.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(tournament.map, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14)),
+                      Text(
+                        tournament.map,
+                        style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14),
+                      ),
                     ],
                   ],
                 ),
@@ -126,7 +130,11 @@ class _WinnersScreenState extends State<WinnersScreen> {
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(16), border: Border.all(color: color.withValues(alpha: 0.4))),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withValues(alpha: 0.4)),
+            ),
             child: Row(
               children: [
                 Icon(given ? Icons.check_circle_rounded : Icons.schedule_rounded, color: color, size: 22),
@@ -162,10 +170,17 @@ class _WinnersScreenState extends State<WinnersScreen> {
             width: 42,
             height: 42,
             alignment: Alignment.center,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.16), border: Border.all(color: color.withValues(alpha: 0.5))),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color.withValues(alpha: 0.16),
+              border: Border.all(color: color.withValues(alpha: 0.5)),
+            ),
             child: index == 0
                 ? HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: color, size: 20, strokeWidth: 1.8)
-                : Text('${index + 1}', style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 17)),
+                : Text(
+                    '${index + 1}',
+                    style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 17),
+                  ),
           ),
           const SizedBox(width: 14),
           Expanded(

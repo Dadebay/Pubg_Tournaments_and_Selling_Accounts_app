@@ -140,6 +140,14 @@ class UcdayyApi {
 
   // ---------------------------------------------------------------- accounts
 
+  /// The signed-in player's own account.
+  static Future<ApiResult> getMyAccount() => _get('/accounts/get-my-account/', auth: true);
+
+  /// Buys the account of post [postId] with the wallet balance. The buyer gives the
+  /// Gmail the account data is sent to and the PUBG id. 400 = not enough money or bad
+  /// input, 404 = no such post, 409 = already sold (see docs/Backend_Account_Purchase.md).
+  static Future<ApiResult> buyAccountPost(int postId, {required String gmail, required String pubgId}) => _postJson('/accounts/buy-post/$postId/', {'gmail': gmail, 'pubg_id': pubgId}, auth: true);
+
   /// Public account of any user.
   static Future<ApiResult> getAccount(int id) =>
       _get('/accounts/get-account/$id/');
@@ -331,10 +339,45 @@ class UcdayyApi {
   static Future<ApiResult> getLucky() => _get('/games/lucky/', auth: true);
 
   /// One spin; costs 1 cashback. 400 = no cashback / game not running, 409 = no winner slots left.
-  static Future<ApiResult> spinLucky(int gameId) => _postJson('/games/lucky/$gameId/spin/', {}, auth: true);
+  ///
+  /// The server's game object has no id, so without one the id-less route is used
+  /// (`/games/lucky/spin/`, then the README's `/lucky/spin/`).
+  static Future<ApiResult> spinLucky(int gameId) async {
+    if (gameId > 0) {
+      return _postJson('/games/lucky/$gameId/spin/', {}, auth: true);
+    }
+    final result = await _postJson('/games/lucky/spin/', {}, auth: true);
+    if (result.statusCode == 404) {
+      return _postJson('/lucky/spin/', {}, auth: true);
+    }
+    return result;
+  }
 
   /// Buys [count] spins (cashback) with points.
   static Future<ApiResult> buyLuckySpins(int count) => _postJson('/games/lucky/buy-spins/', {'count': count}, auth: true);
+
+  // ----------------------------------------------------------------- support
+
+  /// Creates the player's support chat, or returns the one that exists.
+  static Future<ApiResult> openSupportChat() => _postJson('/support/chats/', {}, auth: true);
+
+  /// The newest messages, or those [before] / [after] a message id.
+  static Future<ApiResult> getSupportMessages(int chatId, {int? before, int? after}) {
+    return _get('/support/chats/$chatId/messages/', auth: true, query: {'before': before, 'after': after});
+  }
+
+  /// Sends text, an image or both.
+  static Future<ApiResult> sendSupportMessage(int chatId, {String body = '', File? image}) {
+    if (image == null) {
+      return _postJson('/support/chats/$chatId/messages/', {'body': body}, auth: true);
+    }
+    return _postMultipart('/support/chats/$chatId/messages/', fields: {'body': body}, files: {'image': image});
+  }
+
+  static Future<ApiResult> markSupportRead(int chatId) => _postJson('/support/chats/$chatId/read/', {}, auth: true);
+
+  /// Unread answers of the support team, for the badge.
+  static Future<ApiResult> getSupportUnread() => _get('/support/unread/', auth: true);
 
   // ----------------------------------------------------------------- premium
 
@@ -347,6 +390,9 @@ class UcdayyApi {
   // ------------------------------------------------------------------- about
 
   static Future<ApiResult> getPrivacy() => _get('/about/privacy/');
+
+  /// The terms of use (same shape as the privacy policy); 404 until the server has it.
+  static Future<ApiResult> getTerms() => _get('/about/terms/');
 
   /// Prices and constants of the app (may also carry the terms of use).
   static Future<ApiResult> getConsts() => _get('/about/consts/');

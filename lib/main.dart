@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:game_app/provider/getkonkur.dart';
 import 'package:game_app/utils/api_logger.dart';
+import 'package:game_app/utils/support_push.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:game_app/views/constants/notification_service.dart';
@@ -25,9 +26,19 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+@pragma('vm:entry-point')
 Future<void> backgroundNotificationHandler(RemoteMessage message) async {
-  await FCMConfig().sendNotification(body: message.notification!.body!, title: message.notification!.title!);
-  return;
+  // The system already shows a push that carries a `notification`; only data pushes are drawn here.
+  final notification = message.notification;
+  if (notification != null && SupportPush.isSupport(message)) {
+    return;
+  }
+  final title = notification?.title ?? '${message.data['title'] ?? ''}';
+  final body = notification?.body ?? '${message.data['body'] ?? ''}';
+  if (title.isEmpty && body.isEmpty) {
+    return;
+  }
+  await FCMConfig().sendNotification(title: title, body: body, payload: SupportPush.isSupport(message) ? {'type': 'support'} : null);
 }
 
 void main() {
@@ -101,8 +112,32 @@ class _MyAppRunState extends State<MyAppRun> {
 
   dynamic firebaseTask() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      FCMConfig().sendNotification(body: message.notification!.body!, title: message.notification!.title!);
+      final support = SupportPush.isSupport(message);
+      if (support) {
+        SupportPush.refreshUnread();
+        // The open chat shows the reply itself.
+        if (SupportPush.chatOpen) {
+          return;
+        }
+      }
+      final title = message.notification?.title ?? '${message.data['title'] ?? ''}';
+      final body = message.notification?.body ?? '${message.data['body'] ?? ''}';
+      if (title.isEmpty && body.isEmpty) {
+        return;
+      }
+      FCMConfig().sendNotification(title: title, body: body, payload: support ? {'type': 'support'} : null);
     });
+    // The app was in the background and a notification was tapped.
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      if (SupportPush.isSupport(message)) {
+        SupportPush.open();
+      }
+    });
+    // The app was closed and a notification started it.
+    final initial = await FirebaseMessaging.instance.getInitialMessage();
+    if (initial != null && SupportPush.isSupport(initial)) {
+      SupportPush.open();
+    }
   }
 
   @override

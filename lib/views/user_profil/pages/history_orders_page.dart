@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:game_app/models/history_order_model.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
@@ -66,32 +65,14 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
       return true;
     }
     final message = '$error'.toLowerCase();
-    return message.contains('401') ||
-        message.contains('credentials') ||
-        message.contains('authentication') ||
-        message.contains('token is invalid');
+    return message.contains('401') || message.contains('credentials') || message.contains('authentication') || message.contains('token is invalid');
   }
 
-  static const _pendingStatuses = {
-    'pending',
-    'processing',
-    'waiting',
-    'new',
-    'in_progress',
-    'created',
-  };
-  static const _cancelledStatuses = {
-    'canceled',
-    'cancelled',
-    'rejected',
-    'failed',
-    'declined',
-  };
+  static const _pendingStatuses = {'pending', 'processing', 'waiting', 'new', 'in_progress', 'created'};
+  static const _cancelledStatuses = {'canceled', 'cancelled', 'rejected', 'failed', 'declined'};
 
-  bool _isPending(HistoryOrderModel order) =>
-      _pendingStatuses.contains(order.status?.toLowerCase());
-  bool _isCancelled(HistoryOrderModel order) =>
-      _cancelledStatuses.contains(order.status?.toLowerCase());
+  bool _isPending(HistoryOrderModel order) => _pendingStatuses.contains(order.status?.toLowerCase());
+  bool _isCancelled(HistoryOrderModel order) => _cancelledStatuses.contains(order.status?.toLowerCase());
 
   /// Which tab an order belongs to: 1 pending, 2 completed. Cancelled orders only show under "all".
   bool _inTab(HistoryOrderModel order, int tab) {
@@ -136,18 +117,9 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
             onBack: widget.backArrow ? Get.back : null,
             onRefresh: _refresh,
             tabs: [
-              SegmentTab(
-                label: 'allOrders'.tr,
-                icon: HugeIcons.strokeRoundedTask01,
-              ),
-              SegmentTab(
-                label: 'pendingOrders'.tr,
-                icon: HugeIcons.strokeRoundedClock01,
-              ),
-              SegmentTab(
-                label: 'doneOrders'.tr,
-                icon: HugeIcons.strokeRoundedCheckmarkSquare02,
-              ),
+              SegmentTab(label: 'allOrders'.tr, icon: HugeIcons.strokeRoundedTask01),
+              SegmentTab(label: 'pendingOrders'.tr, icon: HugeIcons.strokeRoundedClock01),
+              SegmentTab(label: 'doneOrders'.tr, icon: HugeIcons.strokeRoundedCheckmarkSquare02),
             ],
             selectedIndex: _tab,
             onTabChanged: (i) => setState(() => _tab = i),
@@ -170,18 +142,11 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                 if (widget.backArrow)
                   IconButton(
                     onPressed: Get.back,
-                    icon: const Icon(
-                      Icons.arrow_back_rounded,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
                   ),
                 Text(
                   'orders'.tr,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: gilroyBold,
-                    fontSize: 22,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22),
                 ),
               ],
             ),
@@ -189,15 +154,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
           Expanded(
             child: Center(
               child: SingleChildScrollView(
-                child: CatalogEmptyState(
-                  icon: IconlyLight.profile,
-                  imageAsset: 'assets/image/empty_login_badge.webp',
-                  title: 'ordersLoginTitle'.tr,
-                  description: 'ordersLoginDescription'.tr,
-                  actionLabel: 'signIn'.tr,
-                  actionIcon: IconlyLight.login,
-                  onAction: _openLogin,
-                ),
+                child: CatalogEmptyState(icon: IconlyLight.profile, imageAsset: 'assets/image/empty_login_badge.webp', title: 'ordersLoginTitle'.tr, description: 'ordersLoginDescription'.tr, actionLabel: 'signIn'.tr, actionIcon: IconlyLight.login, onAction: _openLogin),
               ),
             ),
           ),
@@ -206,10 +163,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
     );
   }
 
-  Widget _content(
-    AsyncSnapshot<List<HistoryOrderModel>> snapshot,
-    List<HistoryOrderModel> all,
-  ) {
+  Widget _content(AsyncSnapshot<List<HistoryOrderModel>> snapshot, List<HistoryOrderModel> all) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(child: spinKit());
     }
@@ -234,24 +188,12 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
       };
       // The tab page gives its body the free viewport height, so this centers.
       return Center(
-        child: CatalogEmptyState(
-          icon: IconlyLight.document,
-          imageAsset: 'assets/image/empty_orders_clipboard.webp',
-          title: titleKey.tr,
-          description: descriptionKey.tr,
-        ),
+        child: CatalogEmptyState(icon: IconlyLight.document, imageAsset: 'assets/image/empty_orders_clipboard.webp', title: titleKey.tr, description: descriptionKey.tr),
       );
     }
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-      child: Column(
-        children: [
-          for (final item in shown)
-            _orderCard(item.order, item.number, all.length),
-          const SizedBox(height: 4),
-          _thanksBanner(),
-        ],
-      ),
+      child: Column(children: [for (final item in shown) _orderCard(item.order, item.number, all.length), const SizedBox(height: 4), _thanksBanner()]),
     );
   }
 
@@ -262,8 +204,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
   Future<List<CartItems>> _itemsOf(HistoryOrderModel order) {
     return _details.putIfAbsent(order.id!, () async {
       try {
-        return (await HistoryIDModel().getOrderByID(order.id!)).cartItems ??
-            const [];
+        return (await HistoryIDModel().getOrderByID(order.id!)).cartItems ?? const [];
       } catch (_) {
         return const <CartItems>[];
       }
@@ -273,11 +214,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
   Widget _orderCard(HistoryOrderModel order, int number, int total) {
     // The list answer may not carry the items; then they come from the order detail.
     if (order.items.isEmpty && order.id != null) {
-      return FutureBuilder<List<CartItems>>(
-        future: _itemsOf(order),
-        builder: (context, snapshot) =>
-            _orderTile(order, snapshot.data ?? const []),
-      );
+      return FutureBuilder<List<CartItems>>(future: _itemsOf(order), builder: (context, snapshot) => _orderTile(order, snapshot.data ?? const []));
     }
     return _orderTile(order, order.items);
   }
@@ -287,16 +224,10 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
   Widget _orderTile(HistoryOrderModel order, List<CartItems> items) {
     final pending = _isPending(order);
     final cancelled = _isCancelled(order);
-    final badge = cancelled
-        ? const Color(0xFFFF5A5F)
-        : (pending ? const Color(0xFF60A5FA) : _green);
-    final badgeText = cancelled
-        ? 'statusCancelled'
-        : (pending ? 'statusPending' : 'statusDone');
+    final badge = cancelled ? const Color(0xFFFF5A5F) : (pending ? const Color(0xFF60A5FA) : _green);
+    final badgeText = cancelled ? 'statusCancelled' : (pending ? 'statusPending' : 'statusDone');
     final first = items.isEmpty ? null : items.first;
-    final title = (first?.ucName?.isNotEmpty ?? false)
-        ? first!.ucName!
-        : '${'orderPage'.tr} №${order.id}';
+    final title = (first?.ucName?.isNotEmpty ?? false) ? first!.ucName! : '${'orderPage'.tr} №${order.id}';
     final extra = items.length > 1 ? items.length - 1 : 0;
     final count = first?.count ?? 1;
     return Padding(
@@ -306,24 +237,12 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
         child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF232327), Color(0xFF151517)],
-            ),
+            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
             border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(22),
-            onTap: order.id == null
-                ? null
-                : () => Get.to(
-                    () => OrderByID(
-                      orderID: order.id!,
-                      pageName: '${'orderPage'.tr} №${order.id}',
-                      ask: order.ask ?? false,
-                    ),
-                  ),
+            onTap: order.id == null ? null : () => Get.to(() => OrderByID(orderID: order.id!, pageName: '${'orderPage'.tr} №${order.id}', ask: order.ask ?? false)),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Row(
@@ -336,23 +255,11 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                       children: [
                         if (order.id != null) ...[
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _gold.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(color: _gold.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
                             child: Text(
                               '№ ${order.id}',
-                              style: const TextStyle(
-                                color: _gold,
-                                fontFamily: gilroyBold,
-                                fontSize: 11.5,
-                                height: 1.1,
-                                letterSpacing: 0.3,
-                              ),
+                              style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 11.5, height: 1.1, letterSpacing: 0.3),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -364,22 +271,14 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                                 title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: gilroyBold,
-                                  fontSize: 18,
-                                ),
+                                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18),
                               ),
                             ),
                             if (count > 1) ...[
                               const SizedBox(width: 8),
                               Text(
                                 '×$count',
-                                style: const TextStyle(
-                                  color: _gold,
-                                  fontFamily: gilroyBold,
-                                  fontSize: 15,
-                                ),
+                                style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 15),
                               ),
                             ],
                           ],
@@ -389,11 +288,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                           _date(order.created_date),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            fontFamily: gilroyMedium,
-                            fontSize: 13,
-                          ),
+                          style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyMedium, fontSize: 13),
                         ),
                       ],
                     ),
@@ -404,11 +299,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                     children: [
                       Text(
                         '${order.price} TMT',
-                        style: const TextStyle(
-                          color: _gold,
-                          fontFamily: gilroyBold,
-                          fontSize: 17,
-                        ),
+                        style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 17),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -417,19 +308,12 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
                           Container(
                             width: 7,
                             height: 7,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: badge,
-                            ),
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: badge),
                           ),
                           const SizedBox(width: 6),
                           Text(
                             badgeText.tr,
-                            style: TextStyle(
-                              color: badge,
-                              fontFamily: gilroySemiBold,
-                              fontSize: 13,
-                            ),
+                            style: TextStyle(color: badge, fontFamily: gilroySemiBold, fontSize: 13),
                           ),
                         ],
                       ),
@@ -459,12 +343,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: RadialGradient(
-                  colors: [
-                    _gold.withValues(alpha: 0.26),
-                    Colors.black.withValues(alpha: 0.4),
-                  ],
-                ),
+                gradient: RadialGradient(colors: [_gold.withValues(alpha: 0.26), Colors.black.withValues(alpha: 0.4)]),
                 border: Border.all(color: _gold.withValues(alpha: 0.25)),
               ),
               child: picture,
@@ -476,17 +355,10 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
               top: -6,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: _gold,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                decoration: BoxDecoration(color: _gold, borderRadius: BorderRadius.circular(10)),
                 child: Text(
                   '+$extra',
-                  style: const TextStyle(
-                    color: Color(0xFF1A1200),
-                    fontFamily: gilroyBold,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 12),
                 ),
               ),
             ),
@@ -500,9 +372,7 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [_gold.withValues(alpha: 0.16), Colors.black],
-        ),
+        gradient: LinearGradient(colors: [_gold.withValues(alpha: 0.16), Colors.black]),
         border: Border.all(color: _gold.withValues(alpha: 0.35)),
       ),
       child: Row(
@@ -510,16 +380,9 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
           Container(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _gold.withValues(alpha: 0.14),
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.14)),
             child: const Center(
-              child: HugeIcon(
-                icon: HugeIcons.strokeRoundedFire,
-                color: _gold,
-                size: 22,
-              ),
+              child: HugeIcon(icon: HugeIcons.strokeRoundedFire, color: _gold, size: 22),
             ),
           ),
           const SizedBox(width: 12),
@@ -529,20 +392,12 @@ class _HistoryOrdersPageState extends State<HistoryOrdersPage> {
               children: [
                 Text(
                   'ordersThanks'.tr,
-                  style: const TextStyle(
-                    color: _gold,
-                    fontFamily: gilroyBold,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 16),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'ordersThanksSub'.tr,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    fontFamily: gilroyMedium,
-                    fontSize: 13,
-                  ),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontFamily: gilroyMedium, fontSize: 13),
                 ),
               ],
             ),
@@ -558,23 +413,10 @@ enum _OrderState { pending, done, cancelled }
 
 _OrderState _orderStateOf(String? status) {
   final value = status?.toLowerCase();
-  if (const {
-    'canceled',
-    'cancelled',
-    'rejected',
-    'failed',
-    'declined',
-  }.contains(value)) {
+  if (const {'canceled', 'cancelled', 'rejected', 'failed', 'declined'}.contains(value)) {
     return _OrderState.cancelled;
   }
-  if (const {
-    'pending',
-    'processing',
-    'waiting',
-    'new',
-    'in_progress',
-    'created',
-  }.contains(value)) {
+  if (const {'pending', 'processing', 'waiting', 'new', 'in_progress', 'created'}.contains(value)) {
     return _OrderState.pending;
   }
   return _OrderState.done;
@@ -586,12 +428,7 @@ class OrderByID extends StatefulWidget {
   final int orderID;
   final String pageName;
   final bool ask;
-  const OrderByID({
-    required this.orderID,
-    required this.pageName,
-    required this.ask,
-    super.key,
-  });
+  const OrderByID({required this.orderID, required this.pageName, required this.ask, super.key});
 
   @override
   State<OrderByID> createState() => _OrderByIDState();
@@ -603,9 +440,7 @@ class _OrderByIDState extends State<OrderByID> {
   static const _blue = Color(0xFF60A5FA);
   static const _red = Color(0xFFFF5A5F);
 
-  late Future<HistoryIDModel> _future = HistoryIDModel().getOrderByID(
-    widget.orderID,
-  );
+  late Future<HistoryIDModel> _future = HistoryIDModel().getOrderByID(widget.orderID);
 
   Future<void> _reload() async {
     final future = HistoryIDModel().getOrderByID(widget.orderID);
@@ -627,13 +462,10 @@ class _OrderByIDState extends State<OrderByID> {
     return '${two(date.day)}.${two(date.month)}.${date.year}  |  ${two(date.hour)}:${two(date.minute)}';
   }
 
-  String _money(num value) =>
-      '${value == value.roundToDouble() ? value.toInt() : value.toStringAsFixed(2)} TMT';
+  String _money(num value) => '${value == value.roundToDouble() ? value.toInt() : value.toStringAsFixed(2)} TMT';
 
   void _copy(String text) {
-    Clipboard.setData(ClipboardData(text: text)).then(
-      (_) => showSnackBar('copySucces', 'copySuccesSubtitle', Colors.green),
-    );
+    Clipboard.setData(ClipboardData(text: text)).then((_) => showSnackBar('copySucces', 'copySuccesSubtitle', Colors.green));
   }
 
   @override
@@ -661,19 +493,9 @@ class _OrderByIDState extends State<OrderByID> {
                     backgroundColor: const Color(0xFF1C1C20),
                     onRefresh: _reload,
                     child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: BouncingScrollPhysics(),
-                      ),
+                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-                      children: [
-                        _statusCard(order),
-                        const SizedBox(height: 22),
-                        for (final item
-                            in order.cartItems ?? const <CartItems>[])
-                          _itemCard(item),
-                        const SizedBox(height: 10),
-                        _infoCard(order),
-                      ],
+                      children: [_statusCard(order), const SizedBox(height: 22), for (final item in order.cartItems ?? const <CartItems>[]) _itemCard(item), const SizedBox(height: 10), _infoCard(order)],
                     ),
                   );
                 },
@@ -694,15 +516,7 @@ class _OrderByIDState extends State<OrderByID> {
       child: ListView(
         physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-        children: const [
-          ShimmerBlock(height: 150, radius: 26),
-          SizedBox(height: 22),
-          ShimmerBlock(height: 112, radius: 24),
-          SizedBox(height: 12),
-          ShimmerBlock(height: 112, radius: 24),
-          SizedBox(height: 22),
-          ShimmerBlock(height: 140, radius: 24),
-        ],
+        children: const [ShimmerBlock(height: 150, radius: 26), SizedBox(height: 22), ShimmerBlock(height: 112, radius: 24), SizedBox(height: 12), ShimmerBlock(height: 112, radius: 24), SizedBox(height: 22), ShimmerBlock(height: 140, radius: 24)],
       ),
     );
   }
@@ -729,11 +543,7 @@ class _OrderByIDState extends State<OrderByID> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [color.withValues(alpha: 0.22), const Color(0xFF141416)],
-        ),
+        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color.withValues(alpha: 0.22), const Color(0xFF141416)]),
         border: Border.all(color: color.withValues(alpha: 0.35)),
       ),
       child: Column(
@@ -749,12 +559,7 @@ class _OrderByIDState extends State<OrderByID> {
                   border: Border.all(color: color.withValues(alpha: 0.5)),
                 ),
                 child: Center(
-                  child: HugeIcon(
-                    icon: icon,
-                    color: color,
-                    size: 28,
-                    strokeWidth: 1.8,
-                  ),
+                  child: HugeIcon(icon: icon, color: color, size: 28, strokeWidth: 1.8),
                 ),
               ),
               const SizedBox(width: 14),
@@ -764,20 +569,12 @@ class _OrderByIDState extends State<OrderByID> {
                   children: [
                     Text(
                       label.tr,
-                      style: TextStyle(
-                        color: color,
-                        fontFamily: gilroyBold,
-                        fontSize: 22,
-                      ),
+                      style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 22),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       _date(order.created_date),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        fontFamily: gilroyMedium,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroyMedium, fontSize: 14),
                     ),
                   ],
                 ),
@@ -792,19 +589,11 @@ class _OrderByIDState extends State<OrderByID> {
             children: [
               Text(
                 'orderPage3'.tr,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontFamily: gilroySemiBold,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold, fontSize: 16),
               ),
               Text(
                 _money(double.tryParse(order.price ?? '') ?? 0),
-                style: const TextStyle(
-                  color: _gold,
-                  fontFamily: gilroyBold,
-                  fontSize: 22,
-                ),
+                style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 22),
               ),
             ],
           ),
@@ -817,21 +606,13 @@ class _OrderByIDState extends State<OrderByID> {
   Widget _itemCard(CartItems item) {
     final count = item.count ?? 1;
     final unit = double.tryParse(item.unitPrice ?? '');
-    final codes = (item.code ?? const <Codes>[])
-        .map((c) => c.code)
-        .whereType<String>()
-        .where((c) => c.isNotEmpty)
-        .toList();
+    final codes = (item.code ?? const <Codes>[]).map((c) => c.code).whereType<String>().where((c) => c.isNotEmpty).toList();
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF232327), Color(0xFF141416)],
-        ),
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF141416)]),
         border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
       ),
       child: Column(
@@ -844,12 +625,7 @@ class _OrderByIDState extends State<OrderByID> {
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  gradient: RadialGradient(
-                    colors: [
-                      _gold.withValues(alpha: 0.26),
-                      Colors.black.withValues(alpha: 0.4),
-                    ],
-                  ),
+                  gradient: RadialGradient(colors: [_gold.withValues(alpha: 0.26), Colors.black.withValues(alpha: 0.4)]),
                   border: Border.all(color: _gold.withValues(alpha: 0.25)),
                 ),
                 child: UcPicture(name: item.ucName, image: item.ucImage),
@@ -863,20 +639,12 @@ class _OrderByIDState extends State<OrderByID> {
                       item.ucName ?? 'UC',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: gilroyBold,
-                        fontSize: 20,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       unit == null ? '×$count' : '×$count  ·  ${_money(unit)}',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.55),
-                        fontFamily: gilroyMedium,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontFamily: gilroyMedium, fontSize: 14),
                     ),
                   ],
                 ),
@@ -884,18 +652,11 @@ class _OrderByIDState extends State<OrderByID> {
               if (unit != null)
                 Text(
                   _money(unit * count),
-                  style: const TextStyle(
-                    color: _gold,
-                    fontFamily: gilroyBold,
-                    fontSize: 18,
-                  ),
+                  style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18),
                 ),
             ],
           ),
-          if (!widget.ask && codes.isNotEmpty) ...[
-            const SizedBox(height: 14),
-            for (final code in codes) _codeRow(code),
-          ],
+          if (!widget.ask && codes.isNotEmpty) ...[const SizedBox(height: 14), for (final code in codes) _codeRow(code)],
         ],
       ),
     );
@@ -920,12 +681,7 @@ class _OrderByIDState extends State<OrderByID> {
                 code,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: _gold,
-                  fontFamily: gilroyBold,
-                  fontSize: 17,
-                  letterSpacing: 1,
-                ),
+                style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 17, letterSpacing: 1),
               ),
             ),
             Container(
@@ -933,20 +689,11 @@ class _OrderByIDState extends State<OrderByID> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const HugeIcon(
-                    icon: HugeIcons.strokeRoundedCopy01,
-                    color: Colors.white70,
-                    size: 18,
-                    strokeWidth: 1.6,
-                  ),
+                  const HugeIcon(icon: HugeIcons.strokeRoundedCopy01, color: Colors.white70, size: 18, strokeWidth: 1.6),
                   const SizedBox(width: 6),
                   Text(
                     'copy'.tr,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontFamily: gilroyMedium,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontFamily: gilroyMedium, fontSize: 13),
                   ),
                 ],
               ),
@@ -970,36 +717,18 @@ class _OrderByIDState extends State<OrderByID> {
       ),
       child: Column(
         children: [
-          _infoRow(
-            HugeIcons.strokeRoundedGameController03,
-            'signIn2'.tr,
-            pubgId,
-            onCopy: pubgId.isEmpty ? null : () => _copy(pubgId),
-          ),
+          _infoRow(HugeIcons.strokeRoundedGameController03, 'signIn2'.tr, pubgId, onCopy: pubgId.isEmpty ? null : () => _copy(pubgId)),
           _divider(),
-          _infoRow(
-            HugeIcons.strokeRoundedTask01,
-            'orderPage'.tr,
-            '№${order.id}',
-          ),
-          if (note.isNotEmpty) ...[
-            _divider(),
-            _infoRow(HugeIcons.strokeRoundedNote01, 'note'.tr, note),
-          ],
+          _infoRow(HugeIcons.strokeRoundedTask01, 'orderPage'.tr, '№${order.id}'),
+          if (note.isNotEmpty) ...[_divider(), _infoRow(HugeIcons.strokeRoundedNote01, 'note'.tr, note)],
         ],
       ),
     );
   }
 
-  Widget _divider() =>
-      Container(height: 1, color: Colors.white.withValues(alpha: 0.07));
+  Widget _divider() => Container(height: 1, color: Colors.white.withValues(alpha: 0.07));
 
-  Widget _infoRow(
-    List<List<dynamic>> icon,
-    String label,
-    String value, {
-    VoidCallback? onCopy,
-  }) {
+  Widget _infoRow(List<List<dynamic>> icon, String label, String value, {VoidCallback? onCopy}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
@@ -1008,11 +737,7 @@ class _OrderByIDState extends State<OrderByID> {
           const SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFFC9BFA8),
-              fontFamily: gilroyMedium,
-              fontSize: 15,
-            ),
+            style: const TextStyle(color: Color(0xFFC9BFA8), fontFamily: gilroyMedium, fontSize: 15),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1021,11 +746,7 @@ class _OrderByIDState extends State<OrderByID> {
               textAlign: TextAlign.end,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: gilroyBold,
-                fontSize: 17,
-              ),
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 17),
             ),
           ),
           if (onCopy != null)
@@ -1034,12 +755,7 @@ class _OrderByIDState extends State<OrderByID> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.only(left: 12),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedCopy01,
-                  color: Colors.white54,
-                  size: 20,
-                  strokeWidth: 1.6,
-                ),
+                child: HugeIcon(icon: HugeIcons.strokeRoundedCopy01, color: Colors.white54, size: 20, strokeWidth: 1.6),
               ),
             ),
         ],

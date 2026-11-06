@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, require_trailing_commas, avoid_void_async, avoid_bool_literals_in_conditional_expressions
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 
 class Auth {
@@ -9,7 +10,19 @@ class Auth {
     await storage.write('data', data);
   }
 
+  /// The next player on this phone must not get the previous one's support replies.
+  Future<void> _leaveSupportTopic() async {
+    try {
+      final topic = storage.read<String>('supportTopic');
+      if (topic != null) {
+        await storage.remove('supportTopic');
+        await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      }
+    } catch (_) {}
+  }
+
   Future<bool> logout() async {
+    await _leaveSupportTopic();
     await storage.remove('AccessToken');
     await storage.remove('RefreshToken');
     return storage.read('AccessToken') == null ? true : false;
@@ -26,6 +39,7 @@ class Auth {
   }
 
   Future<bool> removeToken() async {
+    await _leaveSupportTopic();
     await storage.remove('AccessToken');
     return storage.read('AccessToken') == null ? true : false;
   }

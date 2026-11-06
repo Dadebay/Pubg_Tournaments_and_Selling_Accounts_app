@@ -7,6 +7,9 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
   final bool elevationWhite;
   final double? fontSize;
   final Widget? icon;
+
+  /// Shown on the left when there is no back arrow.
+  final Widget? leadingIcon;
   final bool iconRemove;
   final String name;
   final double dividerOpacity;
@@ -18,6 +21,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
     required this.name,
     required this.elevationWhite,
     this.icon,
+    this.leadingIcon,
     this.dividerOpacity = 1.0,
     super.key,
   });
@@ -49,7 +53,7 @@ class MyAppBar extends StatelessWidget implements PreferredSize {
                     Get.back();
                   },
                 )
-              : SizedBox.shrink(),
+              : (leadingIcon ?? SizedBox.shrink()),
           actions: [
             if (iconRemove)
               SizedBox.shrink()

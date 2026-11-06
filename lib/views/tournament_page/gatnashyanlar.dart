@@ -1,7 +1,6 @@
 import 'package:game_app/models/accouts_for_sale_model.dart';
 
 import '../../models/tournament_model.dart';
-import '../cards/empty_users_card.dart';
 import '../cards/gatnashyanlar_card.dart';
 import '../constants/index.dart';
 
@@ -16,14 +15,7 @@ class Gatnashyanlatr extends StatefulWidget {
   final String turnirID;
   final String turnirType;
 
-  Gatnashyanlatr({
-    required this.teams,
-    required this.usersCount,
-    required this.teamID,
-    required this.turnirType,
-    required this.turnirID,
-    super.key,
-  });
+  Gatnashyanlatr({required this.teams, required this.usersCount, required this.teamID, required this.turnirType, required this.turnirID, super.key});
 
   @override
   State<Gatnashyanlatr> createState() => _GatnashyanlatrState();
@@ -47,56 +39,22 @@ class _GatnashyanlatrState extends State<Gatnashyanlatr> {
         showButton = true;
       }
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: kPrimaryColorBlack,
-      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.all(Radius.circular(25)), side: BorderSide(width: showButton ? 3 : 1, color: showButton ? kPrimaryColor : kPrimaryColor.withOpacity(0.4))),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10, left: showButton ? 20 : 0, right: showButton ? 20 : 0),
-            child: teamText(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                children: [
-                  for (var i = 0; i < widget.usersCount; i++)
-                    widget.teams.teamUsers!.length >= i + 1
-                        ? GatnashyanlarCard(
-                            teamUsers: widget.teams.teamUsers![i],
-                            teamID: widget.teamID,
-                            showButton: showButton,
-                            turnirID: widget.turnirID,
-                          )
-                        : const EmptyUsersCard(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row teamText() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    final users = widget.teams.teamUsers!;
+    return TeamShell(
+      number: widget.teams.number,
+      filled: users.length,
+      total: widget.usersCount,
+      mine: showButton,
       children: [
-        const Text(
-          'Team: ',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: gilroyBold),
-        ),
-        Text(
-          widget.teams.number.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        for (var i = 0; i < widget.usersCount; i++)
+          users.length >= i + 1 ? GatnashyanlarCard(teamUsers: users[i], teamID: widget.teamID, showButton: showButton, turnirID: widget.turnirID) : const TeamEmptySlot(),
       ],
     );
   }

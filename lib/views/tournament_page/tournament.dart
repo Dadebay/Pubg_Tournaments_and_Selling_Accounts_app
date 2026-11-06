@@ -159,11 +159,7 @@ class _TournamentPageState extends State<TournamentPage> {
 
   Widget emptyPage() {
     return Center(
-      child: CatalogEmptyState(
-        icon: widget.tournamentType == 1 ? Icons.emoji_events_outlined : Icons.sports_esports_outlined,
-        title: 'cannot_find_data_tournament'.tr,
-        description: '',
-      ),
+      child: CatalogEmptyState(icon: widget.tournamentType == 1 ? Icons.emoji_events_outlined : Icons.sports_esports_outlined, title: 'cannot_find_data_tournament'.tr, description: ''),
     );
   }
 

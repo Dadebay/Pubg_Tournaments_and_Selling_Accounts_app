@@ -31,7 +31,9 @@ class _NotificationPageState extends State<NotificationPage> {
   static const _gold = Color(0xFFFFC83D);
 
   Future<void> _refresh() async {
-    setState(() => _future = _load());
+    setState(() {
+      _future = _load();
+    });
     await _future;
   }
 

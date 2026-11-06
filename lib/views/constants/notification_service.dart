@@ -1,10 +1,11 @@
 // ignore_for_file: file_names
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:game_app/utils/support_push.dart';
 
 class FCMConfig {
   Future<void> initAwesomeNotification() async {
-    AwesomeNotifications().initialize(
+    await AwesomeNotifications().initialize(
       null,
       [
         NotificationChannel(
@@ -28,6 +29,8 @@ class FCMConfig {
       ],
       debug: false,
     );
+    // A tap on a notification of the support chat opens the chat.
+    await AwesomeNotifications().setListeners(onActionReceivedMethod: onAction);
     // await FirebaseMessaging.instance.subscribeToTopic('EVENT');
   }
 
@@ -41,7 +44,14 @@ class FCMConfig {
 
   int a = 0;
 
-  Future<void> sendNotification({required String title, required String body}) async {
+  @pragma('vm:entry-point')
+  static Future<void> onAction(ReceivedAction action) async {
+    if (action.payload?['type'] == 'support') {
+      SupportPush.open();
+    }
+  }
+
+  Future<void> sendNotification({required String title, required String body, Map<String, String>? payload}) async {
     a++;
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -51,6 +61,7 @@ class FCMConfig {
         body: body,
         notificationLayout: NotificationLayout.BigText,
         wakeUpScreen: true,
+        payload: payload,
       ),
     );
   }

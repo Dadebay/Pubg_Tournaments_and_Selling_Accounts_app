@@ -2,12 +2,12 @@ import 'dart:developer';
 
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/turnir.dart';
+import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/views/cards/team_member_card.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/tournament_page/register_show_page.dart';
 import 'package:game_app/views/tournament_page/team_registration_dialog.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:game_app/views/constants/balance_chip.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/centered_header.dart';
@@ -76,7 +76,7 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = '$serverURL${widget.tournament.image}';
+    final imageUrl = tournamentImageUrl(widget.tournament.image);
     final stage = widget.filter == 'yarym_final'
         ? widget.members.halfturnir
         : widget.filter == 'final'
@@ -105,17 +105,18 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                       // The poster has its own lettering, so only the price badge sits on it.
                       Container(
                         clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(26), border: Border.all(color: Colors.white.withValues(alpha: 0.1))),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(26),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                        ),
                         child: AspectRatio(
                           aspectRatio: 1.9,
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              CachedNetworkImage(
+                              TournamentImage(
                                 imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const ColoredBox(color: Color(0xFF1B1B1E)),
-                                errorWidget: (context, url, error) => const ColoredBox(color: Color(0xFF1B1B1E)),
+                                fallbackAsset: tournamentFallbackAsset(finished: false, id: widget.tournament.id),
                               ),
                               Positioned(
                                 top: 12,
@@ -127,7 +128,10 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                                     gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
                                     boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 8)],
                                   ),
-                                  child: Text('${widget.tournament.price} TMT', style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 14, height: 1.1)),
+                                  child: Text(
+                                    '${widget.tournament.price} TMT',
+                                    style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 14, height: 1.1),
+                                  ),
                                 ),
                               ),
                             ],
@@ -152,16 +156,27 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                                   height: 52,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), color: const Color(0xFFFFC83D).withValues(alpha: 0.16)),
-                                  child: Text(widget.groupName, style: const TextStyle(fontFamily: gilroyBold, fontSize: 21, color: Color(0xFFFFC83D))),
+                                  child: Text(
+                                    widget.groupName,
+                                    style: const TextStyle(fontFamily: gilroyBold, fontSize: 21, color: Color(0xFFFFC83D)),
+                                  ),
                                 ),
                                 const SizedBox(width: 14),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(widget.tournament.nameTm.isNotEmpty ? widget.tournament.nameTm : widget.tournament.nameRu, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white)),
+                                      Text(
+                                        widget.tournament.nameTm.isNotEmpty ? widget.tournament.nameTm : widget.tournament.nameRu,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white),
+                                      ),
                                       const SizedBox(height: 2),
-                                      Text(title, style: const TextStyle(fontFamily: gilroyMedium, fontSize: 13, color: Color(0xFFB8B8C0))),
+                                      Text(
+                                        title,
+                                        style: const TextStyle(fontFamily: gilroyMedium, fontSize: 13, color: Color(0xFFB8B8C0)),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -183,7 +198,12 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
                       const SizedBox(height: 22),
                       Row(
                         children: [
-                          Expanded(child: Text(title, style: const TextStyle(fontFamily: gilroyBold, fontSize: 20, color: Colors.white))),
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: const TextStyle(fontFamily: gilroyBold, fontSize: 20, color: Colors.white),
+                            ),
+                          ),
                           if (!provider.isLoading && provider.teamMembers.isNotEmpty) _slots(provider.teamMembers),
                         ],
                       ),
@@ -227,7 +247,10 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(color: const Color(0xFFFFC83D).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(14)),
-      child: Text('$taken / ${teams.length}', style: const TextStyle(color: Color(0xFFFFC83D), fontFamily: gilroyBold, fontSize: 14, height: 1.1)),
+      child: Text(
+        '$taken / ${teams.length}',
+        style: const TextStyle(color: Color(0xFFFFC83D), fontFamily: gilroyBold, fontSize: 14, height: 1.1),
+      ),
     );
   }
 
@@ -239,7 +262,12 @@ class _TournamentDetailPageState extends State<TournamentDetailPage> {
         children: [
           HugeIcon(icon: icon, color: const Color(0xFFFFC83D), size: 18, strokeWidth: 1.8),
           const SizedBox(height: 6),
-          Text(text, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12.5)),
+          Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12.5),
+          ),
         ],
       ),
     );

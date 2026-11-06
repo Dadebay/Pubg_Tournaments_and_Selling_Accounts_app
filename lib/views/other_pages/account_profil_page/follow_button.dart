@@ -59,10 +59,7 @@ class _FollowButtonState extends State<FollowButton> {
             onTap: _busy ? null : _toggle,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: _following ? Colors.white.withValues(alpha: 0.4) : kPrimaryColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
+              decoration: BoxDecoration(color: _following ? Colors.white.withValues(alpha: 0.4) : kPrimaryColor, borderRadius: BorderRadius.circular(20)),
               child: Text(
                 (_following ? 'unfollow' : 'follow').tr,
                 style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 15),
@@ -74,8 +71,20 @@ class _FollowButtonState extends State<FollowButton> {
             icon: const Icon(Icons.more_horiz, color: Colors.white),
             onSelected: (followers) => _showList(followers: followers),
             itemBuilder: (context) => [
-              PopupMenuItem(value: true, child: Text('followers'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular))),
-              PopupMenuItem(value: false, child: Text('followings'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular))),
+              PopupMenuItem(
+                value: true,
+                child: Text(
+                  'followers'.tr,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular),
+                ),
+              ),
+              PopupMenuItem(
+                value: false,
+                child: Text(
+                  'followings'.tr,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyRegular),
+                ),
+              ),
             ],
           ),
         ],
@@ -127,7 +136,12 @@ class _UserList extends StatelessWidget {
                 }
                 final items = apiItems(snapshot.data!.data);
                 if (!snapshot.data!.ok || items.isEmpty) {
-                  return Center(child: Text('errorEmpty'.tr, style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold)));
+                  return Center(
+                    child: Text(
+                      'errorEmpty'.tr,
+                      style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold),
+                    ),
+                  );
                 }
                 return ListView.builder(
                   itemCount: items.length,
@@ -135,7 +149,10 @@ class _UserList extends StatelessWidget {
                     final image = _image(items[index]);
                     return ListTile(
                       leading: CircleAvatar(backgroundColor: Colors.white24, backgroundImage: image == null ? null : CachedNetworkImageProvider(image)),
-                      title: Text(_name(items[index]), style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold)),
+                      title: Text(
+                        _name(items[index]),
+                        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
+                      ),
                     );
                   },
                 );
