@@ -2,6 +2,8 @@
 /// leniently: numbers may arrive as numbers or as strings.
 double _num(dynamic value) => value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
 
+double? _positive(double? value) => value != null && value > 0 ? value : null;
+
 class LuckyPrize {
   const LuckyPrize({required this.id, required this.label, required this.points});
 
@@ -73,7 +75,8 @@ class LuckyData {
     return LuckyData(
       cashback: cashback,
       spinsLeft: map['spins_left'] == null ? cashback.floor() : (int.tryParse('${map['spins_left']}') ?? cashback.floor()),
-      spinPrice: map['spin_price'] == null ? (games.isEmpty ? null : games.first.spinPrice) : _num(map['spin_price']),
+      // `null` (or 0) means buying spins is off: the buy button is hidden.
+      spinPrice: _positive(map['spin_price'] == null ? (games.isEmpty ? null : games.first.spinPrice) : _num(map['spin_price'])),
       games: games,
     );
   }

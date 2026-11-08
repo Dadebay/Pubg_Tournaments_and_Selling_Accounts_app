@@ -104,6 +104,16 @@ class UcdayyApi {
     }
   }
 
+  /// A POST whose JSON body is a list (the basket lines of `/category/paymentFromPoint/`).
+  static Future<ApiResult> _postList(String path, List<Map<String, Object?>> body, {bool auth = false}) async {
+    try {
+      final response = await http.post(Uri.parse('$_base$path'), headers: await _headers(auth: auth), body: jsonEncode(body));
+      return _result(response);
+    } catch (e) {
+      return ApiResult(statusCode: 0, error: '$e');
+    }
+  }
+
   static Future<ApiResult> _postMultipart(
     String path, {
     Map<String, Object?> fields = const {},
@@ -239,6 +249,7 @@ class UcdayyApi {
     num? price,
     int? pubgType,
     bool? vip,
+    int? location,
     File? image,
     File? bgImage,
   }) {
@@ -252,6 +263,7 @@ class UcdayyApi {
         'price': price,
         'pubg_type': pubgType,
         'vip': vip,
+        'location': location,
       },
       files: {'image': image, 'bg_image': bgImage},
     );
@@ -264,6 +276,10 @@ class UcdayyApi {
     String? pubgUsername,
     String? pubgId,
     num? price,
+
+    /// A location id from `/accounts/locations/`; [clearLocation] removes it (sends an empty value).
+    int? location,
+    bool clearLocation = false,
     File? image,
     File? bgImage,
   }) {
@@ -275,6 +291,7 @@ class UcdayyApi {
         'pubg_username': pubgUsername,
         'pubg_id': pubgId,
         'price': price,
+        'location': clearLocation ? '' : location,
       },
       files: {'image': image, 'bg_image': bgImage},
     );
@@ -355,6 +372,33 @@ class UcdayyApi {
 
   /// Buys [count] spins (cashback) with points.
   static Future<ApiResult> buyLuckySpins(int count) => _postJson('/games/lucky/buy-spins/', {'count': count}, auth: true);
+
+  // --------------------------------------------- games, programs, gift cards
+
+  static String _catalogPath(String kind) => switch (kind) {
+    'program' => 'programs',
+    'gift' => 'gifts',
+    _ => 'games',
+  };
+
+  /// The brands of one kind (`game`, `program` or `gift`), no auth.
+  static Future<ApiResult> getCatalog(String kind) => _get('/${_catalogPath(kind)}/');
+
+  /// One game / program / gift brand with its products.
+  static Future<ApiResult> getCatalogItem(String kind, int id) => _get('/${_catalogPath(kind)}/$id/');
+
+  /// Pays the basket [lines] from the balance. A game product line is
+  /// `{id, count, status: 'thing', asking: <answer>}`, a gift card line `{id, count, status: 'gift'}`.
+  static Future<ApiResult> payFromBalance(List<Map<String, Object?>> lines) => _postList('/category/paymentFromPoint/', lines, auth: true);
+
+  /// Orders of games and programs, newest first.
+  static Future<ApiResult> getMyGameOrders() => _get('/games/my-orders/', auth: true);
+
+  /// The gift codes the player bought, newest first.
+  static Future<ApiResult> getMyGiftCodes() => _get('/gifts/my-codes/', auth: true);
+
+  /// The owner deletes their own post (its images and videos too).
+  static Future<ApiResult> deleteAccountPost(int id) => _postJson('/accounts/delete-post/$id/', {}, auth: true);
 
   // ----------------------------------------------------------------- support
 

@@ -9,10 +9,7 @@ import '../cards/show_all_accounts_card.dart';
 
 class ShowAllAccounts extends StatefulWidget {
   final String name;
-  const ShowAllAccounts({
-    required this.name,
-    super.key,
-  });
+  const ShowAllAccounts({required this.name, super.key});
 
   @override
   State<ShowAllAccounts> createState() => _ShowAllAccountsState();
@@ -90,14 +87,9 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
               ),
             );
           },
-          icon: const Icon(
-            IconlyLight.filter,
-            color: Colors.white,
-          ),
+          icon: const Icon(IconlyLight.filter, color: Colors.white),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         GestureDetector(
           onTap: () {
             defaultBottomSheet(
@@ -128,11 +120,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
               ),
             );
           },
-          child: const Icon(
-            IconlyLight.filter2,
-            color: Colors.white,
-            size: 30,
-          ),
+          child: const Icon(IconlyLight.filter2, color: Colors.white, size: 30),
         ),
       ],
     );
@@ -146,7 +134,10 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 25, bottom: 20),
-            child: Text('priceRange'.tr, style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 19, color: Colors.white)),
+            child: Text(
+              'priceRange'.tr,
+              style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 19, color: Colors.white),
+            ),
           ),
           Row(
             children: [
@@ -157,14 +148,15 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   controller: controller1,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(9),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
                   decoration: InputDecoration(
                     suffixIcon: const Padding(
                       padding: EdgeInsets.only(right: 8),
-                      child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey)),
+                      child: Text(
+                        'TMT',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey),
+                      ),
                     ),
                     suffixIconConstraints: const BoxConstraints(minHeight: 15),
                     isDense: true,
@@ -181,12 +173,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   ),
                 ),
               ),
-              Container(
-                width: 15,
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                height: 2,
-                color: Colors.grey,
-              ),
+              Container(width: 15, margin: const EdgeInsets.symmetric(horizontal: 5), height: 2, color: Colors.grey),
               Expanded(
                 child: TextFormField(
                   style: const TextStyle(fontFamily: gilroyMedium, fontSize: 18),
@@ -194,12 +181,16 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                   controller: controller2,
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(9),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
                   decoration: InputDecoration(
-                    suffixIcon: const Padding(padding: EdgeInsets.only(right: 8), child: Text('TMT', textAlign: TextAlign.center, style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey))),
+                    suffixIcon: const Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text(
+                        'TMT',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: gilroySemiBold, fontSize: 14, color: Colors.grey),
+                      ),
+                    ),
                     suffixIconConstraints: const BoxConstraints(minHeight: 15),
                     isDense: true,
                     hintText: 'maxPrice'.tr,
@@ -230,14 +221,17 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('selectCityTitle'.tr, style: const TextStyle(color: Colors.grey, fontFamily: gilroySemiBold, fontSize: 14)),
-            Text(name.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18)),
+            Text(
+              'selectCityTitle'.tr,
+              style: const TextStyle(color: Colors.grey, fontFamily: gilroySemiBold, fontSize: 14),
+            ),
+            Text(
+              name.tr,
+              style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
+            ),
           ],
         ),
-        leading: const Icon(
-          IconlyLight.location,
-          size: 30,
-        ),
+        leading: const Icon(IconlyLight.location, size: 30),
         trailing: const Icon(IconlyLight.arrowRightCircle),
         onTap: () {
           Get.defaultDialog(
@@ -253,13 +247,9 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: spinKit());
                 } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Error'),
-                  );
+                  return const Center(child: Text('Error'));
                 } else if (snapshot.data == null || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text('No cities found'),
-                  );
+                  return const Center(child: Text('No cities found'));
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -347,24 +337,19 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
             enablePullDown: true,
             enablePullUp: controller.list.isNotEmpty,
             physics: const BouncingScrollPhysics(),
-            header: const MaterialClassicHeader(
-              color: kPrimaryColor,
-            ),
+            header: const MaterialClassicHeader(color: kPrimaryColor),
             child: GridView.builder(
               itemCount: controller.list.length,
               shrinkWrap: false,
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: size.width >= 800 ? 3 : 2,
-                mainAxisSpacing: 10,
-                childAspectRatio: size.width >= 800 ? 3 / 4 : 2 / 3,
+                mainAxisSpacing: 12,
+                childAspectRatio: size.width >= 800 ? 3 / 4 : 0.68,
                 crossAxisSpacing: 10,
               ),
               itemBuilder: (BuildContext context, int index) {
-                return ShowAllProductsCard(
-                  fav: false,
-                  model: controller.list[index],
-                );
+                return ShowAllProductsCard(fav: false, model: controller.list[index]);
               },
             ),
           );
@@ -395,10 +380,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
         } else {
           body = Text('Başga maglumat ýok'.tr);
         }
-        return SizedBox(
-          height: 55.0,
-          child: Center(child: body),
-        );
+        return SizedBox(height: 55.0, child: Center(child: body));
       },
     );
   }

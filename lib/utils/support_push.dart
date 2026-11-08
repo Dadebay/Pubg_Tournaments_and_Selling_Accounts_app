@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
+import 'package:game_app/utils/order_push.dart';
 import 'package:game_app/views/support/support_chat_page.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +15,9 @@ class SupportPush {
 
   /// Storage key of the topic this device is subscribed to (the logout reads it too).
   static const String topicKey = 'supportTopic';
+
+  /// Storage key of the topic for order status pushes (`user_<user id>`).
+  static const String userTopicKey = 'userTopic';
 
   /// Admin replies the player has not read; the badges listen to it.
   static final ValueNotifier<int> unread = ValueNotifier(0);
@@ -46,20 +50,25 @@ class SupportPush {
       if (id <= 0) {
         return;
       }
-      final topic = 'support_$id';
-      final storage = GetStorage();
-      final old = storage.read<String>(topicKey);
-      if (old == topic) {
-        return;
-      }
-      if (old != null) {
-        await FirebaseMessaging.instance.unsubscribeFromTopic(old);
-      }
-      await FirebaseMessaging.instance.subscribeToTopic(topic);
-      await storage.write(topicKey, topic);
+      await _join(topicKey, 'support_$id');
+      await _join(userTopicKey, 'user_$id');
     } catch (e) {
       debugPrint('support topic: $e');
     }
+  }
+
+  /// Subscribes to [topic], leaving the one stored under [key] when it is another player's.
+  static Future<void> _join(String key, String topic) async {
+    final storage = GetStorage();
+    final old = storage.read<String>(key);
+    if (old == topic) {
+      return;
+    }
+    if (old != null) {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(old);
+    }
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+    await storage.write(key, topic);
   }
 
   /// A push of the support chat: it comes from the player's topic, or says so in its data.
@@ -86,5 +95,6 @@ class SupportPush {
       _pendingOpen = false;
       open();
     }
+    OrderPush.flush();
   }
 }

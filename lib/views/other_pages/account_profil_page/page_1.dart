@@ -31,11 +31,11 @@ class TabbarPage1 extends StatelessWidget {
         rows.add(_bullet(line.replaceFirst(RegExp(r'^[-•*▪●◆➤>\s]+'), '')));
       }
     }
-    // The basics first, so the section is never nearly empty: PUBG name, id and the date.
+    // The basics first, so the section is never nearly empty: account name, id and the date.
     final created = model.createdAt ?? '';
     final basics = <Widget>[
-      if ((model.pubgUserName ?? '').trim().isNotEmpty && model.pubgUserName != 'null') _pair('accountDetaile1'.tr.replaceAll(':', '').trim(), model.pubgUserName!.trim()),
-      if ((model.pubgID ?? '').trim().isNotEmpty && '${model.pubgID}' != 'null') _pair('accountDetaile2'.tr.replaceAll(':', '').trim(), '${model.pubgID}'.trim()),
+      if ((model.pubgUserName ?? '').trim().isNotEmpty && model.pubgUserName != 'null') _pair('accountSaleName'.tr, model.pubgUserName!.trim()),
+      if ((model.pubgID ?? '').trim().isNotEmpty && '${model.pubgID}' != 'null') _pair('accountSaleId'.tr, '${model.pubgID}'.trim()),
       if (created.length >= 10) _pair('accountDetaile6'.tr.replaceAll(':', '').trim(), created.substring(0, 10)),
     ];
     return ListView(

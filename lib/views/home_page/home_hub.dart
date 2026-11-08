@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:game_app/bottom_nav_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
-import 'package:game_app/views/concurs/get_concurs.dart';
+import 'package:game_app/views/catalog/catalog_list_page.dart';
+import 'package:game_app/views/other_pages/show_all_acconts.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/home_page/paymant/add_monay.dart';
 import 'package:get/get.dart';
@@ -20,13 +21,13 @@ class HomeBalanceCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 14, 16, 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: _gold.withValues(alpha: 0.28)),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: _gold.withValues(alpha: 0.75), width: 1.8),
         gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF2E2713), Color(0xFF18181B), Color(0xFF121214)]),
-        boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.1), blurRadius: 24, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.2), blurRadius: 22)],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(28),
         child: Stack(
           children: [
             // Soft rings in the corner, like coins catching the light.
@@ -130,25 +131,45 @@ class HomeBalanceCard extends StatelessWidget {
   }
 }
 
-/// The four sections under the balance: UC, tournaments, free UC and orders.
-/// Each tile shows `assets/image/<image>.webp`; if it is missing an icon is drawn.
+/// The four sections under the balance: games, programs, gift cards and accounts for sale.
+/// Each tile shows a scalable gold icon; a bundled icon is the fallback.
 class HomeSections extends StatelessWidget {
   const HomeSections({super.key});
 
   @override
   Widget build(BuildContext context) {
     final tiles = [
-      _Section(label: 'homeBuyUc'.tr, image: 'home_uc', icon: HugeIcons.strokeRoundedCoins01, onTap: () => BottomNavBus.goTo(BottomNavBus.uc)),
-      _Section(label: 'tournament'.tr, image: 'home_tournament', icon: HugeIcons.strokeRoundedCrown, onTap: () => BottomNavBus.goTo(BottomNavBus.premium)),
-      _Section(label: 'homeFreeUc'.tr, image: 'home_free_uc', icon: HugeIcons.strokeRoundedGift, onTap: () => Get.to(() => const GetConcursScreen())),
-      _Section(label: 'orders'.tr, image: 'home_orders', icon: HugeIcons.strokeRoundedTaskDone01, onTap: () => BottomNavBus.goTo(BottomNavBus.orders)),
+      _Section(
+        label: 'homeGames'.tr,
+        image: 'home_games',
+        icon: HugeIcons.strokeRoundedGameController03,
+        onTap: () => Get.to(() => const CatalogListPage(kind: 'game')),
+      ),
+      _Section(
+        label: 'homePrograms'.tr,
+        image: 'home_programs',
+        icon: HugeIcons.strokeRoundedDashboardSquare01,
+        onTap: () => Get.to(() => const CatalogListPage(kind: 'program')),
+      ),
+      _Section(
+        label: 'homeGifts'.tr,
+        image: 'home_gifts',
+        icon: HugeIcons.strokeRoundedGift,
+        onTap: () => Get.to(() => const CatalogListPage(kind: 'gift')),
+      ),
+      _Section(
+        label: 'homeAccounts'.tr,
+        image: 'home_accounts',
+        icon: HugeIcons.strokeRoundedUserStar01,
+        onTap: () => Get.to(() => const ShowAllAccounts(name: 'accountsForSale')),
+      ),
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (var i = 0; i < tiles.length; i++) ...[if (i > 0) const SizedBox(width: 10), Expanded(child: tiles[i])],
+          for (var i = 0; i < tiles.length; i++) ...[if (i > 0) const SizedBox(width: 9), Expanded(child: tiles[i])],
         ],
       ),
     );
@@ -168,45 +189,53 @@ class _Section extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                color: const Color(0xFF141416),
-              ),
-              // The pictures carry their own dark background, so they fill the tile.
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(21),
-                child: Image.asset(
-                  'assets/image/$image.webp',
-                  fit: BoxFit.cover,
-                  cacheWidth: 300,
-                  errorBuilder: (context, error, stackTrace) => Center(
-                    child: Container(
-                      width: 52,
-                      height: 52,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: _gold.withValues(alpha: 0.12)),
-                      child: HugeIcon(icon: icon, color: _gold, size: 26, strokeWidth: 1.8),
-                    ),
+      child: AspectRatio(
+        aspectRatio: 0.8,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(26),
+            border: Border.all(color: _gold.withValues(alpha: 0.8), width: 1.6),
+            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF261D0D), Color(0xFF0E0D0C)]),
+            boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.22), blurRadius: 16)],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/icons/$image.svg',
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => HugeIcon(icon: icon, color: _gold, size: 40, strokeWidth: 1.8),
                   ),
                 ),
               ),
-            ),
+              if (label.contains(' '))
+                Text(
+                  label,
+                  maxLines: 3,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 11.5, height: 1.1),
+                )
+              else
+                SizedBox(
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 12, height: 1.1),
+                    ),
+                  ),
+                ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12.5, height: 1.15),
-          ),
-        ],
+        ),
       ),
     );
   }

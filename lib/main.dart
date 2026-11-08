@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:game_app/provider/getkonkur.dart';
 import 'package:game_app/utils/api_logger.dart';
+import 'package:game_app/utils/order_push.dart';
 import 'package:game_app/utils/support_push.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -38,7 +39,7 @@ Future<void> backgroundNotificationHandler(RemoteMessage message) async {
   if (title.isEmpty && body.isEmpty) {
     return;
   }
-  await FCMConfig().sendNotification(title: title, body: body, payload: SupportPush.isSupport(message) ? {'type': 'support'} : null);
+  await FCMConfig().sendNotification(title: title, body: body, payload: OrderPush.payload(message));
 }
 
 void main() {
@@ -71,10 +72,7 @@ Future<void> _main() async {
 
   // Hide the Android system navigation bar; it comes back for a moment on an edge swipe.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky, overlays: [SystemUiOverlay.top]);
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   runApp(
     MultiProvider(
@@ -125,18 +123,22 @@ class _MyAppRunState extends State<MyAppRun> {
       if (title.isEmpty && body.isEmpty) {
         return;
       }
-      FCMConfig().sendNotification(title: title, body: body, payload: support ? {'type': 'support'} : null);
+      FCMConfig().sendNotification(title: title, body: body, payload: OrderPush.payload(message));
     });
     // The app was in the background and a notification was tapped.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       if (SupportPush.isSupport(message)) {
         SupportPush.open();
+      } else if (OrderPush.isOrder(message)) {
+        OrderPush.open();
       }
     });
     // The app was closed and a notification started it.
     final initial = await FirebaseMessaging.instance.getInitialMessage();
     if (initial != null && SupportPush.isSupport(initial)) {
       SupportPush.open();
+    } else if (initial != null && OrderPush.isOrder(initial)) {
+      OrderPush.open();
     }
   }
 
@@ -145,11 +147,7 @@ class _MyAppRunState extends State<MyAppRun> {
     return GetMaterialApp(
       initialBinding: AllControllerBindings(),
       defaultTransition: Transition.fade,
-      locale: storage.read('langCode') != null
-          ? Locale(storage.read('langCode'))
-          : const Locale(
-              'tr',
-            ),
+      locale: storage.read('langCode') != null ? Locale(storage.read('langCode')) : const Locale('tr'),
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,

@@ -331,7 +331,7 @@ class _LuckyPageState extends State<LuckyPage> with TickerProviderStateMixin {
     );
   }
 
-  /// "LUCKY / ÇEKILIŞ", centered above the wheel.
+  /// "UCDAYY / CASHBACK", centered above the wheel.
   Widget _title(double width) {
     final small = width < 360;
     return Padding(
@@ -345,7 +345,7 @@ class _LuckyPageState extends State<LuckyPage> with TickerProviderStateMixin {
             children: [
               const HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 22, strokeWidth: 2),
               Text(
-                'LUCKY',
+                'UCDAYY',
                 style: TextStyle(
                   color: _gold,
                   fontFamily: gilroyBold,
@@ -360,7 +360,7 @@ class _LuckyPageState extends State<LuckyPage> with TickerProviderStateMixin {
                 ),
               ),
               Text(
-                'luckyDraw'.tr,
+                'CASHBACK',
                 maxLines: 1,
                 style: TextStyle(
                   color: Colors.white,

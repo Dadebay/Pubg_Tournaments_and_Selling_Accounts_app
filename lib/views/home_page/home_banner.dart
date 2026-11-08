@@ -86,7 +86,7 @@ class _HomeBannerState extends State<HomeBanner> {
     if (await BannerAction.open(banner)) {
       return;
     }
-    await Get.to(() => BannerProfileView(title, image, content));
+    await Get.to(() => BannerProfileView(title, image, content, phone: banner.phone));
   }
 
   Widget _card(BannerModel banner) {

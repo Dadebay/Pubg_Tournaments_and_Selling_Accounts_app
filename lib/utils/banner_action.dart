@@ -1,4 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:game_app/models/turnir.dart';
+import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
+import 'package:game_app/views/tournament_page/qartar_groups_screen.dart';
+import 'package:game_app/views/constants/constants.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/cards/tournament_image.dart';
@@ -35,15 +43,18 @@ class BannerAction {
     }
 
     switch (action) {
+      // The server calls a regular tournament (`/turnirs/turnir/{id}/`, shown in the app's
+      // "Lobbi" list) a `tournament`, and a final tournament (`/turnirs/getturnirs/`, the
+      // app's "Turnir" page with its stages) a `lobby`.
       case 'tournament':
-        return _openTournament(targetId, 1);
-      case 'lobby':
         return _openTournament(targetId, 2);
+      case 'lobby':
+        return _openFinalTournament(targetId);
       case 'tournaments':
-        await Get.to(() => const TournamentPage(tournamentType: 1));
+        await Get.to(() => const TournamentPage(tournamentType: 2));
         return true;
       case 'lobbies':
-        await Get.to(() => const TournamentPage(tournamentType: 2));
+        await Get.to(() => const TournamentPage(tournamentType: 1));
         return true;
       case 'premium':
         await Get.to(() => const PremiumPage());
@@ -97,6 +108,42 @@ class BannerAction {
       return true;
     }
     return false;
+  }
+
+  /// Opens a final tournament (quarter / half / final) by id, taken from `/turnirs/getturnirs/`.
+  static Future<bool> _openFinalTournament(int? id) async {
+    if (id == null) {
+      return false;
+    }
+    Tournament? found;
+    try {
+      final response = await http.get(Uri.parse('$serverURL/api/turnirs/getturnirs/'), headers: {'Content-Type': 'application/json;charset=UTF-8'});
+      if (response.statusCode == 200) {
+        final data = json.decode(utf8.decode(response.bodyBytes));
+        if (data is List) {
+          for (final item in data) {
+            if (item is Map<String, dynamic> && item['id'] == id) {
+              found = Tournament.fromJson(item);
+              break;
+            }
+          }
+        }
+      }
+    } catch (_) {
+      found = null;
+    }
+    if (found == null) {
+      Get.snackbar('Üns beriň!', 'noConnection3'.tr, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+      return true;
+    }
+    final tournament = found;
+    await Get.to(
+      () => ChangeNotifierProvider(
+        create: (_) => TeamMembersProvider(),
+        child: QuarterGroupsScreen(filter: 'tournament', tournament: tournament),
+      ),
+    );
+    return true;
   }
 
   /// Loads the tournament, then opens its page. [type] is 1 for a tournament, 2 for a lobby.

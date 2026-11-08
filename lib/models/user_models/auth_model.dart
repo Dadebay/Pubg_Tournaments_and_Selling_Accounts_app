@@ -13,10 +13,12 @@ class Auth {
   /// The next player on this phone must not get the previous one's support replies.
   Future<void> _leaveSupportTopic() async {
     try {
-      final topic = storage.read<String>('supportTopic');
-      if (topic != null) {
-        await storage.remove('supportTopic');
-        await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      for (final key in ['supportTopic', 'userTopic']) {
+        final topic = storage.read<String>(key);
+        if (topic != null) {
+          await storage.remove(key);
+          await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+        }
       }
     } catch (_) {}
   }
@@ -44,7 +46,7 @@ class Auth {
     return storage.read('AccessToken') == null ? true : false;
   }
 
-/////////////////////////////////////////User Refresh Token///////////////////////////////////
+  /////////////////////////////////////////User Refresh Token///////////////////////////////////
 
   Future<bool> setRefreshToken(String token) async {
     await storage.write('RefreshToken', token);

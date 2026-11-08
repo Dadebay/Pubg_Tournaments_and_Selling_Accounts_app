@@ -5,7 +5,9 @@ import 'dart:io';
 
 import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
+import 'package:game_app/models/get_posts_model.dart';
 import 'package:game_app/models/home_page_model.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/utils/support_push.dart';
 import 'package:game_app/views/constants/index.dart';
@@ -32,6 +34,12 @@ class _HomePageState extends State<HomePage> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   late Future<List<BannerModel>> _futureBanners;
+
+  /// The VIP accounts, shown right under the "Satlyk akkauntlar" title.
+  Future<List<GetPostsAccountModel>> _futureVip = Future.value(const <GetPostsAccountModel>[]);
+
+  /// Ids of the VIP accounts, so the normal list below does not show them twice.
+  Set<int> _vipIds = {};
   bool showPage = false;
 
   @override
@@ -41,10 +49,77 @@ class _HomePageState extends State<HomePage> {
     SupportPush.markHomeReady();
     getMe();
     _futureBanners = BannerModel().getBanners();
+    _loadVip();
 
     postsController.clearData();
     postsController.fetchPosts(DANGEROUS_clearList: true);
     getData();
+  }
+
+  void _loadVip() {
+    _futureVip = GetPostsAccountModel()
+        .getVIPPosts(parametrs: {'page': '1', 'size': '10'})
+        .then((items) {
+          if (mounted) {
+            setState(
+              () => _vipIds = {
+                for (final item in items)
+                  if (item.id != null) item.id!,
+              },
+            );
+          }
+          return items;
+        })
+        .catchError((_) => <GetPostsAccountModel>[]);
+  }
+
+  /// A gold "VIP" label and the VIP accounts side by side, under the section title.
+  Widget _vipSection(Size size) {
+    return FutureBuilder<List<GetPostsAccountModel>>(
+      future: _futureVip,
+      builder: (context, snapshot) {
+        final items = snapshot.data ?? const <GetPostsAccountModel>[];
+        if (items.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        const gold = Color(0xFFFFC83D);
+        final cardWidth = size.width >= 800 ? 420.0 : size.width - 40;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Row(
+                children: [
+                  const HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: gold, size: 22, strokeWidth: 1.9),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'VIP',
+                    style: TextStyle(color: gold, fontFamily: gilroyBold, fontSize: 20, letterSpacing: 1),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: Container(height: 1, color: gold.withValues(alpha: 0.3))),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 188,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: items.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 4),
+                itemBuilder: (context, index) => SizedBox(
+                  width: cardWidth,
+                  child: HomePageCard(vip: true, model: items[index]),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -62,6 +137,7 @@ class _HomePageState extends State<HomePage> {
     }
     setState(() {
       _futureBanners = BannerModel().getBanners();
+      _loadVip();
     });
 
     postsController.clearData();
@@ -215,7 +291,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               HomeBanner(future: _futureBanners),
               if (showPage == false) ...[const HomeBalanceCard(), const HomeSections()],
-              listViewName('accountsForSale'.tr, true, size),
+              listViewName('homeVipAccounts'.tr, true, size),
+              _vipSection(size),
               Obx(() {
                 if (postsController.isLoading.value && postsController.list.isEmpty) {
                   return Container(
@@ -230,8 +307,9 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
+                final items = postsController.list.where((item) => !_vipIds.contains(item.id)).toList();
                 return GridView.builder(
-                  itemCount: postsController.list.length,
+                  itemCount: items.length,
                   physics: const NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -243,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisSpacing: 8,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    return HomePageCard(vip: postsController.list[index].vip!, model: postsController.list[index]);
+                    return HomePageCard(vip: items[index].vip == true, model: items[index]);
                   },
                 );
               }),

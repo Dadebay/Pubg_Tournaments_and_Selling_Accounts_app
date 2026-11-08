@@ -31,6 +31,8 @@ class TournamentCard extends StatelessWidget {
       heroTag: heroTag,
       title: tournamentModel.title ?? '',
       startDate: DateTime.tryParse(tournamentModel.start_date ?? ''),
+      finishDate: DateTime.tryParse(tournamentModel.finish_date ?? ''),
+      isFinished: finised,
       price: tournamentModel.price,
       mode: tournamentModel.mode,
       map: tournamentModel.map,

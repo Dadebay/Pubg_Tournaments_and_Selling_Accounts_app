@@ -26,6 +26,8 @@ class NewTournamentCard extends StatelessWidget {
       heroTag: 'tournament-$tournamentType-${tournament.id}-$finised',
       title: tournament.nameTm,
       startDate: tournament.startDate,
+      finishDate: tournament.finishDate,
+      isFinished: finised,
       price: tournament.price,
       mode: tournament.mode,
       map: tournament.map,

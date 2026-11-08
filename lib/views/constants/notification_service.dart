@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:game_app/utils/order_push.dart';
 import 'package:game_app/utils/support_push.dart';
 
 class FCMConfig {
@@ -21,12 +22,7 @@ class FCMConfig {
           defaultRingtoneType: DefaultRingtoneType.Ringtone,
         ),
       ],
-      channelGroups: [
-        NotificationChannelGroup(
-          channelGroupKey: 'basic_channel_group',
-          channelGroupName: 'Basic group',
-        ),
-      ],
+      channelGroups: [NotificationChannelGroup(channelGroupKey: 'basic_channel_group', channelGroupName: 'Basic group')],
       debug: false,
     );
     // A tap on a notification of the support chat opens the chat.
@@ -48,21 +44,15 @@ class FCMConfig {
   static Future<void> onAction(ReceivedAction action) async {
     if (action.payload?['type'] == 'support') {
       SupportPush.open();
+    } else if (action.payload?['type'] == 'game_order') {
+      OrderPush.open();
     }
   }
 
   Future<void> sendNotification({required String title, required String body, Map<String, String>? payload}) async {
     a++;
     await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: a,
-        channelKey: 'basic_channel',
-        title: title,
-        body: body,
-        notificationLayout: NotificationLayout.BigText,
-        wakeUpScreen: true,
-        payload: payload,
-      ),
+      content: NotificationContent(id: a, channelKey: 'basic_channel', title: title, body: body, notificationLayout: NotificationLayout.BigText, wakeUpScreen: true, payload: payload),
     );
   }
 }

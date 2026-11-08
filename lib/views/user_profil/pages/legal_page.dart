@@ -40,6 +40,10 @@ class _LegalPageState extends State<LegalPage> {
       if (doc != null) {
         return doc;
       }
+      // The endpoint exists but the admin has not written the text yet: show the empty state.
+      if (terms.ok) {
+        return null;
+      }
       // The terms live in the constants when the server has them there;
       // otherwise the privacy policy is the document that covers the use of the app.
       final consts = await UcdayyApi.getConsts();
@@ -97,7 +101,11 @@ class _LegalPageState extends State<LegalPage> {
                       child: ListView(
                         physics: const NeverScrollableScrollPhysics(),
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                        children: [const ShimmerBlock(height: 110, radius: 24), const SizedBox(height: 16), for (var i = 0; i < 6; i++) ...const [ShimmerBlock(height: 18, radius: 9), SizedBox(height: 12)]],
+                        children: [
+                          const ShimmerBlock(height: 110, radius: 24),
+                          const SizedBox(height: 16),
+                          for (var i = 0; i < 6; i++) ...const [ShimmerBlock(height: 18, radius: 9), SizedBox(height: 12)],
+                        ],
                       ),
                     );
                   }
@@ -157,7 +165,10 @@ class _LegalPageState extends State<LegalPage> {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
       children: [
         _hero(title, parsed.updated),
-        if (parsed.intro.isNotEmpty) ...[const SizedBox(height: 16), _card(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final line in parsed.intro) line.isBullet ? _bulletRow(line.text) : _paragraph(line.text)]))],
+        if (parsed.intro.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _card(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final line in parsed.intro) line.isBullet ? _bulletRow(line.text) : _paragraph(line.text)])),
+        ],
         for (final section in parsed.sections) ...[const SizedBox(height: 14), _section(section)],
       ],
     );
@@ -199,7 +210,10 @@ class _LegalPageState extends State<LegalPage> {
           Container(
             width: 54,
             height: 54,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)])),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(17),
+              gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+            ),
             child: Icon(_isTerms ? Icons.description_rounded : Icons.shield_rounded, color: const Color(0xFF1A1200), size: 28),
           ),
           const SizedBox(width: 16),
@@ -207,7 +221,10 @@ class _LegalPageState extends State<LegalPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 21, height: 1.15)),
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 21, height: 1.15),
+                ),
                 if (updated != null) ...[
                   const SizedBox(height: 8),
                   Container(
@@ -218,7 +235,10 @@ class _LegalPageState extends State<LegalPage> {
                       children: [
                         Icon(Icons.update_rounded, size: 14, color: Colors.white.withValues(alpha: 0.6)),
                         const SizedBox(width: 5),
-                        Text(updated, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontFamily: gilroySemiBold, fontSize: 12)),
+                        Text(
+                          updated,
+                          style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontFamily: gilroySemiBold, fontSize: 12),
+                        ),
                       ],
                     ),
                   ),
@@ -257,13 +277,19 @@ class _LegalPageState extends State<LegalPage> {
                 height: 30,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(color: _gold.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(10)),
-                child: Text(section.number, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 15)),
+                child: Text(
+                  section.number,
+                  style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 15),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text(section.title, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 17, height: 1.2)),
+                  child: Text(
+                    section.title,
+                    style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 17, height: 1.2),
+                  ),
                 ),
               ),
             ],
@@ -278,7 +304,10 @@ class _LegalPageState extends State<LegalPage> {
   Widget _paragraph(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.78), fontFamily: gilroyMedium, fontSize: 15.5, height: 1.45)),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white.withValues(alpha: 0.78), fontFamily: gilroyMedium, fontSize: 15.5, height: 1.45),
+      ),
     );
   }
 
@@ -294,11 +323,26 @@ class _LegalPageState extends State<LegalPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 9, right: 12, left: 4),
-            child: Container(width: 6, height: 6, decoration: const BoxDecoration(color: _gold, shape: BoxShape.circle)),
+            child: Container(
+              width: 6,
+              height: 6,
+              decoration: const BoxDecoration(color: _gold, shape: BoxShape.circle),
+            ),
           ),
           Expanded(
             child: hasLabel
-                ? Text.rich(TextSpan(style: base, children: [TextSpan(text: '${text.substring(0, split)}: ', style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold)), TextSpan(text: text.substring(split + 2))]))
+                ? Text.rich(
+                    TextSpan(
+                      style: base,
+                      children: [
+                        TextSpan(
+                          text: '${text.substring(0, split)}: ',
+                          style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
+                        ),
+                        TextSpan(text: text.substring(split + 2)),
+                      ],
+                    ),
+                  )
                 : Text(text, style: base),
           ),
         ],

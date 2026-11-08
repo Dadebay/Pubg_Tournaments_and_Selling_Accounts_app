@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:game_app/views/constants/constants.dart';
+import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +19,8 @@ class TournamentBanner extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.startDate,
+    this.finishDate,
+    this.isFinished = false,
     this.price,
     this.mode,
     this.map,
@@ -29,6 +34,8 @@ class TournamentBanner extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final DateTime? startDate;
+  final DateTime? finishDate;
+  final bool isFinished;
   final String? price;
   final String? mode;
   final String? map;
@@ -40,7 +47,9 @@ class TournamentBanner extends StatelessWidget {
   /// "12.50" → "12.5", "100.00" → "100"; null when there is no price.
   String? get _priceText {
     final value = double.tryParse(price ?? '');
-    if (value == null || value <= 0) return null;
+    if (value == null || value <= 0) {
+      return null;
+    }
     return value == value.roundToDouble() ? '${value.toInt()}' : value.toStringAsFixed(1);
   }
 
@@ -52,7 +61,9 @@ class TournamentBanner extends StatelessWidget {
       if (map != null && map!.isNotEmpty) map!,
     ];
     Widget picture = TournamentImage(imageUrl: imageUrl, fallbackAsset: fallbackAsset);
-    if (heroTag != null) picture = Hero(tag: heroTag!, child: picture);
+    if (heroTag != null) {
+      picture = Hero(tag: heroTag!, child: picture);
+    }
 
     return GestureDetector(
       onTap: onTap,
@@ -139,6 +150,10 @@ class TournamentBanner extends StatelessWidget {
                             ],
                           ),
                         ],
+                        if (!isFinished && finishDate != null) ...[
+                          const SizedBox(height: 8),
+                          _TournamentCountdown(finishDate: finishDate!),
+                        ],
                       ],
                     ),
                   ),
@@ -178,6 +193,93 @@ class TournamentBanner extends StatelessWidget {
             text,
             style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12, height: 1.1),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Reads the device clock on each tick so it also catches up after app resume.
+class _TournamentCountdown extends StatefulWidget {
+  const _TournamentCountdown({required this.finishDate});
+
+  final DateTime finishDate;
+
+  @override
+  State<_TournamentCountdown> createState() => _TournamentCountdownState();
+}
+
+class _TournamentCountdownState extends State<_TournamentCountdown> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void didUpdateWidget(covariant _TournamentCountdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.finishDate != widget.finishDate) {
+      _timer?.cancel();
+      _startTimer();
+    }
+  }
+
+  void _startTimer() {
+    if (!widget.finishDate.isAfter(DateTime.now())) {
+      return;
+    }
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+      if (!widget.finishDate.isAfter(DateTime.now())) {
+        _timer?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final remaining = widget.finishDate.difference(DateTime.now());
+    final ended = remaining <= Duration.zero;
+    final seconds = ended ? 0 : remaining.inSeconds;
+    final days = seconds ~/ Duration.secondsPerDay;
+    final hours = (seconds ~/ Duration.secondsPerHour) % 24;
+    final minutes = (seconds ~/ Duration.secondsPerMinute) % 60;
+    final secs = seconds % 60;
+    String two(int value) => value.toString().padLeft(2, '0');
+    final time = '${days > 0 ? '$days${'tournamentCountdownDay'.tr} ' : ''}${two(hours)}:${two(minutes)}:${two(secs)}';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: _gold.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _gold.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const HugeIcon(icon: HugeIcons.strokeRoundedClock01, color: _gold, size: 14, strokeWidth: 1.8),
+          const SizedBox(width: 5),
+          Text(
+            ended ? 'tournamentCountdownEnded'.tr : 'tournamentCountdown'.tr,
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12),
+          ),
+          if (!ended) ...[
+            const SizedBox(width: 6),
+            Text(time, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 12)),
+          ],
         ],
       ),
     );
