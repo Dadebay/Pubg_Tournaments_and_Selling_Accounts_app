@@ -1,12 +1,10 @@
+import 'package:game_app/bottom_nav_bar.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/catalog_model.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/catalog/catalog_common.dart';
-import 'package:game_app/views/catalog/game_orders_page.dart';
-import 'package:game_app/views/catalog/gift_codes_page.dart';
 import 'package:game_app/views/home_page/paymant/add_monay.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 import '../constants/index.dart';
 
@@ -107,7 +105,9 @@ class _CatalogBuyDialogState extends State<CatalogBuyDialog> {
     if (result.ok && (data is! Map || data['success'] != false)) {
       _wallet.getUserMoney();
       Navigator.pop(context, true);
-      await _showDone();
+      // The order is bought: show it in the bottom bar's orders tab.
+      showSnackBar('accountBuyDone', 'orders', const Color(0xFF34D399));
+      BottomNavBus.goTo(BottomNavBus.orders);
       return;
     }
     setState(() => _busy = false);
@@ -138,63 +138,6 @@ class _CatalogBuyDialogState extends State<CatalogBuyDialog> {
       return;
     }
     setState(() => _error = _serverMessage(data, result.error));
-  }
-
-  Future<void> _showDone() {
-    final gift = _gift;
-    return showDialog(
-      context: Get.context!,
-      barrierColor: Colors.black.withValues(alpha: 0.75),
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 28),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(22, 28, 22, 18),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: catalogGold.withValues(alpha: 0.4)),
-            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2A2415), Color(0xFF131315)]),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 76,
-                height: 76,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFF34D399).withValues(alpha: 0.15),
-                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.6), width: 2),
-                ),
-                child: const HugeIcon(icon: HugeIcons.strokeRoundedTick02, color: Color(0xFF34D399), size: 40, strokeWidth: 2.4),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                'accountBuyDone'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22),
-              ),
-              const SizedBox(height: 20),
-              CatalogGoldButton(
-                label: (gift ? 'catalogMyCodes' : 'orders').tr,
-                onTap: () {
-                  Get.back();
-                  Get.to(() => gift ? const GiftCodesPage() : const GameOrdersPage());
-                },
-              ),
-              TextButton(
-                onPressed: Get.back,
-                child: Text(
-                  'luckyOk'.tr,
-                  style: const TextStyle(color: Colors.white54, fontFamily: gilroySemiBold, fontSize: 15),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override

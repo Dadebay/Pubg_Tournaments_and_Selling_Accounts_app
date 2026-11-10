@@ -9,7 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'views/home_page/home_page.dart';
 import 'views/premium/premium_page.dart';
 import 'views/tournament_page/new_tournamet_page.dart';
-import 'views/user_profil/pages/history_orders_page.dart';
+
+import 'package:game_app/views/orders/orders_history_page.dart';
+
 import 'views/user_profil/user_profil.dart';
 import 'views/wallet/wallet_page.dart';
 
@@ -79,7 +81,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     setState(() => selectedIndex = tab);
   }
 
-  List page = [const HomePage(), const PremiumPage(), const WalletPage(), const HistoryOrdersPage(backArrow: false), const UserProfil()];
+  List page = [const HomePage(), const PremiumPage(), const WalletPage(), const OrdersHistoryPage(backArrow: false), const UserProfil()];
   List page2 = [const HomePage(), const NewTournamentPage(), const UserProfil()];
   @override
   Widget build(BuildContext context) {

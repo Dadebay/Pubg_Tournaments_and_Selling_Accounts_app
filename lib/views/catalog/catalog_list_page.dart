@@ -2,8 +2,6 @@ import 'package:game_app/models/catalog_model.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/catalog/catalog_common.dart';
 import 'package:game_app/views/catalog/catalog_detail_page.dart';
-import 'package:game_app/views/catalog/gift_codes_page.dart';
-import 'package:game_app/views/constants/balance_chip.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/shimmer.dart';
@@ -51,40 +49,13 @@ class _CatalogListPageState extends State<CatalogListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final gift = widget.kind == 'gift';
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            CenteredHeader(
-              title: _title,
-              onBack: Get.back,
-              trailing: gift
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Get.to(() => const GiftCodesPage()),
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xFF1B1B1E),
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                            ),
-                            child: const HugeIcon(icon: HugeIcons.strokeRoundedKey01, color: catalogGold, size: 22, strokeWidth: 1.8),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const BalanceChip(),
-                      ],
-                    )
-                  : const BalanceChip(),
-            ),
+            CenteredHeader(title: _title, onBack: Get.back),
             Expanded(
               child: FutureBuilder<List<CatalogBrand>>(
                 future: _future,

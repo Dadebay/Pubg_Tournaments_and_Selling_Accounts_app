@@ -101,7 +101,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
         );
       } else {
         // Show backend error message if available
-        final errorMsg = provider.errorMessage ?? 'Failed to register team';
+        final errorMsg = provider.registerError ?? provider.errorMessage ?? 'tournamentInfo14'.tr;
         Get.snackbar(
           'Error'.tr,
           errorMsg,

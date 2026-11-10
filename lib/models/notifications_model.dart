@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
-import '../views/constants/index.dart';
+import 'package:game_app/repository/ucdayy_api.dart';
 
 class NotifcationModel {
   final int? id;
@@ -10,38 +6,24 @@ class NotifcationModel {
   final String? url;
   final String? content;
   final String? title;
-  NotifcationModel({
-    this.id,
-    this.createdAt,
-    this.url,
-    this.content,
-    this.title,
-  });
+
+  /// This account has opened the notification (kept on the server, per account).
+  bool read;
+  NotifcationModel({this.id, this.createdAt, this.url, this.content, this.title, this.read = false});
 
   factory NotifcationModel.fromJson(Map<dynamic, dynamic> json) {
-    return NotifcationModel(id: json['id'], createdAt: json['created_date'], title: json['title'], content: json['description'], url: json['url']);
+    return NotifcationModel(id: json['id'], createdAt: json['created_date'], title: json['title'], content: json['description'], url: json['url'], read: json['read'] == true);
   }
 
+  /// The notifications, newest first. With a token each carries this account's `read` state.
   Future<List<NotifcationModel>> getNotifcations() async {
-    final List<NotifcationModel> bannerList = [];
-    final response = await http.get(
-      Uri.parse(
-        '$serverURL/api/notifications/',
-      ),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Charset': 'utf-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      final responseJson = json.decode(utf8.decode(response.bodyBytes));
-      for (final Map product in responseJson) {
-        bannerList.add(NotifcationModel.fromJson(product));
-      }
-
-      return bannerList;
-    } else {
+    final result = await UcdayyApi.getNotifications();
+    final data = result.data;
+    if (!result.ok || data is! List) {
       return [];
     }
+    final items = [for (final item in data.whereType<Map>()) NotifcationModel.fromJson(item)];
+    items.sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0));
+    return items;
   }
 }

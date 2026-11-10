@@ -140,20 +140,22 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
                 const SizedBox(height: 22),
-                Text('orderAcceptedTitle'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1.2)),
+                Text(
+                  'orderAcceptedTitle'.tr,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1.2),
+                ),
                 const SizedBox(height: 10),
-                Text('orderAcceptedDescription'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 16, height: 1.35)),
+                Text(
+                  'orderAcceptedDescription'.tr,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 16, height: 1.35),
+                ),
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(18)),
-                  child: Column(
-                    children: [
-                      _summaryRow(widget.asking.tr, widget.pubgID.tr, Colors.white),
-                      const SizedBox(height: 10),
-                      _summaryRow('orderPage3'.tr, total, _gold),
-                    ],
-                  ),
+                  child: Column(children: [_summaryRow(widget.asking.tr, widget.pubgID.tr, Colors.white), const SizedBox(height: 10), _summaryRow('orderPage3'.tr, total, _gold)]),
                 ),
                 const SizedBox(height: 22),
                 GestureDetector(
@@ -166,7 +168,10 @@ class _OrderPageState extends State<OrderPage> {
                       gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
                       boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.25), blurRadius: 16, offset: const Offset(0, 6))],
                     ),
-                    child: Text('orderAcceptedButton'.tr, style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 18)),
+                    child: Text(
+                      'orderAcceptedButton'.tr,
+                      style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 18),
+                    ),
                   ),
                 ),
               ],
@@ -181,10 +186,18 @@ class _OrderPageState extends State<OrderPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14)),
+        Text(
+          label,
+          style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14),
+        ),
         const SizedBox(width: 12),
         Flexible(
-          child: Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: valueColor, fontFamily: gilroyBold, fontSize: 17)),
+          child: Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: valueColor, fontFamily: gilroyBold, fontSize: 17),
+          ),
         ),
       ],
     );
@@ -210,13 +223,27 @@ class _OrderPageState extends State<OrderPage> {
               Container(
                 width: 68,
                 height: 68,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: _gold.withValues(alpha: 0.12), border: Border.all(color: _gold.withValues(alpha: 0.4))),
-                child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedWallet01, color: _gold, size: 34, strokeWidth: 1.6)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  color: _gold.withValues(alpha: 0.12),
+                  border: Border.all(color: _gold.withValues(alpha: 0.4)),
+                ),
+                child: const Center(
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedWallet01, color: _gold, size: 34, strokeWidth: 1.6),
+                ),
               ),
               const SizedBox(height: 18),
-              Text('not_monay'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22, height: 1.2)),
+              Text(
+                'not_monay'.tr,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22, height: 1.2),
+              ),
               const SizedBox(height: 10),
-              Text('Dowam etmek üçin balansy dolduryň'.tr, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 15)),
+              Text(
+                'Dowam etmek üçin balansy dolduryň'.tr,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyRegular, fontSize: 15),
+              ),
               const SizedBox(height: 22),
               GestureDetector(
                 onTap: () {
@@ -226,8 +253,14 @@ class _OrderPageState extends State<OrderPage> {
                 child: Container(
                   height: 52,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)])),
-                  child: Text('add_monay'.tr, style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 17)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+                  ),
+                  child: Text(
+                    'add_monay'.tr,
+                    style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 17),
+                  ),
                 ),
               ),
               TextButton(
@@ -290,23 +323,41 @@ class _OrderPageState extends State<OrderPage> {
             child: Container(
               width: 42,
               height: 42,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.06), border: Border.all(color: Colors.white.withValues(alpha: 0.14))),
-              child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2)),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.06),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+              ),
+              child: const Center(
+                child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2),
+              ),
             ),
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Text('orderPage'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 28)),
+            child: Text(
+              'orderPage'.tr,
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 28),
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(color: const Color(0xFF1B1B1E), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: 0.1))),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1B1B1E),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const HugeIcon(icon: HugeIcons.strokeRoundedWallet01, color: _gold, size: 20, strokeWidth: 1.6),
                 const SizedBox(width: 8),
-                Obx(() => Text(_balance.toStringAsFixed(1), style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16))),
+                Obx(
+                  () => Text(
+                    _balance.toStringAsFixed(1),
+                    style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 16),
+                  ),
+                ),
               ],
             ),
           ),
@@ -330,16 +381,26 @@ class _OrderPageState extends State<OrderPage> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), color: _gold.withValues(alpha: 0.12)),
-            child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedGameController03, color: _gold, size: 24, strokeWidth: 1.6)),
+            child: const Center(
+              child: HugeIcon(icon: HugeIcons.strokeRoundedGameController03, color: _gold, size: 24, strokeWidth: 1.6),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.asking.tr, style: const TextStyle(color: Color(0xFFC9BFA8), fontFamily: gilroyMedium, fontSize: 13)),
+                Text(
+                  widget.asking.tr,
+                  style: const TextStyle(color: Color(0xFFC9BFA8), fontFamily: gilroyMedium, fontSize: 13),
+                ),
                 const SizedBox(height: 2),
-                Text(widget.pubgID.tr, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20, letterSpacing: 0.5)),
+                Text(
+                  widget.pubgID.tr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20, letterSpacing: 0.5),
+                ),
               ],
             ),
           ),
@@ -368,8 +429,14 @@ class _OrderPageState extends State<OrderPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('orderPage3'.tr, style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold, fontSize: 16)),
-                    Text(_money(total), style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 26)),
+                    Text(
+                      'orderPage3'.tr,
+                      style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold, fontSize: 16),
+                    ),
+                    Text(
+                      _money(total),
+                      style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 26),
+                    ),
                   ],
                 ),
                 if (short && walletController.cartList.isNotEmpty) ...[
@@ -378,7 +445,12 @@ class _OrderPageState extends State<OrderPage> {
                     children: [
                       const HugeIcon(icon: HugeIcons.strokeRoundedAlertCircle, color: Colors.redAccent, size: 16, strokeWidth: 1.8),
                       const SizedBox(width: 6),
-                      Expanded(child: Text('not_monay'.tr, style: const TextStyle(color: Colors.redAccent, fontFamily: gilroyMedium, fontSize: 13))),
+                      Expanded(
+                        child: Text(
+                          'not_monay'.tr,
+                          style: const TextStyle(color: Colors.redAccent, fontFamily: gilroyMedium, fontSize: 13),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -408,7 +480,10 @@ class _OrderPageState extends State<OrderPage> {
                           children: [
                             const HugeIcon(icon: HugeIcons.strokeRoundedWallet01, color: Color(0xFF1A1200), size: 22, strokeWidth: 2),
                             const SizedBox(width: 10),
-                            Text('balance'.tr, style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 18)),
+                            Text(
+                              'balance'.tr,
+                              style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 18),
+                            ),
                           ],
                         ),
                 ),

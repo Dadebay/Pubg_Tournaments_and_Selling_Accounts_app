@@ -24,6 +24,7 @@ class SupportMessage {
     required this.image,
     required this.createdAt,
     required this.admin,
+    this.chatId,
     this.pending = false,
     this.failed = false,
   });
@@ -36,6 +37,9 @@ class SupportMessage {
 
   /// Name of the support agent (admin messages only).
   final String? admin;
+
+  /// The chat the message belongs to (a first message opens a new chat).
+  final int? chatId;
 
   /// Shown at once while the request is still on its way / after it failed.
   final bool pending;
@@ -50,30 +54,18 @@ class SupportMessage {
       image: image is String && image.isNotEmpty ? image : null,
       createdAt: DateTime.tryParse('${json['created_date']}')?.toLocal() ?? DateTime.now(),
       admin: json['admin'] is String ? json['admin'] as String : null,
+      chatId: json['chat_id'] == null ? null : _int(json['chat_id']),
     );
   }
 
   SupportMessage copyWith({bool? pending, bool? failed}) {
-    return SupportMessage(
-      id: id,
-      mine: mine,
-      body: body,
-      image: image,
-      createdAt: createdAt,
-      admin: admin,
-      pending: pending ?? this.pending,
-      failed: failed ?? this.failed,
-    );
+    return SupportMessage(id: id, mine: mine, body: body, image: image, createdAt: createdAt, admin: admin, chatId: chatId, pending: pending ?? this.pending, failed: failed ?? this.failed);
   }
 }
 
 /// One page of `GET /support/chats/{id}/messages/`, oldest first.
 class SupportMessages {
-  const SupportMessages({
-    required this.messages,
-    required this.hasMore,
-    required this.status,
-  });
+  const SupportMessages({required this.messages, required this.hasMore, required this.status});
 
   final List<SupportMessage> messages;
   final bool hasMore;
@@ -82,10 +74,6 @@ class SupportMessages {
   factory SupportMessages.fromJson(dynamic json) {
     final map = json is Map ? json : const <dynamic, dynamic>{};
     final raw = map['messages'];
-    return SupportMessages(
-      messages: raw is List ? raw.whereType<Map>().map(SupportMessage.fromJson).toList() : const [],
-      hasMore: map['has_more'] == true,
-      status: '${map['status'] ?? 'open'}',
-    );
+    return SupportMessages(messages: raw is List ? raw.whereType<Map>().map(SupportMessage.fromJson).toList() : const [], hasMore: map['has_more'] == true, status: '${map['status'] ?? 'open'}');
   }
 }

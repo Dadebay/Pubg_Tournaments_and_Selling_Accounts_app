@@ -287,7 +287,12 @@ class _TransferScreenNewState extends State<TransferScreenNew> {
               itemCount: 8,
               itemBuilder: (context, index) {
                 final isReceived = index % 2 == 0;
-                return _buildTransactionItem(isReceived: isReceived, name: isReceived ? 'John Doe' : 'Jane Smith', date: 'Oct ${20 + index}, 2025', amount: '${isReceived ? '+' : '-'}${50 + index * 10}.00');
+                return _buildTransactionItem(
+                  isReceived: isReceived,
+                  name: isReceived ? 'John Doe' : 'Jane Smith',
+                  date: 'Oct ${20 + index}, 2025',
+                  amount: '${isReceived ? '+' : '-'}${50 + index * 10}.00',
+                );
               },
             ),
           ),

@@ -7,7 +7,10 @@ import 'package:hugeicons/hugeicons.dart';
 /// A chat bubble for the left of the top bar: opens the support chat and shows
 /// the number of unread answers of the support team.
 class SupportChatButton extends StatefulWidget {
-  const SupportChatButton({super.key});
+  const SupportChatButton({this.floating = false, super.key});
+
+  /// A bigger, filled bubble for a floating action button.
+  final bool floating;
 
   @override
   State<SupportChatButton> createState() => _SupportChatButtonState();
@@ -32,22 +35,23 @@ class _SupportChatButtonState extends State<SupportChatButton> {
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: SizedBox(
-          width: 46,
-          height: 46,
+          width: widget.floating ? 62 : 46,
+          height: widget.floating ? 62 : 46,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: widget.floating ? 56 : 40,
+                height: widget.floating ? 56 : 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.06),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+                  color: widget.floating ? const Color(0xFFFFC83D) : Colors.white.withValues(alpha: 0.06),
+                  border: Border.all(color: widget.floating ? Colors.transparent : Colors.white.withValues(alpha: 0.14)),
+                  boxShadow: widget.floating ? [BoxShadow(color: Colors.black.withValues(alpha: 0.35), blurRadius: 14, offset: const Offset(0, 6))] : null,
                 ),
-                child: const Center(
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedMessage01, color: Colors.white, size: 21, strokeWidth: 1.8),
+                child: Center(
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedMessage01, color: widget.floating ? const Color(0xFF1A1200) : Colors.white, size: widget.floating ? 26 : 21, strokeWidth: 1.8),
                 ),
               ),
               Positioned(

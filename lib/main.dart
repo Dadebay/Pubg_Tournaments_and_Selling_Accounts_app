@@ -5,7 +5,10 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:game_app/provider/getkonkur.dart';
 import 'package:game_app/utils/api_logger.dart';
+import 'package:game_app/controllers/notification_badge_controller.dart';
+import 'package:game_app/utils/guard_client.dart';
 import 'package:game_app/utils/order_push.dart';
+import 'package:game_app/utils/server_status.dart';
 import 'package:game_app/utils/support_push.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
@@ -43,12 +46,9 @@ Future<void> backgroundNotificationHandler(RemoteMessage message) async {
 }
 
 void main() {
-  if (kDebugMode) {
-    // Every `http.get` / `http.post` of the app goes through the colored logger.
-    http.runWithClient(_main, () => LoggingClient(IOClient()));
-  } else {
-    _main();
-  }
+  // Every `http.get` / `http.post` of the app goes through the guard (maintenance and ban
+  // answers); in debug mode also through the colored logger.
+  http.runWithClient(_main, () => GuardClient(kDebugMode ? LoggingClient(IOClient()) : IOClient()));
 }
 
 Future<void> _main() async {
@@ -105,11 +105,16 @@ class _MyAppRunState extends State<MyAppRun> {
   void initState() {
     super.initState();
     firebaseTask();
+    ServerStatus.instance.start();
     ErrorWidget.builder = (FlutterErrorDetails details) => const Material();
   }
 
   dynamic firebaseTask() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // A broadcast of the admin (topic EVENT): a new notification, so the bell badge is refreshed.
+      if ((message.from ?? '').endsWith('/EVENT') && Get.isRegistered<NotificationBadgeController>()) {
+        Get.find<NotificationBadgeController>().refreshCount();
+      }
       final support = SupportPush.isSupport(message);
       if (support) {
         SupportPush.refreshUnread();

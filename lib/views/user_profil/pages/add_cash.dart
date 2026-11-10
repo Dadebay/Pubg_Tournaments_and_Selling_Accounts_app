@@ -1,13 +1,10 @@
 // ignore_for_file: file_names, deprecated_member_use
 
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/history_order_model.dart';
-import 'package:game_app/models/user_models/auth_model.dart';
-import 'package:game_app/views/wallet/online_add_wallet_money.dart';
-import 'package:http/http.dart' as http;
+import 'package:game_app/views/support/support_chat_page.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/add_account_model.dart';
@@ -138,7 +135,10 @@ class _AddCashState extends State<AddCash> {
 class AskMoneyPage extends StatefulWidget {
   final String text;
   final String textSend;
-  const AskMoneyPage({required this.text, required this.textSend, super.key});
+
+  /// The amount in manat the player wants to top up (asked in a dialog before this page).
+  final String? amount;
+  const AskMoneyPage({required this.text, required this.textSend, this.amount, super.key});
 
   @override
   State<AskMoneyPage> createState() => _AskMoneyPageState();
@@ -158,15 +158,6 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
   FocusNode phoneFocusNode = FocusNode();
 
   final _login = GlobalKey<FormState>();
-  Future addMoneyToCARD() async {
-    final String? token = await Auth().getToken();
-    final response = await http.post(Uri.parse('$serverURL/api/paymentToPoint/'), headers: <String, String>{HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', HttpHeaders.authorizationHeader: 'Bearer $token'}, body: jsonEncode({'amount': amountController.text}));
-
-    print(response.body);
-    print(response.statusCode);
-    await Get.to(() => OnlineAddMoneyToWallet(url: jsonDecode(response.body)['formUrl'], amount: amountController.text));
-  }
-
   TextEditingController amountController = TextEditingController();
 
   FocusNode amountFocusNode = FocusNode();
@@ -270,28 +261,83 @@ class _AskMoneyPageState extends State<AskMoneyPage> {
                 //         ),
                 //       )
                 // :
-                ...List<Widget>.from(
-                  (snapshot.data!['nomerler'] as List<dynamic>).map(
-                    (number) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await launch('tel://$number');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+                if ((widget.amount ?? '').isNotEmpty) ...[
+                  Container(
+                    margin: const EdgeInsets.only(top: 4, bottom: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: const Color(0xFFFFC83D).withValues(alpha: 0.1),
+                      border: Border.all(color: const Color(0xFFFFC83D).withValues(alpha: 0.45)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'topUpAmountLabel'.tr,
+                            style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 15),
+                          ),
                         ),
-                        child: Text(
-                          'popUP1'.tr,
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold, fontSize: 22),
+                        Text(
+                          '${widget.amount} TMT',
+                          style: const TextStyle(color: Color(0xFFFFC83D), fontFamily: gilroyBold, fontSize: 22),
                         ),
+                      ],
+                    ),
+                  ),
+                  // The chat opens with the request already written in the field.
+                  GestureDetector(
+                    onTap: () => Get.to(() => SupportChatPage(initialText: 'topUpChatMessage'.trParams({'amount': widget.amount!}))),
+                    child: Container(
+                      height: 54,
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const HugeIcon(icon: HugeIcons.strokeRoundedCustomerService, color: Color(0xFF1A1200), size: 26, strokeWidth: 1.9),
+                          const SizedBox(width: 10),
+                          Text(
+                            'topUpViaChat'.tr,
+                            style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 20),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
+                ],
+                // Second row: one green call button for each phone number.
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      for (final entry in (snapshot.data!['nomerler'] as List<dynamic>).take(2).toList().asMap().entries) ...[
+                        if (entry.key > 0) const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              await launch('tel://${entry.value}');
+                            },
+                            icon: const HugeIcon(icon: HugeIcons.strokeRoundedCall, color: Colors.white, size: 22, strokeWidth: 1.9),
+                            label: Text(
+                              'popUP1'.tr,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2EB85C),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
                 const SizedBox(height: 30),

@@ -113,9 +113,15 @@ class _CartFabState extends State<CartFab> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('goToCart'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 15, height: 1.1)),
+                Text(
+                  'goToCart'.tr,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 15, height: 1.1),
+                ),
                 const SizedBox(height: 2),
-                Text(_price(price), style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 13, height: 1)),
+                Text(
+                  _price(price),
+                  style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 13, height: 1),
+                ),
               ],
             ),
             const SizedBox(width: 18),
@@ -146,7 +152,9 @@ class _CartFabState extends State<CartFab> with TickerProviderStateMixin {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedShoppingBag01, color: Colors.white, size: 26, strokeWidth: 1.6)),
+          const Center(
+            child: HugeIcon(icon: HugeIcons.strokeRoundedShoppingBag01, color: Colors.white, size: 26, strokeWidth: 1.6),
+          ),
           Positioned(
             right: -8,
             top: -6,
@@ -160,7 +168,10 @@ class _CartFabState extends State<CartFab> with TickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(color: _gold, borderRadius: BorderRadius.circular(9)),
-                child: Text('$count', style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 11, height: 1)),
+                child: Text(
+                  '$count',
+                  style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 11, height: 1),
+                ),
               ),
             ),
           ),

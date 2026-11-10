@@ -34,15 +34,16 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
       centerTitle: true,
       leadingWidth: 80,
       leading: IconButton(
-        icon: const Icon(
-          IconlyLight.arrowLeftCircle,
-          color: Colors.white,
-        ),
+        icon: const Icon(IconlyLight.arrowLeftCircle, color: Colors.white),
         onPressed: () {
           Navigator.pop(context);
         },
       ),
-      actions: [userAppBarMoney()],
+      actions: [
+        Center(
+          child: Padding(padding: const EdgeInsets.only(right: 12), child: userAppBarMoney()),
+        ),
+      ],
       automaticallyImplyLeading: false,
       backgroundColor: kPrimaryColorBlack,
       title: Text(
@@ -50,11 +51,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Colors.white,
-          fontFamily: gilroySemiBold,
-          fontSize: 25,
-        ),
+        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 25),
       ),
     );
   }
@@ -77,19 +74,11 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
         children: [
           Text(
             'order'.tr,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: gilroySemiBold,
-              fontSize: 22,
-            ),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 2, bottom: 2, left: 8),
-            child: Icon(
-              IconlyLight.arrowRightCircle,
-              color: Colors.white,
-              size: 24,
-            ),
+            child: Icon(IconlyLight.arrowRightCircle, color: Colors.white, size: 24),
           ),
         ],
       ),
@@ -120,11 +109,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
             children: [
               Text(
                 'enterIDGift'.tr,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: gilroyBold,
-                  fontSize: 22,
-                ),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -155,13 +140,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
                       walletController.finalCount.value = counts;
                       //if widget.pageName contains belet text
                       final bool containsBelet = widget.pageName.toLowerCase().contains('belet'.toLowerCase()); // case insensitive
-                      await Get.to(
-                        () => OrderPage(
-                          pubgID: pubgUserIDController.text,
-                          onlyCard: containsBelet,
-                          asking: dialogTitle,
-                        ),
-                      );
+                      await Get.to(() => OrderPage(pubgID: pubgUserIDController.text, onlyCard: containsBelet, asking: dialogTitle));
                     } else {
                       showSnackBar('tournamentInfo14', 'errorEmpty', Colors.red);
                     }
@@ -180,9 +159,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
   Future<List<ThingsMODEL>> getThingsProducts({required int id}) async {
     final List<ThingsMODEL> pubgPost = [];
     final response = await http.get(
-      Uri.parse(
-        '$serverURL/api/category/sellings/$id/',
-      ),
+      Uri.parse('$serverURL/api/category/sellings/$id/'),
       headers: <String, String>{
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         // HttpHeaders.authorizationHeader: 'Bearer $token',
@@ -238,10 +215,7 @@ class _OtherConcursScreenState extends State<OtherConcursScreen> {
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.8 / 4),
                   itemBuilder: (context, index) {
-                    return ThingsCards(
-                      model: snapshot.data![index],
-                      selectedIndex: selectedIndex,
-                    );
+                    return ThingsCards(model: snapshot.data![index], selectedIndex: selectedIndex);
                   },
                 );
               },

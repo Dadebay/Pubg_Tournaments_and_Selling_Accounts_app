@@ -36,7 +36,7 @@ class GetPostsAccountModel {
       desc: json['description'] ?? '0.0',
       pubgType: json['pubg_type'] ?? '0.0',
       title: json['title'] ?? '0.0',
-      vip: json['vip'] ?? '0.0',
+      vip: json['vip'] == true, // always a bool on the new API; false for older answers
       user: json['user'] == null ? PostByIdModel() : PostByIdModel.fromJson(json['user']),
       videos: json['videos'] == null ? [] : ((json['videos'] ?? []) as List).map((json) => GetAccountVideos.fromJson(json)).toList(),
     );

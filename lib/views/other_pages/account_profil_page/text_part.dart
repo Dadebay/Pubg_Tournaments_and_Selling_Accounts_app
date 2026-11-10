@@ -36,7 +36,7 @@ class CustomFlexibleSpace extends StatelessWidget {
             bottom: videos.length > 1 ? 70 : 20,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
-              child: videos.isEmpty ? _banner(model) : _videoArea(videos.first, big: true),
+              child: videos.isEmpty ? _banner(model) : _videoArea(videos.first, big: true, cover: model.bgImage),
             ),
           ),
           if (videos.length > 1)
@@ -64,7 +64,7 @@ class CustomFlexibleSpace extends StatelessWidget {
   Widget _banner(GetPostsAccountModel model) {
     return CachedNetworkImage(
       fadeInCurve: Curves.ease,
-      imageUrl: "$serverURL${model.bgImage ?? ""}",
+      imageUrl: mediaUrl(model.bgImage),
       fit: BoxFit.cover,
       width: double.infinity,
       placeholder: (context, url) => Center(child: spinKit()),
@@ -73,14 +73,16 @@ class CustomFlexibleSpace extends StatelessWidget {
   }
 
   /// A video's poster with a gold play button; a tap opens the player.
-  Widget _videoArea(GetAccountVideos video, {required bool big}) {
+  /// [cover] is the post's background picture ("fon surat"): it is what shows before the video
+  /// opens. Without one the video's own poster (or a frame of the video) is used.
+  Widget _videoArea(GetAccountVideos video, {required bool big, String? cover}) {
     const gold = Color(0xFFFFC83D);
     return GestureDetector(
       onTap: () => Get.to(() => VideoPLayerMine(videoURL: mediaUrl(video.video))),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          VideoPreview(poster: video.poster, video: video.video),
+          VideoPreview(poster: mediaUrl(cover).isNotEmpty ? cover : video.poster, video: video.video),
           Container(color: Colors.black.withValues(alpha: 0.3)),
           Center(
             child: Container(

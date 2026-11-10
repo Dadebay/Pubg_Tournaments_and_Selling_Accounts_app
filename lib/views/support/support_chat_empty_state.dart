@@ -16,11 +16,7 @@ class SupportChatEmptyState extends StatelessWidget {
     final failed = onRetry != null;
     return DecoratedBox(
       decoration: const BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment(0, -0.32),
-          radius: 1.05,
-          colors: [Color(0xFF191207), Colors.black],
-        ),
+        gradient: RadialGradient(center: Alignment(0, -0.32), radius: 1.05, colors: [Color(0xFF191207), Colors.black]),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -51,57 +47,28 @@ class SupportChatEmptyState extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                (failed
-                                        ? 'supportUnavailableTitle'
-                                        : 'supportWelcomeTitle')
-                                    .tr,
+                                (failed ? 'supportUnavailableTitle' : 'supportWelcomeTitle').tr,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: gilroyBold,
-                                  fontSize: 25,
-                                  height: 1.17,
-                                ),
+                                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 25, height: 1.17),
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                (failed
-                                        ? 'supportUnavailableText'
-                                        : 'supportWelcomeText')
-                                    .tr,
+                                (failed ? 'supportUnavailableText' : 'supportWelcomeText').tr,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Color(0xFFC5C0B7),
-                                  fontFamily: gilroyMedium,
-                                  fontSize: 15,
-                                  height: 1.45,
-                                ),
+                                style: const TextStyle(color: Color(0xFFC5C0B7), fontFamily: gilroyMedium, fontSize: 15, height: 1.45),
                               ),
                               if (failed) ...[
                                 const SizedBox(height: 28),
                                 FilledButton.icon(
                                   onPressed: onRetry,
-                                  icon: const Icon(
-                                    Icons.refresh_rounded,
-                                    size: 19,
-                                  ),
-                                  label: Text(
-                                    'noConnection3'.tr,
-                                    style: const TextStyle(
-                                      fontFamily: gilroyBold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
+                                  icon: const Icon(Icons.refresh_rounded, size: 19),
+                                  label: Text('noConnection3'.tr, style: const TextStyle(fontFamily: gilroyBold, fontSize: 15)),
                                   style: FilledButton.styleFrom(
                                     backgroundColor: _gold,
                                     foregroundColor: const Color(0xFF1A1200),
                                     minimumSize: const Size(0, 48),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 23,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 23),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                   ),
                                 ),
                               ],

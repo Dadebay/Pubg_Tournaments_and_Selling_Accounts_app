@@ -8,6 +8,7 @@ import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/utils/support_push.dart';
+import 'package:game_app/views/constants/blocked_dialog.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/constants/notification_bell.dart';
 import 'package:game_app/views/constants/support_chat_button.dart';
@@ -28,8 +29,12 @@ class NewHomePage extends StatefulWidget {
 }
 
 class _NewHomePageState extends State<NewHomePage> {
-  final ShowAllAccountsController postsController = Get.put(ShowAllAccountsController());
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final ShowAllAccountsController postsController = Get.put(
+    ShowAllAccountsController(),
+  );
+  final RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   late Future<List<BannerModel>> _futureBanners;
   bool showPage = false;
@@ -116,71 +121,28 @@ class _NewHomePageState extends State<NewHomePage> {
     try {
       final response = await http.get(
         Uri.parse('$serverURL/api/accounts/get-my-account/'),
-        headers: <String, String>{HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', HttpHeaders.authorizationHeader: 'Bearer $token'},
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
       );
       if (response.statusCode == 200) {
         final decoded = utf8.decode(response.bodyBytes);
         final responseJson = json.decode(decoded);
         final bool blocked = responseJson['blocked'] ?? false;
-        final String blockReason = responseJson['block_reason'] ?? 'Sebäbi görkezilmedi';
-        final String blockEndDate = responseJson['block_end_date'] ?? 'Möhleti görkezilmedi';
 
         if (blocked == true) {
-          if (!mounted) return null;
-          await showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (ctxt) => AlertDialog(
-              backgroundColor: kPrimaryColorBlack,
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              title: Text(
-                'Üns Beriň!'.tr,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold),
-              ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Siz Blocklandyňyz!'.tr,
-                      style: const TextStyle(fontSize: 18, color: Colors.redAccent, fontFamily: gilroyBold),
-                    ),
-                    const SizedBox(height: 15),
-                    Text(
-                      'Sebäbi:'.tr,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: gilroyRegular),
-                    ),
-                    Text(
-                      blockReason.tr,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 16, color: Colors.white, fontFamily: gilroyMedium),
-                    ),
-                    const SizedBox(height: 15),
-                    Text(
-                      'Blok möhleti:'.tr,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey, fontFamily: gilroyRegular),
-                    ),
-                    Text(
-                      blockEndDate.tr,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.normal, fontFamily: gilroyRegular),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Auth().removeToken();
-
-                    exit(0);
-                  },
-                  child: Text('Düşnükli'.tr, style: const TextStyle(color: kPrimaryColor)),
-                ),
-              ],
-            ),
+          if (!mounted) {
+            return null;
+          }
+          // The reason and a live countdown; when the time is up the player continues and the server is asked again.
+          final continued = await showBlockedDialog(
+            context,
+            ban: BanInfo.fromJson(responseJson),
           );
+          if (continued) {
+            return await getMe();
+          }
         }
         return GetMeModel.fromJson(responseJson);
       } else {
@@ -199,64 +161,91 @@ class _NewHomePageState extends State<NewHomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
-        appBar: const MyAppBar(fontSize: 0, backArrow: false, iconRemove: false, icon: NotificationBell(), leadingIcon: SupportChatButton(), name: appName, elevationWhite: false),
-        body: SmartRefresher(
-          footer: footer(),
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          enablePullDown: true,
-          enablePullUp: true,
-          physics: const BouncingScrollPhysics(),
-          header: const MaterialClassicHeader(color: kPrimaryColor),
-          child: ListView(
-            children: [
-              HomeBanner(future: _futureBanners),
-              listViewName('pubgTypes'.tr, false, size),
-              NewPubgTypes(),
-              listViewName('accountsForSale'.tr, true, size),
-              Obx(() {
-                if (postsController.isLoading.value && postsController.list.isEmpty) {
-                  return Container(
-                    margin: const EdgeInsets.all(8),
-                    height: 220,
-                    width: Get.size.width,
-                    child: Center(child: spinKit()),
-                  );
-                } else if (postsController.list.isEmpty && !postsController.isLoading.value) {
-                  return Center(
-                    child: Padding(padding: const EdgeInsets.all(16.0), child: Text('noPostsFound'.tr)),
-                  );
-                }
+        appBar: const MyAppBar(
+          fontSize: 0,
+          backArrow: false,
+          iconRemove: false,
+          icon: NotificationBell(),
+          name: appName,
+          elevationWhite: false,
+        ),
+        body: Stack(
+          children: [
+            SmartRefresher(
+              footer: footer(),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              enablePullDown: true,
+              enablePullUp: true,
+              physics: const BouncingScrollPhysics(),
+              header: const MaterialClassicHeader(color: kPrimaryColor),
+              child: ListView(
+                children: [
+                  HomeBanner(future: _futureBanners),
+                  listViewName('pubgTypes'.tr, false, size),
+                  NewPubgTypes(),
+                  listViewName('accountsForSale'.tr, true, size),
+                  Obx(() {
+                    if (postsController.isLoading.value &&
+                        postsController.list.isEmpty) {
+                      return Container(
+                        margin: const EdgeInsets.all(8),
+                        height: 220,
+                        width: Get.size.width,
+                        child: Center(child: spinKit()),
+                      );
+                    } else if (postsController.list.isEmpty &&
+                        !postsController.isLoading.value) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text('noPostsFound'.tr),
+                        ),
+                      );
+                    }
 
-                return GridView.builder(
-                  itemCount: postsController.list.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(8.0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: size.width >= 800 ? 3 : (size.width >= 600 ? 2 : 1),
-                    mainAxisExtent: 188,
-                    mainAxisSpacing: 4,
-                    crossAxisSpacing: 8,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return HomePageCard(vip: postsController.list[index].vip!, model: postsController.list[index]);
-                  },
-                );
-              }),
-              Obx(() {
-                if (postsController.isLoadingMore.value) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: spinKit()),
-                  );
-                }
-                return const SizedBox.shrink();
-              }),
-            ],
-          ),
+                    return GridView.builder(
+                      itemCount: postsController.list.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(8.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: size.width >= 800
+                            ? 3
+                            : (size.width >= 600 ? 2 : 1),
+                        mainAxisExtent: 188,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 8,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return HomePageCard(
+                          vip: postsController.list[index].vip!,
+                          model: postsController.list[index],
+                        );
+                      },
+                    );
+                  }),
+                  Obx(() {
+                    if (postsController.isLoadingMore.value) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(child: spinKit()),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                ],
+              ),
+            ),
+            // Placed by hand: the Scaffold FAB slot did not land at the corner here.
+            const Positioned(
+              right: 16,
+              bottom: 16,
+              child: SupportChatButton(floating: true),
+            ),
+          ],
         ),
       ),
     );

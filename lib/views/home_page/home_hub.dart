@@ -21,13 +21,13 @@ class HomeBalanceCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 14, 16, 0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: _gold.withValues(alpha: 0.75), width: 1.8),
         gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF2E2713), Color(0xFF18181B), Color(0xFF121214)]),
         boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.2), blurRadius: 22)],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(14),
         child: Stack(
           children: [
             // Soft rings in the corner, like coins catching the light.
@@ -43,7 +43,7 @@ class HomeBalanceCard extends StatelessWidget {
                     height: 58,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(12),
                       gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFFFE08A), _goldDark]),
                       boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 5))],
                     ),
@@ -90,7 +90,7 @@ class HomeBalanceCard extends StatelessWidget {
                       height: 46,
                       padding: const EdgeInsets.only(left: 12, right: 16),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(23),
+                        borderRadius: BorderRadius.circular(14),
                         gradient: const LinearGradient(colors: [Color(0xFFFFD866), _goldDark]),
                         boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.3), blurRadius: 14, offset: const Offset(0, 5))],
                       ),
@@ -194,7 +194,7 @@ class _Section extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(26),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(color: _gold.withValues(alpha: 0.8), width: 1.6),
             gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF261D0D), Color(0xFF0E0D0C)]),
             boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.22), blurRadius: 16)],

@@ -6,17 +6,14 @@ import 'package:hugeicons/hugeicons.dart';
 
 import '../constants/index.dart';
 import '../other_pages/account_profil_page/account_profil_page.dart';
+import '../other_pages/account_profil_page/video_preview.dart';
 
 const _gold = Color(0xFFFFC83D);
 const _goldDark = Color(0xFFFF9800);
 
 /// An account for sale: a dark card with a gold frame and gold corner stripes.
-/// Left the account's picture, right the PUBG badge, the title line, the price
-/// with a coin stack and the date.
-///
-/// The badge, the small PUBG logo on the picture and the coin stack are pictures in
-/// `assets/image/` (`pubg_badge.webp`, `pubg_logo.webp`, `coin_stack.webp`); until
-/// they exist a text/icon stand-in is drawn.
+/// Left the account's picture, right the title line, the price with a coin stack
+/// (`assets/image/coin_stack.webp`, an icon is drawn without it) and the date.
 class HomePageCard extends StatelessWidget {
   final bool vip;
   final GetPostsAccountModel model;
@@ -51,7 +48,7 @@ class HomePageCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
         padding: const EdgeInsets.all(1.6),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(26),
+          borderRadius: BorderRadius.circular(22),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -70,7 +67,7 @@ class HomePageCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24.5),
+          borderRadius: BorderRadius.circular(20.5),
           child: DecoratedBox(
             decoration: const BoxDecoration(
               gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF1F1F24), Color(0xFF0E0E10)]),
@@ -99,17 +96,17 @@ class HomePageCard extends StatelessWidget {
   Widget _picture() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: _gold.withValues(alpha: 0.7), width: 1.5),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.5),
+        borderRadius: BorderRadius.circular(12.5),
         child: Stack(
           fit: StackFit.expand,
           children: [
             CachedNetworkImage(
               fadeInCurve: Curves.ease,
-              imageUrl: '$serverURL${model.image}',
+              imageUrl: mediaUrl(model.image),
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 color: Colors.white.withValues(alpha: 0.05),
@@ -126,118 +123,80 @@ class HomePageCard extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              left: 6,
-              top: 6,
-              child: _AssetOr(
-                asset: 'assets/image/pubg_logo.webp',
-                height: 24,
-                fallback: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.black.withValues(alpha: 0.55),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.6)),
-                  ),
-                  child: const Text(
-                    'PUBG',
-                    style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 10, height: 1.1),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
+  /// The text side: the title, the price in a gold chip and the date in a small pill.
   Widget _details() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _badge(),
-        const SizedBox(height: 8),
         if (_title.isNotEmpty)
           Text(
             _title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Color(0xFFD5D5DA), fontFamily: gilroySemiBold, fontSize: 16),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 17, height: 1.1),
           ),
-        const SizedBox(height: 6),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _AssetOr(
-              asset: 'assets/image/coin_stack.webp',
-              height: 32,
-              fallback: const HugeIcon(icon: HugeIcons.strokeRoundedCoins01, color: _gold, size: 30, strokeWidth: 1.8),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text.rich(
-                  TextSpan(
-                    text: _price,
-                    style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 30, height: 1),
-                    children: const [
-                      TextSpan(
-                        text: '  TMT',
-                        style: TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroySemiBold, fontSize: 15),
-                      ),
-                    ],
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.fromLTRB(8, 5, 12, 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: _gold.withValues(alpha: 0.45)),
+            gradient: LinearGradient(colors: [_gold.withValues(alpha: 0.2), _gold.withValues(alpha: 0.06)]),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _AssetOr(
+                asset: 'assets/image/coin_stack.webp',
+                height: 26,
+                fallback: const HugeIcon(icon: HugeIcons.strokeRoundedCoins01, color: _gold, size: 24, strokeWidth: 1.8),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text.rich(
+                    TextSpan(
+                      text: _price,
+                      style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 24, height: 1.1),
+                      children: const [
+                        TextSpan(
+                          text: ' TMT',
+                          style: TextStyle(color: Color(0xFFE6C36A), fontFamily: gilroySemiBold, fontSize: 13),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 6),
-        Container(height: 1, color: _gold.withValues(alpha: 0.22)),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: _gold, size: 17, strokeWidth: 1.8),
-            const SizedBox(width: 8),
-            Text(
-              _date,
-              style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 14),
-            ),
-          ],
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white.withValues(alpha: 0.07)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: Color(0xFF9A9AA3), size: 15, strokeWidth: 1.8),
+              const SizedBox(width: 6),
+              Text(
+                _date,
+                style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 13, height: 1.1),
+              ),
+            ],
+          ),
         ),
       ],
-    );
-  }
-
-  /// The "PUBG" plate with the golden helmet.
-  Widget _badge() {
-    return _AssetOr(
-      asset: 'assets/image/pubg_badge.webp',
-      height: 36,
-      fallback: Container(
-        height: 38,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _gold.withValues(alpha: 0.6)),
-          color: Colors.black.withValues(alpha: 0.4),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'PUBG',
-              style: TextStyle(color: _gold, fontFamily: gilroyBold, fontStyle: FontStyle.italic, fontSize: 22, height: 1),
-            ),
-            SizedBox(width: 8),
-            HugeIcon(icon: HugeIcons.strokeRoundedShield01, color: _gold, size: 22, strokeWidth: 1.8),
-          ],
-        ),
-      ),
     );
   }
 }

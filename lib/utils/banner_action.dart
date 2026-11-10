@@ -15,7 +15,7 @@ import 'package:game_app/views/premium/premium_page.dart';
 import 'package:game_app/views/support/support_chat_page.dart';
 import 'package:game_app/views/tournament_page/tournament.dart';
 import 'package:game_app/views/user_profil/pages/about_us.dart';
-import 'package:game_app/views/user_profil/pages/history_orders_page.dart';
+import 'package:game_app/views/orders/orders_history_page.dart';
 import 'package:game_app/views/tournament_page/tournament_profil_page.dart';
 import 'package:game_app/views/wallet/wallet_page.dart';
 import 'package:get/get.dart';
@@ -68,7 +68,7 @@ class BannerAction {
         await Get.to(() => const WalletPage());
         return true;
       case 'orders':
-        await Get.to(() => const HistoryOrdersPage());
+        await Get.to(() => const OrdersHistoryPage());
         return true;
       case 'about':
         await Get.to(() => const AboutUs());

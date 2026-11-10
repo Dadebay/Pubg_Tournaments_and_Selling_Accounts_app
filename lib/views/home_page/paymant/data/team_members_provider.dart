@@ -5,21 +5,41 @@ import 'package:game_app/models/team_member.dart';
 import 'package:flutter/foundation.dart';
 import 'package:game_app/models/team_winers.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/views/constants/constants.dart';
+import 'package:get/get.dart' hide FormData, Response;
+
+/// A message the player can read. A server crash answers with a whole HTML page (the Django
+/// error page) and a 5xx status; that must never reach the screen, so it becomes a short notice.
+String friendlyError(dynamic data, int? status, [String? fallback]) {
+  final text = '${data ?? ''}'.trim();
+  final looksLikeHtml = text.startsWith('<') || text.toLowerCase().contains('<!doctype') || text.toLowerCase().contains('<html');
+  if (looksLikeHtml || (status != null && status >= 500)) {
+    return 'serverError'.tr;
+  }
+  if (text.isNotEmpty) {
+    return text.length > 200 ? '${text.substring(0, 200)}…' : text;
+  }
+  return (fallback ?? '').isEmpty ? 'tournamentInfo14'.tr : fallback!;
+}
 
 class TeamMembersProvider with ChangeNotifier {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://216.250.11.240'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: serverURL));
 
   List<TeamMember> _teamMembers = [];
-  List<TeamMemberWin>  _teamMembersWin = [];
+  List<TeamMemberWin> _teamMembersWin = [];
   bool _isLoading = false;
   bool _isRegistering = false;
   String? _errorMessage;
 
   List<TeamMember> get teamMembers => _teamMembers;
-   List<TeamMemberWin> get teamMembersWin => _teamMembersWin;
+  List<TeamMemberWin> get teamMembersWin => _teamMembersWin;
   bool get isLoading => _isLoading;
   bool get isRegistering => _isRegistering;
   String? get errorMessage => _errorMessage;
+
+  /// Why the last team registration failed (kept apart so it never shows in the team lists).
+  String? _registerError;
+  String? get registerError => _registerError;
 
   Future<void> fetchTeamMembers(int tournamentId) async {
     _isLoading = true;
@@ -37,7 +57,7 @@ class TeamMembersProvider with ChangeNotifier {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }
     } on DioException catch (e) {
-      _errorMessage = e.response?.data.toString() ?? e.message;
+      _errorMessage = friendlyError(e.response?.data, e.response?.statusCode, e.message);
       print('Dio error: $_errorMessage');
     } catch (e) {
       _errorMessage = e.toString();
@@ -64,7 +84,7 @@ class TeamMembersProvider with ChangeNotifier {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }
     } on DioException catch (e) {
-      _errorMessage = e.response?.data.toString() ?? e.message;
+      _errorMessage = friendlyError(e.response?.data, e.response?.statusCode, e.message);
       print('Dio error: $_errorMessage');
     } catch (e) {
       _errorMessage = e.toString();
@@ -91,7 +111,7 @@ class TeamMembersProvider with ChangeNotifier {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }
     } on DioException catch (e) {
-      _errorMessage = e.response?.data.toString() ?? e.message;
+      _errorMessage = friendlyError(e.response?.data, e.response?.statusCode, e.message);
       print('Dio error: $_errorMessage');
     } catch (e) {
       _errorMessage = e.toString();
@@ -118,7 +138,7 @@ class TeamMembersProvider with ChangeNotifier {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }
     } on DioException catch (e) {
-      _errorMessage = e.response?.data.toString() ?? e.message;
+      _errorMessage = friendlyError(e.response?.data, e.response?.statusCode, e.message);
       print('Dio error: $_errorMessage');
     } catch (e) {
       _errorMessage = e.toString();
@@ -145,7 +165,7 @@ class TeamMembersProvider with ChangeNotifier {
         _errorMessage = 'Unexpected response format: ${response.statusCode}';
       }
     } on DioException catch (e) {
-      _errorMessage = e.response?.data.toString() ?? e.message;
+      _errorMessage = friendlyError(e.response?.data, e.response?.statusCode, e.message);
       print('Dio error: $_errorMessage');
     } catch (e) {
       _errorMessage = e.toString();
@@ -156,14 +176,7 @@ class TeamMembersProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> registerTeam({
-    required int tournamentId,
-    required String account,
-    required String extra_name,
-    required String user1,
-    required String user2,
-    required String user3,
-  }) async {
+  Future<bool> registerTeam({required int tournamentId, required String account, required String extra_name, required String user1, required String user2, required String user3}) async {
     _isRegistering = true;
     notifyListeners();
 
@@ -171,22 +184,11 @@ class TeamMembersProvider with ChangeNotifier {
       // Get the token
       final token = await Auth().getToken();
 
-      final formData = FormData.fromMap({
-        'name': account,
-        'extra_name':extra_name,
-        'user_1': user1,
-        'user_2': user2,
-        'user_3': user3,
-      });
-
+      // `tournamentId` is the slot id (`id` from getteammembers). Text fields only, no files.
       final response = await _dio.post(
         '/api/turnirs/buyturnir/$tournamentId/',
-        data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
+        data: {'name': account, 'extra_name': extra_name, 'user_1': user1, 'user_2': user2, 'user_3': user3},
+        options: Options(headers: {'Authorization': 'Bearer $token'}, contentType: Headers.jsonContentType),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -210,19 +212,25 @@ class TeamMembersProvider with ChangeNotifier {
         final data = e.response!.data;
 
         if (data is Map<String, dynamic>) {
-          if (data.containsKey('detail')) {
-            _errorMessage = data['detail'].toString();
+          if (data['premium_required'] == true) {
+            _registerError = 'premiumRequired'.tr;
+          } else if (data['code'] == 'blocked') {
+            _registerError = 'accountBlocked'.tr;
+          } else if (data['error'] == "You don't have enough money") {
+            _registerError = 'money_error_subtitle'.tr;
+          } else if (data.containsKey('detail')) {
+            _registerError = data['detail'].toString();
           } else if (data.containsKey('error')) {
-            _errorMessage = data['error'].toString();
+            _registerError = data['error'].toString();
           } else {
             // fallback: join all key-values
-            _errorMessage = data.entries.map((e) => '${e.key}: ${e.value}').join('\n');
+            _registerError = data.entries.map((e) => '${e.key}: ${e.value}').join('\n');
           }
         } else {
-          _errorMessage = data.toString();
+          _registerError = friendlyError(data, e.response?.statusCode, e.message);
         }
       } else {
-        _errorMessage = e.message;
+        _registerError = friendlyError(null, null, e.message);
       }
 
       notifyListeners();

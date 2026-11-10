@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:game_app/bottom_nav_bar.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
-import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/constants/index.dart';
-import 'package:http/http.dart' as http;
+import 'package:game_app/views/wallet/payment_banks.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// The bank page of a basket paid by card. On the `returnUrl` (or when the user closes the
+/// page) the status is asked from the server. The page pops with the status code of that call.
 class OpenOnlinePaymentWebsite extends StatefulWidget {
-  const OpenOnlinePaymentWebsite({required this.url, required this.list, required this.thingBuy, required this.konkursBuy, super.key});
-  final String url;
+  const OpenOnlinePaymentWebsite({required this.registration, required this.list, required this.thingBuy, required this.konkursBuy, super.key});
+  final CardRegistration registration;
   final bool thingBuy;
   final bool konkursBuy;
   final List list;
@@ -19,8 +17,9 @@ class OpenOnlinePaymentWebsite extends StatefulWidget {
 }
 
 class _OpenOnlinePaymentWebsiteState extends State<OpenOnlinePaymentWebsite> {
-  late WebViewController _controller;
+  late final WebViewController _controller;
   final WalletController walletController = Get.put(WalletController());
+  bool _statusCalled = false;
 
   @override
   void initState() {
@@ -29,102 +28,83 @@ class _OpenOnlinePaymentWebsiteState extends State<OpenOnlinePaymentWebsite> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onPageFinished: (String url) {
-            print(url);
-            _controller.runJavaScriptReturningResult('document.body.innerText').then((result) async {
-              print('----------------------------------------------------------------------');
-              print(result);
-
-              // Assuming the JSON data is in the body text
-              try {
-                // Log the type of result to understand its structure
-                print('Result type: ${result.runtimeType}');
-                print('Result: $result');
-
-                // Attempt to decode the JSON
-                final jsonData = jsonDecode(result.toString());
-                print('Decoded JSON: $jsonData');
-
-                // Extract orderId from the URL
-                final Uri uri = Uri.parse(url);
-                final String? orderId = uri.queryParameters['orderId'];
-                print('Order ID from URL: $orderId');
-
-                if (orderId != null) {
-                  final String? token = await Auth().getToken();
-
-                  // Add orderId to each item in widget.list
-                  List listTest = [];
-                  if (widget.thingBuy == false) {
-                    listTest = widget.list
-                        .map(
-                          (e) => {
-                            'status': e['status'],
-                            'id': e['id'],
-                            'count': e['count'],
-                            'orderId': orderId,
-                            'pubg_id': e['pubg_id'],
-                          },
-                        )
-                        .toList();
-                  } else if (widget.konkursBuy == true) {
-                    listTest = widget.list
-                        .map(
-                          (e) => {
-                            'status': 'konkurs',
-                            'id': e['id'],
-                            'count': e['count'],
-                            'orderId': orderId,
-                          },
-                        )
-                        .toList();
-                  } else {
-                    listTest = widget.list
-                        .map(
-                          (e) => {
-                            'status': e['status'],
-                            'id': e['id'],
-                            'count': e['count'],
-                            'asking': e['asking'],
-                            'orderId': orderId,
-                          },
-                        )
-                        .toList();
-                  }
-
-                  final response2 = await http.post(
-                    Uri.parse('$serverURL/api/category/paymentStatus/'),
-                    headers: <String, String>{
-                      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-                      HttpHeaders.authorizationHeader: 'Bearer $token',
-                    },
-                    body: jsonEncode(listTest),
-                  );
-
-                  print('______________________________________________________________________________________________???????????????????????????');
-                  print(listTest);
-                  print(response2.body);
-                  print(response2.statusCode);
-                  print('______________________________________________________________________________________________???????????????????????????');
-                  if (response2.statusCode == 200) {
-                    walletController.cartList.clear();
-                    walletController.cartList.refresh();
-                    showSnackBar('copySucces', 'orderSubtitle', Colors.green);
-                    Get.to(() => const BottomNavBar(
-                          showPages: false,
-                        ));
-                  }
-                  return response2.statusCode;
-                } else {
-                  print('Order ID not found in URL.');
-                }
-              } catch (e) {
-                print('Error parsing JSON: $e');
-              }
-            });
+          onNavigationRequest: (request) {
+            if (widget.registration.isReturn(request.url)) {
+              _finish();
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+          onPageStarted: (url) {
+            if (widget.registration.isReturn(url)) {
+              _finish();
+            }
           },
         ),
-      );
+      )
+      ..loadRequest(Uri.parse(widget.registration.formUrl));
+  }
+
+  @override
+  void dispose() {
+    // The user left the page by themselves: still ask the server, if they paid it succeeds.
+    if (!_statusCalled) {
+      _statusCalled = true;
+      _checkStatus(closePage: false);
+    }
+    super.dispose();
+  }
+
+  void _finish() {
+    if (_statusCalled) {
+      return;
+    }
+    _statusCalled = true;
+    _checkStatus(closePage: true);
+  }
+
+  /// The same basket as in the register call, with the order id.
+  List<Map<String, Object?>> get _lines {
+    final orderId = widget.registration.orderId;
+    if (!widget.thingBuy) {
+      return [
+        for (final e in widget.list) {'status': e['status'], 'id': e['id'], 'count': e['count'], 'orderId': orderId, 'pubg_id': e['pubg_id']},
+      ];
+    }
+    if (widget.konkursBuy) {
+      return [
+        for (final e in widget.list) {'status': 'konkurs', 'id': e['id'], 'count': e['count'], 'orderId': orderId},
+      ];
+    }
+    return [
+      for (final e in widget.list) {'status': e['status'], 'id': e['id'], 'count': e['count'], 'asking': e['asking'], 'orderId': orderId},
+    ];
+  }
+
+  Future<void> _checkStatus({required bool closePage}) async {
+    final result = await UcdayyApi.basketCardStatus(_lines);
+    if (result.ok || PaymentFlow.alreadyUsed(result)) {
+      walletController.cartList.clear();
+      walletController.cartList.refresh();
+      walletController.getUserMoney();
+      showSnackBar('copySucces', 'orderSubtitle', Colors.green);
+      if (closePage && Get.key.currentState?.canPop() == true) {
+        Get.back(result: 200);
+      }
+      return;
+    }
+    if (!closePage) {
+      return;
+    }
+    if (result.statusCode == 409) {
+      // Paid, but the stock ran out: the money went back to the balance.
+      walletController.getUserMoney();
+      showSnackBar('money_error_title', 'money_error_subtitle', Colors.red);
+      Get.back(result: 409);
+      return;
+    }
+    showSnackBar('noConnection3', PaymentFlow.errorKey(result), Colors.red);
+    _statusCalled = false;
   }
 
   @override
@@ -133,15 +113,13 @@ class _OpenOnlinePaymentWebsiteState extends State<OpenOnlinePaymentWebsite> {
       appBar: MyAppBar(
         fontSize: 0.0,
         backArrow: true,
-        icon: userAppBarMoney(),
+        icon: Padding(padding: const EdgeInsets.only(right: 8), child: userAppBarMoney()),
         iconRemove: false,
         name: 'orderPage'.tr,
         elevationWhite: true,
       ),
       backgroundColor: kPrimaryColorBlack,
-      body: WebViewWidget(
-        controller: _controller..loadRequest(Uri.parse(widget.url)),
-      ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }

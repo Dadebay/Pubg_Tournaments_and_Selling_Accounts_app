@@ -64,9 +64,7 @@ class ConcursWinners extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Lottie.asset(noDataLottie, width: 350, height: 350),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      const SizedBox(height: 15),
                       Text(
                         'notBoughtConcurs'.tr,
                         style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
@@ -108,10 +106,7 @@ class ConcursWinners extends StatelessWidget {
                                 width: Get.size.width,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                 ),
                               ),
                               placeholder: (context, url) => Center(child: spinKit()),
@@ -134,11 +129,7 @@ class ConcursWinners extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: gilroyMedium,
-                                fontSize: 17,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 17),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -149,11 +140,7 @@ class ConcursWinners extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.start,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: gilroyBold,
-                                fontSize: 14,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 14),
                             ),
                           ),
                           Expanded(
@@ -161,11 +148,7 @@ class ConcursWinners extends StatelessWidget {
                             child: Text(
                               '${snapshot.data![index].phone}',
                               textAlign: TextAlign.end,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: gilroyMedium,
-                                fontSize: 16,
-                              ),
+                              style: const TextStyle(color: Colors.white, fontFamily: gilroyMedium, fontSize: 16),
                             ),
                           ),
                         ],

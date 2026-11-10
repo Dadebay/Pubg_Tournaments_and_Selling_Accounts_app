@@ -28,18 +28,17 @@ class UcdayyApi {
 
   static const String _base = '$serverURL/api';
 
-  static Future<Map<String, String>> _headers({
-    bool auth = false,
-    bool json = true,
-  }) async {
+  static Future<Map<String, String>> _headers({bool auth = false, bool json = true}) async {
     final headers = <String, String>{};
     if (json) {
-      headers[HttpHeaders.contentTypeHeader] =
-          'application/json; charset=UTF-8';
+      headers[HttpHeaders.contentTypeHeader] = 'application/json; charset=UTF-8';
     }
     if (auth) {
+      // No token (a guest): no header, so endpoints with an optional token still answer.
       final token = await Auth().getToken();
-      headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      if (token != null && token.isNotEmpty) {
+        headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      }
     }
     return headers;
   }
@@ -71,27 +70,16 @@ class UcdayyApi {
 
   static const String _shopBase = _base;
 
-  static Future<ApiResult> _get(
-    String path, {
-    bool auth = false,
-    Map<String, Object?> query = const {},
-    String base = _base,
-  }) async {
+  static Future<ApiResult> _get(String path, {bool auth = false, Map<String, Object?> query = const {}, String base = _base}) async {
     try {
-      final uri = Uri.parse('$base$path')
-          .replace(queryParameters: _query(query));
+      final uri = Uri.parse('$base$path').replace(queryParameters: _query(query));
       return _result(await http.get(uri, headers: await _headers(auth: auth)));
     } catch (e) {
       return ApiResult(statusCode: 0, error: '$e');
     }
   }
 
-  static Future<ApiResult> _postJson(
-    String path,
-    Map<String, Object?> body, {
-    bool auth = false,
-    String base = _base,
-  }) async {
+  static Future<ApiResult> _postJson(String path, Map<String, Object?> body, {bool auth = false, String base = _base}) async {
     try {
       final response = await http.post(
         Uri.parse('$base$path'),
@@ -107,18 +95,18 @@ class UcdayyApi {
   /// A POST whose JSON body is a list (the basket lines of `/category/paymentFromPoint/`).
   static Future<ApiResult> _postList(String path, List<Map<String, Object?>> body, {bool auth = false}) async {
     try {
-      final response = await http.post(Uri.parse('$_base$path'), headers: await _headers(auth: auth), body: jsonEncode(body));
+      final response = await http.post(
+        Uri.parse('$_base$path'),
+        headers: await _headers(auth: auth),
+        body: jsonEncode(body),
+      );
       return _result(response);
     } catch (e) {
       return ApiResult(statusCode: 0, error: '$e');
     }
   }
 
-  static Future<ApiResult> _postMultipart(
-    String path, {
-    Map<String, Object?> fields = const {},
-    Map<String, File?> files = const {},
-  }) async {
+  static Future<ApiResult> _postMultipart(String path, {Map<String, Object?> fields = const {}, Map<String, File?> files = const {}}) async {
     try {
       final request = http.MultipartRequest('POST', Uri.parse('$_base$path'));
       request.headers.addAll(await _headers(auth: true, json: false));
@@ -128,13 +116,7 @@ class UcdayyApi {
         if (file == null) {
           continue;
         }
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            entry.key,
-            file.path,
-            contentType: _mediaType(file.path),
-          ),
-        );
+        request.files.add(await http.MultipartFile.fromPath(entry.key, file.path, contentType: _mediaType(file.path)));
       }
       final streamed = await request.send();
       return _result(await http.Response.fromStream(streamed));
@@ -159,114 +141,49 @@ class UcdayyApi {
   static Future<ApiResult> buyAccountPost(int postId, {required String gmail, required String pubgId}) => _postJson('/accounts/buy-post/$postId/', {'gmail': gmail, 'pubg_id': pubgId}, auth: true);
 
   /// Public account of any user.
-  static Future<ApiResult> getAccount(int id) =>
-      _get('/accounts/get-account/$id/');
+  static Future<ApiResult> getAccount(int id) => _get('/accounts/get-account/$id/');
 
-  static Future<ApiResult> changePassword({
-    required String password,
-    required String password2,
-  }) {
-    return _postJson('/accounts/change-password/', {
-      'password': password,
-      'password2': password2,
-    }, auth: true);
+  static Future<ApiResult> changePassword({required String password, required String password2}) {
+    return _postJson('/accounts/change-password/', {'password': password, 'password2': password2}, auth: true);
   }
 
   /// Follows the user, or unfollows when already following.
   static Future<ApiResult> toggleFollow(int userId) {
-    return _postJson('/accounts/follow/', {
-      'following_user_id': userId,
-    }, auth: true);
+    return _postJson('/accounts/follow/', {'following_user_id': userId}, auth: true);
   }
 
-  static Future<ApiResult> getFollowers(
-    int userId, {
-    int? page,
-    int? pageSize,
-  }) {
-    return _get(
-      '/accounts/get-followers/$userId/',
-      query: {'page': page, 'page_size': pageSize},
-    );
+  static Future<ApiResult> getFollowers(int userId, {int? page, int? pageSize}) {
+    return _get('/accounts/get-followers/$userId/', query: {'page': page, 'page_size': pageSize});
   }
 
-  static Future<ApiResult> getFollowings(
-    int userId, {
-    int? page,
-    int? pageSize,
-  }) {
-    return _get(
-      '/accounts/get-followings/$userId/',
-      query: {'page': page, 'page_size': pageSize},
-    );
+  static Future<ApiResult> getFollowings(int userId, {int? page, int? pageSize}) {
+    return _get('/accounts/get-followings/$userId/', query: {'page': page, 'page_size': pageSize});
   }
 
-  static Future<ApiResult> uploadImage(File image) =>
-      _postMultipart('/accounts/upload-image/', files: {'image': image});
+  static Future<ApiResult> uploadImage(File image) => _postMultipart('/accounts/upload-image/', files: {'image': image});
 
   static Future<ApiResult> getImages(int userId, {int? page, int? pageSize}) {
-    return _get(
-      '/accounts/get-images/$userId/',
-      query: {'page': page, 'page_size': pageSize},
-    );
+    return _get('/accounts/get-images/$userId/', query: {'page': page, 'page_size': pageSize});
   }
 
   /// Username / password login, answers with `access` and `refresh`.
-  static Future<ApiResult> tokenLogin({
-    required String username,
-    required String password,
-  }) {
+  static Future<ApiResult> tokenLogin({required String username, required String password}) {
     return _postJson('/token/', {'username': username, 'password': password});
   }
 
   // ------------------------------------------------------------------- posts
 
   static Future<ApiResult> getMyPosts({int? page, int? pageSize}) {
-    return _get(
-      '/accounts/get-my-posts/',
-      auth: true,
-      query: {'page': page, 'page_size': pageSize},
-    );
+    return _get('/accounts/get-my-posts/', auth: true, query: {'page': page, 'page_size': pageSize});
   }
 
-  static Future<ApiResult> getUserPosts(
-    int userId, {
-    int? page,
-    int? pageSize,
-  }) {
-    return _get(
-      '/accounts/get-user-posts/$userId/',
-      query: {'page': page, 'page_size': pageSize},
-    );
+  static Future<ApiResult> getUserPosts(int userId, {int? page, int? pageSize}) {
+    return _get('/accounts/get-user-posts/$userId/', query: {'page': page, 'page_size': pageSize});
   }
 
   /// The fee is charged from the user's points by the server.
-  static Future<ApiResult> addPost({
-    String? title,
-    String? description,
-    String? pubgUsername,
-    String? pubgId,
-    num? price,
-    int? pubgType,
-    bool? vip,
-    int? location,
-    File? image,
-    File? bgImage,
-  }) {
-    return _postMultipart(
-      '/accounts/add-post/',
-      fields: {
-        'title': title,
-        'description': description,
-        'pubg_username': pubgUsername,
-        'pubg_id': pubgId,
-        'price': price,
-        'pubg_type': pubgType,
-        'vip': vip,
-        'location': location,
-      },
-      files: {'image': image, 'bg_image': bgImage},
-    );
+  static Future<ApiResult> addPost({String? title, String? description, String? pubgUsername, String? pubgId, num? price, int? pubgType, bool? vip, int? location, File? image, File? bgImage}) {
+    return _postMultipart('/accounts/add-post/', fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'pubg_type': pubgType, 'vip': vip, 'location': location}, files: {'image': image, 'bg_image': bgImage});
   }
 
   static Future<ApiResult> updatePost(
@@ -283,72 +200,37 @@ class UcdayyApi {
     File? image,
     File? bgImage,
   }) {
-    return _postMultipart(
-      '/accounts/update-post/$id/',
-      fields: {
-        'title': title,
-        'description': description,
-        'pubg_username': pubgUsername,
-        'pubg_id': pubgId,
-        'price': price,
-        'location': clearLocation ? '' : location,
-      },
-      files: {'image': image, 'bg_image': bgImage},
-    );
+    return _postMultipart('/accounts/update-post/$id/', fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'location': clearLocation ? '' : location}, files: {'image': image, 'bg_image': bgImage});
   }
 
-  static Future<ApiResult> uploadPostVideo({
-    required int postId,
-    required File video,
-  }) {
-    return _postMultipart(
-      '/accounts/upload-post-video/',
-      fields: {'post': postId},
-      files: {'video': video},
-    );
+  static Future<ApiResult> uploadPostVideo({required int postId, required File video}) {
+    return _postMultipart('/accounts/upload-post-video/', fields: {'post': postId}, files: {'video': video});
   }
 
   // --------------------------------------------------------------------- ucs
 
-  static Future<ApiResult> getUcCategories() =>
-      _get('/ucs/categories/', base: _shopBase);
+  static Future<ApiResult> getUcCategories() => _get('/ucs/categories/', base: _shopBase);
 
   /// Products of one category: `{ category, count, next, results: [...] }`.
   static Future<ApiResult> getUcCategory(int id, {int? page}) {
     return _get('/ucs/categories/$id/', query: {'page': page}, base: _shopBase);
   }
 
-  static Future<ApiResult> getUcDetail(int id) =>
-      _get('/ucs/uc/$id/', base: _shopBase);
+  static Future<ApiResult> getUcDetail(int id) => _get('/ucs/uc/$id/', base: _shopBase);
 
   // ------------------------------------------------------------------ carts
 
   /// Creates an order from UC items; the price is charged from the user's points.
-  static Future<ApiResult> addCart({
-    required List<Map<String, int>> items,
-    String? pubgId,
-    bool ask = false,
-  }) {
-    return _postJson(
-      '/carts/add-cart/',
-      {'pubg_id': pubgId, 'ask': ask, 'list': items},
-      auth: true,
-      base: _shopBase,
-    );
+  static Future<ApiResult> addCart({required List<Map<String, int>> items, String? pubgId, bool ask = false}) {
+    return _postJson('/carts/add-cart/', {'pubg_id': pubgId, 'ask': ask, 'list': items}, auth: true, base: _shopBase);
   }
 
   /// My orders.
   static Future<ApiResult> getCarts({int? page, int? pageSize}) {
-    return _get(
-      '/carts/',
-      auth: true,
-      query: {'page': page, 'page_size': pageSize},
-      base: _shopBase,
-    );
+    return _get('/carts/', auth: true, query: {'page': page, 'page_size': pageSize}, base: _shopBase);
   }
 
-  static Future<ApiResult> getCart(int id) =>
-      _get('/carts/get-cart/$id/', auth: true, base: _shopBase);
+  static Future<ApiResult> getCart(int id) => _get('/carts/get-cart/$id/', auth: true, base: _shopBase);
 
   // ------------------------------------------------------------------- lucky
 
@@ -391,6 +273,33 @@ class UcdayyApi {
   /// `{id, count, status: 'thing', asking: <answer>}`, a gift card line `{id, count, status: 'gift'}`.
   static Future<ApiResult> payFromBalance(List<Map<String, Object?>> lines) => _postList('/category/paymentFromPoint/', lines, auth: true);
 
+  // ---------------------------------------------------------- card payments
+
+  /// The banks the card payment supports: `[{id, name_tm, name_ru, enabled}]`, no auth.
+  static Future<ApiResult> getPaymentBanks() => _get('/payment/banks/');
+
+  /// Registers a card top-up of [amount] whole manat: `{formUrl, orderId, bank_id, returnUrl}`.
+  static Future<ApiResult> registerCardTopUp({required int amount, int? bankId}) {
+    return _postJson('/paymentToPoint/', {'amount': amount, 'bank_id': ?bankId}, auth: true);
+  }
+
+  /// The server asks the bank itself; answers `{success, amount, bonus, total}`.
+  static Future<ApiResult> cardTopUpStatus({required int amount, required String orderId}) {
+    return _postJson('/paymentToPointStatus/', {'amount': amount, 'orderId': orderId}, auth: true);
+  }
+
+  /// Registers a card payment of a basket. The bank goes on the first line.
+  static Future<ApiResult> registerBasketCard(List<Map<String, Object?>> lines, {int? bankId}) {
+    final body = [
+      for (var i = 0; i < lines.length; i++)
+        if (i == 0 && bankId != null) {...lines[i], 'bank_id': bankId} else lines[i],
+    ];
+    return _postList('/category/payment/', body, auth: true);
+  }
+
+  /// [lines] are the same basket lines as in the register call, with the `orderId`.
+  static Future<ApiResult> basketCardStatus(List<Map<String, Object?>> lines) => _postList('/category/paymentStatus/', lines, auth: true);
+
   /// Orders of games and programs, newest first.
   static Future<ApiResult> getMyGameOrders() => _get('/games/my-orders/', auth: true);
 
@@ -401,6 +310,19 @@ class UcdayyApi {
   static Future<ApiResult> deleteAccountPost(int id) => _postJson('/accounts/delete-post/$id/', {}, auth: true);
 
   // ----------------------------------------------------------------- support
+
+  /// The player's open chat with its latest messages: `{chat: {...} | null, messages: [], unread}`.
+  /// A chat the admin closed, or that had no message for 72 hours, is gone: `chat` is null.
+  static Future<ApiResult> getSupportChat() => _get('/support/chat/', auth: true);
+
+  /// Writes to support without a chat id. With no open chat this opens a new one with a
+  /// clean history; the answer is the new message (with its `chat_id`).
+  static Future<ApiResult> sendSupportMessageNew({String body = '', File? image}) {
+    if (image == null) {
+      return _postJson('/support/messages/', {'body': body}, auth: true);
+    }
+    return _postMultipart('/support/messages/', fields: {'body': body}, files: {'image': image});
+  }
 
   /// Creates the player's support chat, or returns the one that exists.
   static Future<ApiResult> openSupportChat() => _postJson('/support/chats/', {}, auth: true);
@@ -443,8 +365,25 @@ class UcdayyApi {
 
   // ----------------------------------------------------------- notifications
 
-  static Future<ApiResult> getNotification(int id) =>
-      _get('/notifications/$id/');
+  /// The list, oldest first, each with `read` for this account (without a token every one is unread).
+  static Future<ApiResult> getNotifications() => _get('/notifications/', auth: true);
+
+  /// `{unread: N}` for the bell badge.
+  static Future<ApiResult> getNotificationsUnread() => _get('/notifications/unread/', auth: true);
+
+  /// One notification; with a token opening it marks it read.
+  static Future<ApiResult> getNotification(int id) => _get('/notifications/$id/', auth: true);
+
+  static Future<ApiResult> markNotificationRead(int id) => _postJson('/notifications/$id/read/', {}, auth: true);
+
+  /// `{unread: 0}`.
+  static Future<ApiResult> markAllNotificationsRead() => _postJson('/notifications/read-all/', {}, auth: true);
+
+  // ------------------------------------------------------------------ orders
+
+  /// Everything the player bought, newest first: `{count, page, page_size, types, results}`.
+  /// [type] filters by one type or several separated by commas (`uc,gift`).
+  static Future<ApiResult> getOrderHistory({int page = 1, int pageSize = 20, String? type}) => _get('/orders/history/', auth: true, query: {'page': page, 'page_size': pageSize, 'type': type});
 }
 
 /// Items of a paged answer: either a bare list or `{ results: [...] }`.

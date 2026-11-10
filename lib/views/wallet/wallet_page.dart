@@ -44,9 +44,7 @@ class _WalletPageState extends State<WalletPage> {
       backgroundColor: kPrimaryColorBlack,
       // The floating nav bar overlaps the page, so lift the button above it.
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.paddingOf(context).bottom + 8,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom + 8),
         child: CartFab(
           onTap: () async {
             if (await _checkToken()) {
@@ -59,11 +57,9 @@ class _WalletPageState extends State<WalletPage> {
         title: 'Pubg UC',
         actions: userAppBarMoney(),
         tabs: [
-          for (final category in _categories ?? const <Map>[])
-            SegmentTab(label: _categoryName(category)),
+          for (final category in _categories ?? const <Map>[]) SegmentTab(label: _categoryName(category)),
           // The tab bar needs at least one tab while the categories load.
-          if (_categories == null || _categories!.isEmpty)
-            const SegmentTab(label: 'UC'),
+          if (_categories == null || _categories!.isEmpty) const SegmentTab(label: 'UC'),
         ],
         selectedIndex: _tab,
         onTabChanged: (i) => setState(() => _tab = i),
@@ -85,11 +81,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   Future<void> onTapFunction() async {
-    await showDialog(
-      context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.72),
-      builder: (context) => _idDialog(),
-    );
+    await showDialog(context: context, barrierColor: Colors.black.withValues(alpha: 0.72), builder: (context) => _idDialog());
   }
 
   static const _gold = Color(0xFFFFC83D);
@@ -100,11 +92,9 @@ class _WalletPageState extends State<WalletPage> {
     var total = 0.0;
     for (final item in walletController.cartList) {
       count += item['count'] as int;
-      total +=
-          (double.tryParse('${item['price']}') ?? 0) * (item['count'] as int);
+      total += (double.tryParse('${item['price']}') ?? 0) * (item['count'] as int);
     }
-    final price =
-        '${total == total.roundToDouble() ? total.toInt() : total.toStringAsFixed(2)} TMT';
+    final price = '${total == total.roundToDouble() ? total.toInt() : total.toStringAsFixed(2)} TMT';
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -112,15 +102,9 @@ class _WalletPageState extends State<WalletPage> {
         padding: const EdgeInsets.fromLTRB(22, 26, 22, 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF26231C), Color(0xFF131315)],
-          ),
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF26231C), Color(0xFF131315)]),
           border: Border.all(color: _gold.withValues(alpha: 0.35)),
-          boxShadow: [
-            BoxShadow(color: _gold.withValues(alpha: 0.18), blurRadius: 40),
-          ],
+          boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.18), blurRadius: 40)],
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -135,24 +119,14 @@ class _WalletPageState extends State<WalletPage> {
                   border: Border.all(color: _gold.withValues(alpha: 0.4)),
                 ),
                 child: const Center(
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedGameController03,
-                    color: _gold,
-                    size: 34,
-                    strokeWidth: 1.6,
-                  ),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedGameController03, color: _gold, size: 34, strokeWidth: 1.6),
                 ),
               ),
               const SizedBox(height: 18),
               Text(
                 'enterID'.tr,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: gilroyBold,
-                  fontSize: 24,
-                  height: 1.15,
-                ),
+                style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1.15),
               ),
               const SizedBox(height: 12),
               _summaryChip(count, price),
@@ -163,17 +137,8 @@ class _WalletPageState extends State<WalletPage> {
               const SizedBox(height: 6),
               TextButton(
                 onPressed: Get.back,
-                style: TextButton.styleFrom(
-                  minimumSize: const Size.fromHeight(44),
-                  foregroundColor: Colors.white70,
-                ),
-                child: Text(
-                  'cancel'.tr,
-                  style: const TextStyle(
-                    fontFamily: gilroySemiBold,
-                    fontSize: 16,
-                  ),
-                ),
+                style: TextButton.styleFrom(minimumSize: const Size.fromHeight(44), foregroundColor: Colors.white70),
+                child: Text('cancel'.tr, style: const TextStyle(fontFamily: gilroySemiBold, fontSize: 16)),
               ),
             ],
           ),
@@ -185,41 +150,20 @@ class _WalletPageState extends State<WalletPage> {
   Widget _summaryChip(int count, String price) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(14),
-      ),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(14)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const HugeIcon(
-            icon: HugeIcons.strokeRoundedShoppingBag01,
-            color: Colors.white70,
-            size: 18,
-            strokeWidth: 1.6,
-          ),
+          const HugeIcon(icon: HugeIcons.strokeRoundedShoppingBag01, color: Colors.white70, size: 18, strokeWidth: 1.6),
           const SizedBox(width: 8),
           Text(
             '$count',
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: gilroyBold,
-              fontSize: 15,
-            ),
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 15),
           ),
-          Container(
-            width: 1,
-            height: 14,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            color: Colors.white24,
-          ),
+          Container(width: 1, height: 14, margin: const EdgeInsets.symmetric(horizontal: 10), color: Colors.white24),
           Text(
             price,
-            style: const TextStyle(
-              color: _gold,
-              fontFamily: gilroyBold,
-              fontSize: 15,
-            ),
+            style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 15),
           ),
         ],
       ),
@@ -227,11 +171,10 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   Widget _idField() {
-    OutlineInputBorder border(Color color, [double width = 1.4]) =>
-        OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: color, width: width),
-        );
+    OutlineInputBorder border(Color color, [double width = 1.4]) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+      borderSide: BorderSide(color: color, width: width),
+    );
     return TextFormField(
       controller: pubgUserIDController,
       focusNode: pubgUserIDFocusNode,
@@ -239,22 +182,11 @@ class _WalletPageState extends State<WalletPage> {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       textAlign: TextAlign.center,
       cursorColor: _gold,
-      style: const TextStyle(
-        color: Colors.white,
-        fontFamily: gilroyBold,
-        fontSize: 22,
-        letterSpacing: 1.5,
-      ),
-      validator: (value) =>
-          (value == null || value.trim().isEmpty) ? 'errorEmpty'.tr : null,
+      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22, letterSpacing: 1.5),
+      validator: (value) => (value == null || value.trim().isEmpty) ? 'errorEmpty'.tr : null,
       decoration: InputDecoration(
         hintText: 'Pubg ID',
-        hintStyle: TextStyle(
-          color: Colors.white.withValues(alpha: 0.3),
-          fontFamily: gilroyMedium,
-          fontSize: 18,
-          letterSpacing: 0,
-        ),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontFamily: gilroyMedium, fontSize: 18, letterSpacing: 0),
         errorStyle: const TextStyle(fontFamily: gilroyMedium),
         filled: true,
         fillColor: Colors.black.withValues(alpha: 0.4),
@@ -263,12 +195,7 @@ class _WalletPageState extends State<WalletPage> {
           padding: const EdgeInsets.only(left: 6),
           child: Center(
             widthFactor: 1,
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedIdentityCard,
-              color: Colors.white.withValues(alpha: 0.5),
-              size: 22,
-              strokeWidth: 1.6,
-            ),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedIdentityCard, color: Colors.white.withValues(alpha: 0.5), size: 22, strokeWidth: 1.6),
           ),
         ),
         // Keeps the id centered between the icon and an equally wide gap.
@@ -289,24 +216,12 @@ class _WalletPageState extends State<WalletPage> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: _gold.withValues(alpha: 0.25),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+          boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.25), blurRadius: 16, offset: const Offset(0, 6))],
         ),
         child: Text(
           'agree'.tr,
-          style: const TextStyle(
-            color: Color(0xFF1A1200),
-            fontFamily: gilroyBold,
-            fontSize: 18,
-          ),
+          style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 18),
         ),
       ),
     );
@@ -329,13 +244,7 @@ class _WalletPageState extends State<WalletPage> {
     }
     walletController.finalPRice.value = value;
     walletController.finalCount.value = counts;
-    await Get.to(
-      () => OrderPage(
-        pubgID: pubgUserIDController.text,
-        onlyCard: false,
-        asking: 'accountDetaile2'.tr,
-      ),
-    );
+    await Get.to(() => OrderPage(pubgID: pubgUserIDController.text, onlyCard: false, asking: 'accountDetaile2'.tr));
   }
 
   int _tab = 0;
@@ -407,21 +316,12 @@ class _WalletPageState extends State<WalletPage> {
 
   String _categoryName(Map category) {
     final isRu = Get.locale?.languageCode == 'ru';
-    final name =
-        category[isRu ? 'name_ru' : 'name_tm'] ??
-        category['name_tm'] ??
-        category['name_ru'] ??
-        category['name'];
+    final name = category[isRu ? 'name_ru' : 'name_tm'] ?? category['name_tm'] ?? category['name_ru'] ?? category['name'];
     return '${name ?? ''}';
   }
 
   String _emptyImageForCategory(Map category) {
-    final names = [
-      category['name'],
-      category['name_tm'],
-      category['name_ru'],
-      category['slug'],
-    ].whereType<String>().join(' ').toLowerCase();
+    final names = [category['name'], category['name_tm'], category['name_ru'], category['slug']].whereType<String>().join(' ').toLowerCase();
     if (names.contains('wow') || names.contains('wonder')) {
       return 'assets/image/empty_wow_world.webp';
     }
@@ -446,17 +346,13 @@ class _WalletPageState extends State<WalletPage> {
     }
     final id = categories[_tab]['id'] as int;
     if (_refreshing) {
-      return CatalogSkeletonGrid(
-        premium: _isPremium(categories[_tab]),
-        count: _shownCount,
-      );
+      return CatalogSkeletonGrid(premium: _isPremium(categories[_tab]), count: _shownCount);
     }
     return FutureBuilder<List<UcModel>?>(
       future: _tabFuture(id),
       builder: (context, snapshot) {
         // Waiting with data is a refresh: keep showing the cards that are there.
-        if (snapshot.connectionState == ConnectionState.waiting &&
-            snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting && snapshot.data == null) {
           return CatalogSkeletonGrid(premium: _isPremium(categories[_tab]));
         }
         final items = snapshot.data;
@@ -473,32 +369,15 @@ class _WalletPageState extends State<WalletPage> {
           shrinkWrap: true,
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 14,
-            crossAxisSpacing: 14,
-            childAspectRatio: premium ? 0.7 : 0.78,
-          ),
-          itemBuilder: (context, index) => premium
-              ? PremiumPackageCard(
-                  key: ValueKey(items[index].id),
-                  model: items[index],
-                )
-              : UcPackageCard(
-                  key: ValueKey(items[index].id),
-                  model: items[index],
-                ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: premium ? 0.7 : 0.78),
+          itemBuilder: (context, index) => premium ? PremiumPackageCard(key: ValueKey(items[index].id), model: items[index]) : UcPackageCard(key: ValueKey(items[index].id), model: items[index]),
         );
       },
     );
   }
 
   bool _isPremium(Map category) {
-    final names = [
-      category['name'],
-      category['name_tm'],
-      category['name_ru'],
-    ].whereType<String>().join(' ').toLowerCase();
+    final names = [category['name'], category['name_tm'], category['name_ru']].whereType<String>().join(' ').toLowerCase();
     return names.contains('premium') || names.contains('премиум');
   }
 
@@ -510,9 +389,7 @@ class _WalletPageState extends State<WalletPage> {
         icon: failed ? IconlyLight.dangerCircle : IconlyLight.bag,
         imageAsset: failed ? null : _emptyImageForCategory(categories[_tab]),
         title: (failed ? 'catalogLoadErrorTitle' : 'catalogEmptyTitle').tr,
-        description:
-            (failed ? 'catalogLoadErrorDescription' : 'catalogEmptyDescription')
-                .tr,
+        description: (failed ? 'catalogLoadErrorDescription' : 'catalogEmptyDescription').tr,
         actionLabel: failed ? 'noConnection3'.tr : null,
         actionIcon: Icons.refresh_rounded,
         onAction: failed

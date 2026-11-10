@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use, duplicate_ignore, implementation_imports, avoid_positional_boolean_parameters, unnecessary_null_comparison, always_use_package_imports
 
-import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/views/other_pages/show_all_acconts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../constants/index.dart';
+import 'balance_chip.dart';
 
 SnackbarController showSnackBar(String title, String subtitle, Color color) {
   return Get.snackbar(
@@ -50,30 +50,8 @@ Widget spinKit() {
   return Center(child: Lottie.asset(loader, animate: true, width: 300, height: 300));
 }
 
-Widget userAppBarMoney() {
-  return Padding(
-    padding: const EdgeInsets.only(top: 5),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Obx(() {
-          double a = 0.0;
-          if (Get.find<WalletController>().userMoney != null) {
-            a = double.parse(Get.find<WalletController>().userMoney.toString());
-          }
-          return Text(
-            a.toStringAsFixed(1),
-            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 23),
-          );
-        }),
-        const Padding(
-          padding: EdgeInsets.only(left: 5, right: 5),
-          child: Icon(IconlyLight.wallet, color: Colors.white),
-        ),
-      ],
-    ),
-  );
-}
+/// The balance pill (the same one the tournaments page has) for the right side of a header.
+Widget userAppBarMoney() => const BalanceChip();
 
 Column errorData({required Function() onTap}) {
   return Column(
@@ -173,14 +151,14 @@ Padding listViewName(String text, bool icon, Size size) {
             ? GestureDetector(
                 onTap: () => Get.to(() => const ShowAllAccounts(name: 'accountsForSale')),
                 child: Container(
-                  width: size.width >= 800 ? 48 : 38,
-                  height: size.width >= 800 ? 48 : 38,
+                  width: size.width >= 800 ? 40 : 30,
+                  height: size.width >= 800 ? 40 : 30,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.85), width: 1.6),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.85), width: 1.4),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white, size: size.width >= 800 ? 26 : 20, strokeWidth: 2),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white, size: size.width >= 800 ? 22 : 16, strokeWidth: 2),
                 ),
               )
             : const SizedBox.shrink(),

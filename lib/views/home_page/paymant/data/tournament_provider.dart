@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:game_app/models/turnir.dart';
+import 'package:game_app/views/constants/constants.dart';
 
 class TournamentProvider with ChangeNotifier {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'http://216.250.11.240'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: serverURL));
 
   List<Tournament> _tournaments = [];
   bool _isLoading = false;

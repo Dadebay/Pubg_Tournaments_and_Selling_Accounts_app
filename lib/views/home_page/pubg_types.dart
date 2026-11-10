@@ -27,20 +27,13 @@ class PubgTypes extends StatelessWidget {
 
     return Container(
       height: size.width >= 800 ? 300 : 150,
-      margin: const EdgeInsets.only(
-        top: 25,
-        bottom: 25,
-      ),
+      margin: const EdgeInsets.only(top: 25, bottom: 25),
       color: kPrimaryColorBlack,
       alignment: Alignment.center,
       child: CarouselSlider.builder(
         itemCount: 3,
         itemBuilder: (context, index, count) {
-          return MiniCategoryCard(
-            index: index,
-            image: images[index],
-            name: names[index],
-          );
+          return MiniCategoryCard(index: index, image: images[index], name: names[index]);
         },
         options: CarouselOptions(
           onPageChanged: (index, CarouselPageChangedReason a) {},

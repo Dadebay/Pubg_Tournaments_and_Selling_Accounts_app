@@ -50,10 +50,26 @@ class SupportPush {
       if (id <= 0) {
         return;
       }
-      await _join(topicKey, 'support_$id');
+      // Support replies and order changes come to `user_<id>`, broadcasts of the admin to `EVENT`.
+      // The old `support_<id>` topic is left (the server sends each message once).
+      await _leave(topicKey);
       await _join(userTopicKey, 'user_$id');
+      await FirebaseMessaging.instance.subscribeToTopic(broadcastTopic);
     } catch (e) {
       debugPrint('support topic: $e');
+    }
+  }
+
+  /// Topic of the broadcasts written in the admin panel.
+  static const String broadcastTopic = 'EVENT';
+
+  /// Leaves the topic stored under [key], if any.
+  static Future<void> _leave(String key) async {
+    final storage = GetStorage();
+    final old = storage.read<String>(key);
+    if (old != null) {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(old);
+      await storage.remove(key);
     }
   }
 

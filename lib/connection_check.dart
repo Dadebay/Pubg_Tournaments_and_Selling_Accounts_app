@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/new_bottom_nav.dart';
+import 'package:game_app/utils/server_status.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:lottie/lottie.dart';
@@ -37,6 +38,8 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
   void checkConnection() async {
     try {
       final result = await InternetAddress.lookup('google.com');
+      // The server is down or under maintenance: a notice covers the app until it is back.
+      await ServerStatus.instance.ensureUp();
       int a = 0;
       bool showPage = false;
       await AboutUsModel().getAboutUs().then((value) {
@@ -62,9 +65,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
           await Get.find<SettingsController>().changeUserUI();
           if (Get.find<SettingsController>().loginUser.value != true) {
             await showDeleteDialog(context, 'loginError', 'welcome', () {
-              Get.to(
-                () => const TabBarViewPage(),
-              );
+              Get.to(() => const TabBarViewPage());
             });
           }
         });
@@ -111,22 +112,14 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                   children: <Widget>[
                     Text(
                       'noConnection1'.tr,
-                      style: const TextStyle(
-                        fontSize: 24.0,
-                        color: kPrimaryColor,
-                        fontFamily: gilroyMedium,
-                      ),
+                      style: const TextStyle(fontSize: 24.0, color: kPrimaryColor, fontFamily: gilroyMedium),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                       child: Text(
                         'noConnection2'.tr,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontFamily: gilroyMedium,
-                          fontSize: 16.0,
-                        ),
+                        style: const TextStyle(color: Colors.black, fontFamily: gilroyMedium, fontSize: 16.0),
                       ),
                     ),
                     ElevatedButton(
@@ -138,9 +131,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryColor,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: borderRadius10,
-                        ),
+                        shape: const RoundedRectangleBorder(borderRadius: borderRadius10),
                         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
                       ),
                       child: Text(
@@ -148,9 +139,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                         style: const TextStyle(fontSize: 18, color: Colors.white, fontFamily: gilroyMedium),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -161,16 +150,8 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                 maxRadius: 70,
                 minRadius: 60,
                 child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: ClipRRect(
-                    child: Image.asset(
-                      'assets/icons/noconnection.gif',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
+                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                  child: ClipRRect(child: Image.asset('assets/icons/noconnection.gif', fit: BoxFit.fill)),
                 ),
               ),
             ),

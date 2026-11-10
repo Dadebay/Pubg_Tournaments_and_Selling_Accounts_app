@@ -1,37 +1,54 @@
-import 'package:game_app/models/notifications_model.dart';
+import 'package:flutter/widgets.dart';
+import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
-/// Counts the notifications the user has not opened yet. The newest id seen is kept
-/// on the device, so everything above it is new.
-class NotificationBadgeController extends GetxController {
-  static const _key = 'last_seen_notification_id';
-
-  final GetStorage _box = GetStorage();
-
-  /// How many notifications came after the last visit to the notification page.
+/// The number of notifications this account has not opened, from the server
+/// (`GET /notifications/unread/`). It is refreshed on start, when the app comes back,
+/// when an `EVENT` push arrives, after reading and cleared on logout.
+class NotificationBadgeController extends GetxController with WidgetsBindingObserver {
+  /// Unread notifications of the account.
   final RxInt unseen = 0.obs;
 
-  int get lastSeenId => _box.read<int>(_key) ?? 0;
+  @override
+  void onInit() {
+    super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      refreshCount();
+    }
+  }
 
   Future<void> refreshCount() async {
     try {
-      final items = await NotifcationModel().getNotifcations();
-      unseen.value = items.where((item) => (item.id ?? 0) > lastSeenId).length;
+      final result = await UcdayyApi.getNotificationsUnread();
+      final data = result.data;
+      if (result.ok && data is Map) {
+        unseen.value = int.tryParse('${data['unread']}') ?? 0;
+      } else if (result.statusCode == 401) {
+        // A guest has no read state.
+        unseen.value = 0;
+      }
     } catch (_) {
       // The badge simply keeps its last value when the request fails.
     }
   }
 
-  /// Everything in [items] counts as seen from now on.
-  Future<void> markSeen(List<NotifcationModel> items) async {
-    var newest = lastSeenId;
-    for (final item in items) {
-      if ((item.id ?? 0) > newest) {
-        newest = item.id!;
-      }
+  /// One notification was read here.
+  void decrement() {
+    if (unseen.value > 0) {
+      unseen.value--;
     }
-    await _box.write(_key, newest);
-    unseen.value = 0;
   }
+
+  void clear() => unseen.value = 0;
 }

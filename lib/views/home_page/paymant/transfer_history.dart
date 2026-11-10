@@ -47,10 +47,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Transfer History'.tr),
-        elevation: 2,
-      ),
+      appBar: AppBar(title: Text('Transfer History'.tr), elevation: 2),
       body: Consumer<TransferProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
@@ -64,23 +61,14 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
                   const SizedBox(height: 16),
-                  Text(
-                    'No transfers yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey.shade600,
-                    )),
+                  Text('No transfers yet', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
                   // Text(
                   //   'Error: ${provider.error}',
                   //   style: const TextStyle(fontSize: 16),
                   //   textAlign: TextAlign.center,
                   // ),
                   const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => provider.fetchTransfers(),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
-                  ),
+                  ElevatedButton.icon(onPressed: () => provider.fetchTransfers(), icon: const Icon(Icons.refresh), label: const Text('Retry')),
                 ],
               ),
             );
@@ -93,13 +81,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                 children: [
                   Icon(Icons.swap_horiz, size: 64, color: Colors.grey.shade400),
                   const SizedBox(height: 16),
-                  Text(
-                    'No transfers yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
+                  Text('No transfers yet', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
                 ],
               ),
             );
@@ -116,9 +98,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -137,13 +117,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                         child: const Icon(Icons.arrow_upward, color: Colors.red),
                                       ),
                                       const SizedBox(width: 10),
-                                      Text(
-                                        '+993${transfer.receiver}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                      Text('+993${transfer.receiver}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                                     ],
                                   )
                                 : Row(
@@ -153,13 +127,7 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                                         child: const Icon(Icons.arrow_downward, color: Colors.green),
                                       ),
                                       const SizedBox(width: 10),
-                                      Text(
-                                        '+993${transfer.sender}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                      Text('+993${transfer.sender}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                                     ],
                                   ),
                           ],
@@ -174,19 +142,9 @@ class _TransferHistoryScreenState extends State<TransferHistoryScreen> {
                           children: [
                             Text(
                               currentUserId != transfer.sender.toString() ? 'TMT +${transfer.amount.toStringAsFixed(2)}' : 'TMT -${transfer.amount.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: currentUserId != transfer.sender.toString() ? Colors.green : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(fontSize: 20, color: currentUserId != transfer.sender.toString() ? Colors.green : Colors.red, fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              _formatDate(transfer.createdDate),
-                              style: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontSize: 13,
-                              ),
-                            ),
+                            Text(_formatDate(transfer.createdDate), style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
                           ],
                         ),
                       ],

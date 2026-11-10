@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:game_app/models/transfer.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
@@ -18,10 +19,7 @@ class TransferProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
-  Future<void> sendTransfer({
-    required String phone,
-    required String amount,
-  }) async {
+  Future<void> sendTransfer({required String phone, required String amount}) async {
     _isLoading = true;
     _errorMessage = null;
     _successMessage = null;
@@ -41,20 +39,12 @@ class TransferProvider with ChangeNotifier {
       }
       final updatedAmount = numericAmount + 1;
       // ✅ Create FormData
-      final formData = FormData.fromMap({
-        'phone': phone,
-        'amount': updatedAmount,
-      });
+      final formData = FormData.fromMap({'phone': phone, 'amount': updatedAmount});
 
       final response = await dio.post(
         url,
         data: formData,
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.acceptHeader: 'application/json',
-          },
-        ),
+        options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token', HttpHeaders.acceptHeader: 'application/json'}),
       );
 
       log('Response status: ${response.statusCode}');
@@ -94,15 +84,7 @@ class TransferProvider with ChangeNotifier {
       // Get the token from Auth
       final token = await Auth().getToken();
 
-      final response = await _dio.get(
-        '$serverURL/api/sendpoint/',
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.acceptHeader: 'application/json',
-          },
-        ),
-      );
+      final response = await _dio.get('$serverURL/api/sendpoint/', options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer $token', HttpHeaders.acceptHeader: 'application/json'}));
 
       if (response.statusCode == 200) {
         final data = response.data;

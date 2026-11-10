@@ -14,10 +14,7 @@ class NotificationBell extends StatefulWidget {
 }
 
 class _NotificationBellState extends State<NotificationBell> {
-  final NotificationBadgeController _badge =
-      Get.isRegistered<NotificationBadgeController>()
-      ? Get.find<NotificationBadgeController>()
-      : Get.put(NotificationBadgeController(), permanent: true);
+  final NotificationBadgeController _badge = Get.isRegistered<NotificationBadgeController>() ? Get.find<NotificationBadgeController>() : Get.put(NotificationBadgeController(), permanent: true);
 
   @override
   void initState() {
@@ -26,7 +23,7 @@ class _NotificationBellState extends State<NotificationBell> {
   }
 
   Future<void> _open() async {
-    await Get.to(() => NotificationPage());
+    await Get.to(() => NotificationPage(onlyUnread: true));
     await _badge.refreshCount();
   }
 
@@ -51,12 +48,7 @@ class _NotificationBellState extends State<NotificationBell> {
                 border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
               ),
               child: const Center(
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedNotification03,
-                  color: Colors.white,
-                  size: 21,
-                  strokeWidth: 1.8,
-                ),
+                child: HugeIcon(icon: HugeIcons.strokeRoundedNotification03, color: Colors.white, size: 21, strokeWidth: 1.8),
               ),
             ),
             Positioned(
@@ -80,13 +72,7 @@ class _NotificationBellState extends State<NotificationBell> {
                     ),
                     child: Text(
                       count > 99 ? '99+' : '$count',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Gilroy',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 10.5,
-                        height: 1,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontFamily: 'Gilroy', fontWeight: FontWeight.w700, fontSize: 10.5, height: 1),
                     ),
                   ),
                 );

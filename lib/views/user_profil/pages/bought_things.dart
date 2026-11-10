@@ -2,7 +2,7 @@ import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/user_profil/pages/bought_gifts.dart';
 import 'package:game_app/views/user_profil/pages/bought_konkurs.dart';
-import 'package:game_app/views/user_profil/pages/history_orders_page.dart';
+import 'package:game_app/views/orders/orders_history_page.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 /// "My orders" of the profile: four tiles, one per kind of purchase.
@@ -12,30 +12,10 @@ class BoughtThings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiles = [
-      _Tile(
-        'boughtUC',
-        HugeIcons.strokeRoundedCoins01,
-        const Color(0xFF34D399),
-        () => Get.to(() => const HistoryOrdersPage()),
-      ),
-      _Tile(
-        'boughtGifts',
-        HugeIcons.strokeRoundedGift,
-        const Color(0xFFFF7AB6),
-        () => Get.to(() => const BoughtGifts()),
-      ),
-      _Tile(
-        'boughtKonkurs',
-        HugeIcons.strokeRoundedAward01,
-        const Color(0xFFFFC83D),
-        () => Get.to(() => const BoughtKonkurs()),
-      ),
-      _Tile(
-        'boughtCODES',
-        HugeIcons.strokeRoundedKey01,
-        const Color(0xFF60A5FA),
-        () => Get.to(() => const BoughtCODES()),
-      ),
+      _Tile('boughtUC', HugeIcons.strokeRoundedCoins01, const Color(0xFF34D399), () => Get.to(() => const OrdersHistoryPage())),
+      _Tile('boughtGifts', HugeIcons.strokeRoundedGift, const Color(0xFFFF7AB6), () => Get.to(() => const BoughtGifts())),
+      _Tile('boughtKonkurs', HugeIcons.strokeRoundedAward01, const Color(0xFFFFC83D), () => Get.to(() => const BoughtKonkurs())),
+      _Tile('boughtCODES', HugeIcons.strokeRoundedKey01, const Color(0xFF60A5FA), () => Get.to(() => const BoughtCODES())),
     ];
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
@@ -61,10 +41,7 @@ class BoughtThings extends StatelessWidget {
                       curve: Curves.easeOutCubic,
                       builder: (context, t, child) => Opacity(
                         opacity: t,
-                        child: Transform.translate(
-                          offset: Offset(0, 22 * (1 - t)),
-                          child: child,
-                        ),
+                        child: Transform.translate(offset: Offset(0, 22 * (1 - t)), child: child),
                       ),
                       child: _TileCard(tile: tiles[i]),
                     ),
@@ -101,19 +78,9 @@ class _TileCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [color.withValues(alpha: 0.28), const Color(0xFF141416)],
-          ),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color.withValues(alpha: 0.28), const Color(0xFF141416)]),
           border: Border.all(color: color.withValues(alpha: 0.32)),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.12),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: color.withValues(alpha: 0.12), blurRadius: 24, offset: const Offset(0, 8))],
         ),
         child: Stack(
           children: [
@@ -123,12 +90,7 @@ class _TileCard extends StatelessWidget {
               bottom: -18,
               child: Transform.rotate(
                 angle: -0.3,
-                child: HugeIcon(
-                  icon: tile.icon,
-                  color: color.withValues(alpha: 0.13),
-                  size: 110,
-                  strokeWidth: 1.4,
-                ),
+                child: HugeIcon(icon: tile.icon, color: color.withValues(alpha: 0.13), size: 110, strokeWidth: 1.4),
               ),
             ),
             Padding(
@@ -145,33 +107,18 @@ class _TileCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(19),
                           color: color.withValues(alpha: 0.18),
-                          border: Border.all(
-                            color: color.withValues(alpha: 0.45),
-                          ),
+                          border: Border.all(color: color.withValues(alpha: 0.45)),
                         ),
                         child: Center(
-                          child: HugeIcon(
-                            icon: tile.icon,
-                            color: color,
-                            size: 30,
-                            strokeWidth: 1.6,
-                          ),
+                          child: HugeIcon(icon: tile.icon, color: color, size: 30, strokeWidth: 1.6),
                         ),
                       ),
                       Container(
                         width: 34,
                         height: 34,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.08),
-                        ),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.08)),
                         child: Center(
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedArrowUpRight01,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            size: 18,
-                            strokeWidth: 2,
-                          ),
+                          child: HugeIcon(icon: HugeIcons.strokeRoundedArrowUpRight01, color: Colors.white.withValues(alpha: 0.7), size: 18, strokeWidth: 2),
                         ),
                       ),
                     ],
@@ -181,12 +128,7 @@ class _TileCard extends StatelessWidget {
                     tile.title.tr,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: gilroyBold,
-                      fontSize: 19,
-                      height: 1.15,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 19, height: 1.15),
                   ),
                 ],
               ),

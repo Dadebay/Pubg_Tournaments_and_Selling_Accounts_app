@@ -13,7 +13,10 @@ import 'package:hugeicons/hugeicons.dart';
 /// Chat with the support team. One thread per player: it is created on the
 /// first visit, new answers are polled every 3 seconds while the page is open.
 class SupportChatPage extends StatefulWidget {
-  const SupportChatPage({super.key});
+  const SupportChatPage({this.initialText, super.key});
+
+  /// Put in the message field when the page opens (the player only presses send).
+  final String? initialText;
 
   @override
   State<SupportChatPage> createState() => _SupportChatPageState();
@@ -33,9 +36,11 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
   /// Oldest first; shown reversed so the list sticks to the newest message.
   final List<SupportMessage> _messages = [];
   int? _chatId;
+
+  /// When the chat closes by itself: 72 hours after it was started.
+  DateTime? _closesAt;
   bool _loading = true;
   bool _failed = false;
-  bool _closed = false;
   bool _hasMore = false;
   bool _loadingMore = false;
   bool _sending = false;
@@ -50,6 +55,9 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
     WidgetsBinding.instance.addObserver(this);
     SupportPush.chatOpen = true;
     _scroll.addListener(_onScroll);
+    if ((widget.initialText ?? '').isNotEmpty) {
+      _text.text = widget.initialText!;
+    }
     _text.addListener(() => setState(() {}));
     _focus.addListener(() => setState(() {}));
     _start();
@@ -82,9 +90,11 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
       _loading = true;
       _failed = false;
     });
-    final chat = await UcdayyApi.openSupportChat();
-    final data = chat.data;
-    if (!chat.ok || data is! Map) {
+    // A chat the admin closed, or that was quiet for 72 hours, is gone: `chat` is null and the
+    // player simply starts a new conversation by writing (the old messages stay hidden).
+    final result = await UcdayyApi.getSupportChat();
+    final data = result.data;
+    if (!result.ok || data is! Map) {
       if (mounted) {
         setState(() {
           _loading = false;
@@ -93,26 +103,32 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
       }
       return;
     }
-    final model = SupportChat.fromJson(data);
-    _chatId = model.id;
-    final page = await UcdayyApi.getSupportMessages(model.id);
     if (!mounted) {
       return;
     }
-    if (!page.ok) {
+    final chat = data['chat'];
+    if (chat is! Map) {
       setState(() {
+        _chatId = null;
+        _closesAt = null;
+        _messages.clear();
+        _hasMore = false;
+        _lastId = 0;
         _loading = false;
-        _failed = true;
       });
+      SupportPush.unread.value = 0;
       return;
     }
-    final parsed = SupportMessages.fromJson(page.data);
+    final model = SupportChat.fromJson(chat);
+    _chatId = model.id;
+    final started = DateTime.tryParse('${chat['created_date'] ?? ''}')?.toLocal();
+    _closesAt = started?.add(const Duration(hours: 72));
+    final parsed = SupportMessages.fromJson(data);
     setState(() {
       _messages
         ..clear()
         ..addAll(parsed.messages);
       _hasMore = parsed.hasMore;
-      _closed = model.isClosed || parsed.status == 'closed';
       _lastId = _maxId();
       _loading = false;
     });
@@ -141,7 +157,18 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
     final known = _messages.map((e) => e.id).toSet();
     final fresh = parsed.messages.where((e) => !known.contains(e.id)).toList();
     final closed = parsed.status == 'closed';
-    if (fresh.isEmpty && closed == _closed) {
+    if (closed) {
+      // The admin closed the chat: it disappears and the player can start a new one.
+      _timer?.cancel();
+      setState(() {
+        _chatId = null;
+        _messages.clear();
+        _hasMore = false;
+        _lastId = 0;
+      });
+      return;
+    }
+    if (fresh.isEmpty) {
       return;
     }
     setState(() {
@@ -151,7 +178,6 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
       }
       _messages.addAll(fresh);
       _lastId = _maxId();
-      _closed = closed;
     });
     if (fresh.any((e) => !e.mine)) {
       unawaited(_playReplySound());
@@ -204,11 +230,11 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
     setState(() => _image = file);
   }
 
-  bool get _canSend => !_sending && !_closed && _chatId != null && (_text.text.trim().isNotEmpty || _image != null);
+  bool get _canSend => !_sending && (_text.text.trim().isNotEmpty || _image != null);
 
   Future<void> _send() async {
     final id = _chatId;
-    if (!_canSend || id == null) {
+    if (!_canSend) {
       return;
     }
     final body = _text.text.trim();
@@ -223,7 +249,8 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
     if (_scroll.hasClients) {
       unawaited(_scroll.animateTo(0, duration: const Duration(milliseconds: 250), curve: Curves.easeOut));
     }
-    final result = await UcdayyApi.sendSupportMessage(id, body: body, image: image);
+    // Without an open chat the first message opens a new one.
+    final result = id == null ? await UcdayyApi.sendSupportMessageNew(body: body, image: image) : await UcdayyApi.sendSupportMessage(id, body: body, image: image);
     if (!mounted) {
       return;
     }
@@ -239,10 +266,21 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
           _messages.add(saved);
         }
         _lastId = _maxId();
+        if (id == null && (saved.chatId ?? 0) > 0) {
+          _chatId = saved.chatId;
+        }
       } else if (index >= 0) {
         _messages[index] = temp.copyWith(pending: false, failed: true);
       }
     });
+    if (result.ok && id == null) {
+      // The new chat is open: poll it (and learn its id when the answer did not carry it).
+      if (_chatId == null) {
+        await _start();
+      } else {
+        _startPolling();
+      }
+    }
     if (!result.ok && result.error != null) {
       showSnackBar('error', result.error!, Colors.red);
     }
@@ -265,9 +303,27 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
       body: SafeArea(
         child: Column(
           children: [
+            if (_closesAt != null && _chatId != null) _closesChip(),
             Expanded(child: _body()),
-            if (!_loading && !_failed && _chatId != null) _closed ? _closedBar() : _composer(),
+            if (!_loading && !_failed) _composer(),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// "This chat closes at ...": a chat lasts 72 hours from its start.
+  Widget _closesChip() {
+    final at = _closesAt!;
+    String two(int n) => n.toString().padLeft(2, '0');
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(20)),
+        child: Text(
+          '${'supportClosesAt'.tr}: ${two(at.day)}.${two(at.month)} ${two(at.hour)}:${two(at.minute)}',
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontFamily: gilroyMedium, fontSize: 12),
         ),
       ),
     );
@@ -327,28 +383,6 @@ class _SupportChatPageState extends State<SupportChatPage> with WidgetsBindingOb
           text,
           style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroyMedium, fontSize: 12),
         ),
-      ),
-    );
-  }
-
-  Widget _closedBar() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF151517),
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.07))),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          HugeIcon(icon: HugeIcons.strokeRoundedLockPassword, size: 18, color: Colors.white.withValues(alpha: 0.6)),
-          const SizedBox(width: 8),
-          Text(
-            'supportClosed'.tr,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroySemiBold, fontSize: 15),
-          ),
-        ],
       ),
     );
   }

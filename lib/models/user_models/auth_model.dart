@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, require_trailing_commas, avoid_void_async, avoid_bool_literals_in_conditional_expressions
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:game_app/controllers/notification_badge_controller.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class Auth {
@@ -25,6 +27,10 @@ class Auth {
 
   Future<bool> logout() async {
     await _leaveSupportTopic();
+    // The unread number belongs to the account that just left.
+    if (Get.isRegistered<NotificationBadgeController>()) {
+      Get.find<NotificationBadgeController>().clear();
+    }
     await storage.remove('AccessToken');
     await storage.remove('RefreshToken');
     return storage.read('AccessToken') == null ? true : false;

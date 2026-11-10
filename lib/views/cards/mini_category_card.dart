@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_app/views/user_profil/pages/history_orders_page.dart';
+import 'package:game_app/views/orders/orders_history_page.dart';
 import 'package:get/get.dart';
 
 import '../../models/user_models/auth_model.dart';
@@ -24,7 +24,7 @@ class MiniCategoryCard extends StatelessWidget {
           final token = await Auth().getToken();
           if (token != null) {
             // defaultBottomSheet(name: 'selectCityTitle', child: getCitiess());
-            await Get.to(() => const HistoryOrdersPage());
+            await Get.to(() => const OrdersHistoryPage());
           } else {
             showSnackBar('loginError', 'add_account_login_error', Colors.red);
           }
@@ -38,7 +38,7 @@ class MiniCategoryCard extends StatelessWidget {
         //   );
         // }
         else if (index == 2) {
-          await Get.to(() => NotificationPage());
+          await Get.to(() => NotificationPage(onlyUnread: true));
         }
       },
       child: Container(
@@ -93,7 +93,7 @@ class NewMiniCategoryCard extends StatelessWidget {
           final token = await Auth().getToken();
           if (token != null) {
             // defaultBottomSheet(name: 'selectCityTitle', child: getCitiess());
-            await Get.to(() => const HistoryOrdersPage());
+            await Get.to(() => const OrdersHistoryPage());
           } else {
             showSnackBar('loginError', 'add_account_login_error', Colors.red);
           }
@@ -107,7 +107,7 @@ class NewMiniCategoryCard extends StatelessWidget {
         //   );
         // }
         else if (index == 1) {
-          await Get.to(() => NotificationPage());
+          await Get.to(() => NotificationPage(onlyUnread: true));
         }
       },
       child: Container(

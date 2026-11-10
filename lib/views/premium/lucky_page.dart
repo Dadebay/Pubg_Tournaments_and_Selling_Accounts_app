@@ -767,13 +767,16 @@ class _WheelPainter extends CustomPainter {
       canvas.restore();
     }
     final display = text.replaceFirst(RegExp(r'\s+TMT$', caseSensitive: false), '\nTMT');
-    final painter = TextPainter(
+    // A long amount (millions) is made smaller until it fits on one line of the slice.
+    final limit = inner * 0.48;
+    var fontSize = math.max(12.0, inner * 0.115);
+    TextPainter build(double size, double width) => TextPainter(
       text: TextSpan(
         text: display,
         style: TextStyle(
           color: Colors.white,
           fontFamily: gilroyBold,
-          fontSize: math.max(12, inner * 0.115),
+          fontSize: size,
           height: 0.98,
           shadows: const [Shadow(color: Colors.black, blurRadius: 4, offset: Offset(1, 2))],
         ),
@@ -781,8 +784,12 @@ class _WheelPainter extends CustomPainter {
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
       maxLines: 2,
-      ellipsis: '…',
-    )..layout(maxWidth: inner * 0.48);
+    )..layout(maxWidth: width);
+    final natural = build(fontSize, double.infinity);
+    if (natural.width > limit) {
+      fontSize = math.max(7.0, fontSize * limit / natural.width);
+    }
+    final painter = build(fontSize, limit + 4);
     final center = direction * (inner * 0.43);
     canvas.save();
     canvas.translate(center.dx, center.dy);

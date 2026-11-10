@@ -11,7 +11,13 @@ class OrderPush {
 
   static bool _pendingOpen = false;
 
-  static bool isOrder(RemoteMessage message) => '${message.data['type'] ?? ''}'.toLowerCase() == 'game_order' || (message.from ?? '').startsWith('/topics/user_');
+  /// An order status push. The `user_<id>` topic also carries support replies, so the topic alone says nothing.
+  static bool isOrder(RemoteMessage message) {
+    if (SupportPush.isSupport(message)) {
+      return false;
+    }
+    return '${message.data['type'] ?? ''}'.toLowerCase().contains('order');
+  }
 
   /// The payload a local notification carries so a tap can tell what to open.
   static Map<String, String>? payload(RemoteMessage message) {

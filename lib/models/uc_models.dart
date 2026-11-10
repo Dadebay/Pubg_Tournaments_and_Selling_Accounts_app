@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:game_app/views/wallet/open_online_payment_url.dart';
+import 'package:game_app/views/wallet/payment_banks.dart';
 import 'package:http/http.dart' as http;
 
 class UcModel {
@@ -57,18 +57,20 @@ class UcModel {
   }
 
   Future addCartPlasticCARD(List list, bool buything, bool buykonkurs) async {
-    final String? token = await Auth().getToken();
-    final response = await http.post(
-      Uri.parse('$serverURL/api/category/payment/'),
-      headers: <String, String>{
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-      body: jsonEncode(list),
-    );
-    await Get.to(
+    final bankId = await PaymentFlow.pickBank();
+    if (bankId == null) {
+      return null;
+    }
+    final result = await UcdayyApi.registerBasketCard([for (final line in list) Map<String, Object?>.from(line as Map)], bankId: bankId);
+    final registration = result.ok ? CardRegistration.tryParse(result.data) : null;
+    if (registration == null) {
+      showSnackBar('noConnection3', PaymentFlow.errorKey(result), Colors.red);
+      return null;
+    }
+    // The page answers with the status code of the status call (200 paid, 409 stock ran out).
+    return Get.to(
       () => OpenOnlinePaymentWebsite(
-        url: jsonDecode(response.body)['formUrl'],
+        registration: registration,
         list: list,
         thingBuy: buything,
         konkursBuy: buykonkurs,

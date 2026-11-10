@@ -52,7 +52,11 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
           Navigator.pop(context);
         },
       ),
-      actions: [userAppBarMoney()],
+      actions: [
+        Center(
+          child: Padding(padding: const EdgeInsets.only(right: 12), child: userAppBarMoney()),
+        ),
+      ],
       automaticallyImplyLeading: false,
       backgroundColor: kPrimaryColorBlack,
       title: const Text(

@@ -99,7 +99,7 @@ class _HomeBannerState extends State<HomeBanner> {
         margin: const EdgeInsets.symmetric(horizontal: 6),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(26),
+          borderRadius: BorderRadius.circular(22),
           color: const Color(0xFF1B1B1E),
           border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 18, offset: const Offset(0, 8))],
