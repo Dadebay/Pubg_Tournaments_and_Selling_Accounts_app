@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
@@ -12,11 +12,7 @@ class TeamMemberCard extends StatelessWidget {
   final TeamMember member;
   final int index;
 
-  const TeamMemberCard({
-    required this.member,
-    required this.index,
-    super.key,
-  });
+  const TeamMemberCard({required this.member, required this.index, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +38,15 @@ class TeamMemberCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: 0.15), border: Border.all(color: color.withValues(alpha: 0.5))),
-                child: Text('${index + 1}', style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 16)),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.15),
+                  border: Border.all(color: color.withValues(alpha: 0.5)),
+                ),
+                child: Text(
+                  '${index + 1}',
+                  style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 16),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -54,21 +57,14 @@ class TeamMemberCard extends StatelessWidget {
                   style: const TextStyle(fontFamily: gilroyBold, fontSize: 17, color: Colors.white),
                 ),
               ),
-              if (free)
-                _pill('Bos'.tr, const Color(0xFF34D399))
-              else if (group.isNotEmpty)
-                _pill(group, _gold),
+              if (free) _pill('Bos'.tr, const Color(0xFF34D399)) else if (group.isNotEmpty) _pill(group, _gold),
               const SizedBox(width: 8),
               HugeIcon(icon: free ? HugeIcons.strokeRoundedAdd01 : HugeIcons.strokeRoundedArrowRight01, color: free ? const Color(0xFF34D399) : Colors.white38, size: 20, strokeWidth: 2),
             ],
           ),
           if (players.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [for (final name in players) _player(name)],
-            ),
+            Wrap(spacing: 8, runSpacing: 8, children: [for (final name in players) _player(name)]),
           ],
         ],
       ),
@@ -78,8 +74,15 @@ class TeamMemberCard extends StatelessWidget {
   Widget _pill(String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12), border: Border.all(color: color.withValues(alpha: 0.4))),
-      child: Text(text, style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 12, height: 1.1)),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 12, height: 1.1),
+      ),
     );
   }
 
@@ -92,7 +95,10 @@ class TeamMemberCard extends StatelessWidget {
         children: [
           const HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Color(0xFFB8B8C0), size: 13, strokeWidth: 1.8),
           const SizedBox(width: 6),
-          Text(name, style: const TextStyle(color: Color(0xFFE0E0E6), fontFamily: gilroySemiBold, fontSize: 13, height: 1.1)),
+          Text(
+            name,
+            style: const TextStyle(color: Color(0xFFE0E0E6), fontFamily: gilroySemiBold, fontSize: 13, height: 1.1),
+          ),
         ],
       ),
     );

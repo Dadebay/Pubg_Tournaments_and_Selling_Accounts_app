@@ -369,7 +369,7 @@ class _WalletPageState extends State<WalletPage> {
           shrinkWrap: true,
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: premium ? 0.7 : 0.78),
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: premium ? 0.7 : 0.78),
           itemBuilder: (context, index) => premium ? PremiumPackageCard(key: ValueKey(items[index].id), model: items[index]) : UcPackageCard(key: ValueKey(items[index].id), model: items[index]),
         );
       },

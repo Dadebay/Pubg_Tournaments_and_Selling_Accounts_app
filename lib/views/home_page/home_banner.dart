@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/utils/banner_action.dart';
 import 'package:game_app/views/constants/shimmer.dart';
@@ -40,21 +40,21 @@ class _HomeBannerState extends State<HomeBanner> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final height = width >= 800 ? 280.0 : (width * 0.46).clamp(150.0, 220.0);
+    final height = width >= 600 ? 250.0 : (width * 0.46).clamp(150.0, 220.0);
     return FutureBuilder<List<BannerModel>>(
       future: widget.future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Padding(
+          return Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Shimmer(child: ShimmerBlock(height: height, radius: 26)),
-          );
+          )));
         }
         final banners = snapshot.data ?? const <BannerModel>[];
         if (snapshot.hasError || banners.isEmpty) {
           return const SizedBox.shrink();
         }
-        return Padding(
+        return Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: Padding(
           padding: const EdgeInsets.only(top: 12),
           child: Column(
             children: [
@@ -75,7 +75,7 @@ class _HomeBannerState extends State<HomeBanner> {
               if (banners.length > 1) _dots(banners.length),
             ],
           ),
-        );
+        )));
       },
     );
   }

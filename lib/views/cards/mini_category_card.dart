@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/views/orders/orders_history_page.dart';
 import 'package:get/get.dart';
 
@@ -42,7 +42,6 @@ class MiniCategoryCard extends StatelessWidget {
         }
       },
       child: Container(
-        width: Get.size.width,
         margin: const EdgeInsets.only(left: 16),
         decoration: BoxDecoration(borderRadius: borderRadius20, color: Colors.grey.withValues(alpha: 0.1)),
         child: Stack(
@@ -111,7 +110,6 @@ class NewMiniCategoryCard extends StatelessWidget {
         }
       },
       child: Container(
-        width: Get.size.width,
         margin: const EdgeInsets.only(left: 16),
         decoration: BoxDecoration(borderRadius: borderRadius20, color: Colors.grey.withValues(alpha: 0.1)),
         child: Stack(

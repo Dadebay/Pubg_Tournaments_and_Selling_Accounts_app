@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/views/other_users/other_user_product_profil.dart';
 import 'package:get/get.dart';
 
@@ -36,10 +36,16 @@ class BestPlayersCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: isTopThree ? [rankColor.withValues(alpha: 0.15), rankColor.withValues(alpha: 0.05), Colors.transparent] : [const Color(0xFF1a1f3a), const Color(0xFF0f1229)]),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isTopThree ? [rankColor.withValues(alpha: 0.15), rankColor.withValues(alpha: 0.05), Colors.transparent] : [const Color(0xFF1a1f3a), const Color(0xFF0f1229)],
+        ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: isTopThree ? rankColor.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1), width: isTopThree ? 2 : 1),
-        boxShadow: isTopThree ? [BoxShadow(color: rankColor.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))] : [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: isTopThree
+            ? [BoxShadow(color: rankColor.withValues(alpha: 0.3), blurRadius: 15, offset: const Offset(0, 5))]
+            : [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Material(
         color: Colors.transparent,

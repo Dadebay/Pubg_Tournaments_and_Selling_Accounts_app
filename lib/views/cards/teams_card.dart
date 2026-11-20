@@ -21,21 +21,16 @@ class _TeamsCardState extends State<TeamsCard> {
       usersCount = widget.turnirType == 'SOLO'
           ? 1
           : widget.turnirType == 'DUO'
-              ? 2
-              : widget.turnirType == 'SQUAD'
-                  ? 4
-                  : 0;
+          ? 2
+          : widget.turnirType == 'SQUAD'
+          ? 4
+          : 0;
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (TeamUsers i in widget.team.teamUsers!) Text(i.id.toString()),
-        for (var i in myList.sublist(0, usersCount - widget.team.teamUsers!.length)) Text(i.toString()),
-      ],
-    );
+    return Column(children: [for (TeamUsers i in widget.team.teamUsers!) Text(i.id.toString()), for (var i in myList.sublist(0, usersCount - widget.team.teamUsers!.length)) Text(i.toString())]);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/views/catalog/catalog_list_page.dart';
@@ -18,7 +18,7 @@ class HomeBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 720), child: Container(
       margin: const EdgeInsets.fromLTRB(16, 14, 16, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -113,7 +113,7 @@ class HomeBalanceCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    )));
   }
 
   Widget _ring(double size, double alpha) {
@@ -166,12 +166,12 @@ class HomeSections extends StatelessWidget {
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
-      child: Row(
+      child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 720), child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var i = 0; i < tiles.length; i++) ...[if (i > 0) const SizedBox(width: 9), Expanded(child: tiles[i])],
         ],
-      ),
+      ))),
     );
   }
 }

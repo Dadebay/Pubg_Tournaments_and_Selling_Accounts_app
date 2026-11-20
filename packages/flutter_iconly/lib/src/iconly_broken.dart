@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-import 'package:flutter/material.dart';
-
+import 'package:material_ui/material_ui.dart';
 
 /// [IconlyBroken] for style Broken Icons
 ///

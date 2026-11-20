@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/best_players_model.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/constants.dart';
+import 'package:game_app/views/constants/player_photo.dart';
 import 'package:game_app/views/constants/shimmer.dart';
 import 'package:game_app/views/other_users/other_user_product_profil.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,9 @@ Color _rankColor(int index) => switch (index) {
 String _pointsText(String? points) {
   final value = double.tryParse(points ?? '');
   if (value == null) return points ?? '0';
-  return value == value.roundToDouble() ? '${value.toInt()}' : value.toStringAsFixed(1);
+  return value == value.roundToDouble()
+      ? '${value.toInt()}'
+      : value.toStringAsFixed(1);
 }
 
 String _nameOf(BestPlayersModel player) {
@@ -43,7 +46,12 @@ String _imageOf(BestPlayersModel player) {
 
 void _openProfile(BestPlayersModel player, int index) {
   Get.to(
-    () => OtherUserProductProfil(points: player.points, name: _nameOf(player), image: _imageOf(player), index: index),
+    () => OtherUserProductProfil(
+      points: player.points,
+      name: _nameOf(player),
+      image: _imageOf(player),
+      index: index,
+    ),
     transition: Transition.fadeIn,
     duration: const Duration(milliseconds: 300),
   );
@@ -58,7 +66,8 @@ class BestPlayers extends StatefulWidget {
 }
 
 class _BestPlayersState extends State<BestPlayers> {
-  late Future<List<BestPlayersModel>> _future = BestPlayersModel().getBestPlayers();
+  late Future<List<BestPlayersModel>> _future = BestPlayersModel()
+      .getBestPlayers();
 
   Future<void> _refresh() async {
     final next = BestPlayersModel().getBestPlayers();
@@ -85,23 +94,34 @@ class _BestPlayersState extends State<BestPlayers> {
                     return _skeleton();
                   }
                   if (snapshot.hasError) {
-                    return _message(Icons.cloud_off_rounded, 'errorLoadData'.tr);
+                    return _message(
+                      Icons.cloud_off_rounded,
+                      'errorLoadData'.tr,
+                    );
                   }
                   final players = snapshot.data ?? const <BestPlayersModel>[];
                   if (players.isEmpty) {
-                    return _message(Icons.emoji_events_outlined, 'errorLoadEmptyData'.tr);
+                    return _message(
+                      Icons.emoji_events_outlined,
+                      'errorLoadEmptyData'.tr,
+                    );
                   }
                   return RefreshIndicator(
                     color: _gold,
                     backgroundColor: const Color(0xFF1C1C20),
                     onRefresh: _refresh,
                     child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
+                      ),
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
                       children: [
                         _Podium(players: players.take(3).toList()),
                         const SizedBox(height: 22),
-                        for (var i = 3; i < players.length; i++) ...[_PlayerRow(player: players[i], index: i), const SizedBox(height: 10)],
+                        for (var i = 3; i < players.length; i++) ...[
+                          _PlayerRow(player: players[i], index: i),
+                          const SizedBox(height: 10),
+                        ],
                       ],
                     ),
                   );
@@ -121,11 +141,17 @@ class _BestPlayersState extends State<BestPlayers> {
       onRefresh: _refresh,
       child: LayoutBuilder(
         builder: (context, box) => SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
           child: SizedBox(
             height: box.maxHeight,
             child: Center(
-              child: CatalogEmptyState(icon: icon, title: text, description: ''),
+              child: CatalogEmptyState(
+                icon: icon,
+                title: text,
+                description: '',
+              ),
             ),
           ),
         ),
@@ -141,7 +167,10 @@ class _BestPlayersState extends State<BestPlayers> {
         children: [
           const ShimmerBlock(height: 250, radius: 26),
           const SizedBox(height: 22),
-          for (var i = 0; i < 6; i++) ...const [ShimmerBlock(height: 68, radius: 20), SizedBox(height: 10)],
+          for (var i = 0; i < 6; i++) ...const [
+            ShimmerBlock(height: 68, radius: 20),
+            SizedBox(height: 10),
+          ],
         ],
       ),
     );
@@ -163,24 +192,26 @@ class _Avatar extends StatelessWidget {
       padding: const EdgeInsets.all(2.5),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [color, color.withValues(alpha: 0.35)]),
-        boxShadow: [BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 16)],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color, color.withValues(alpha: 0.35)],
+        ),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.35), blurRadius: 16),
+        ],
       ),
       child: ClipOval(
         child: url.isEmpty
-            ? const ColoredBox(
-                color: Color(0xFF232327),
-                child: Center(child: Icon(Icons.person_rounded, color: Colors.white38)),
-              )
+            ? const PlayerPhotoPlaceholder()
             : CachedNetworkImage(
                 imageUrl: url,
                 fit: BoxFit.cover,
                 fadeInDuration: const Duration(milliseconds: 200),
-                placeholder: (context, url) => const ColoredBox(color: Color(0xFF232327)),
-                errorWidget: (context, url, error) => const ColoredBox(
-                  color: Color(0xFF232327),
-                  child: Center(child: Icon(Icons.person_rounded, color: Colors.white38)),
-                ),
+                placeholder: (context, url) =>
+                    const ColoredBox(color: Color(0xFF232327)),
+                errorWidget: (context, url, error) =>
+                    const PlayerPhotoPlaceholder(),
               ),
       ),
     );
@@ -201,14 +232,24 @@ class _Podium extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: _gold.withValues(alpha: 0.28)),
-        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2A2416), Color(0xFF141416)]),
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF2A2416), Color(0xFF141416)],
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _PodiumSlot(player: at(1), index: 1, avatar: 66, lift: 22)),
-          Expanded(child: _PodiumSlot(player: at(0), index: 0, avatar: 88, lift: 0)),
-          Expanded(child: _PodiumSlot(player: at(2), index: 2, avatar: 66, lift: 38)),
+          Expanded(
+            child: _PodiumSlot(player: at(1), index: 1, avatar: 66, lift: 22),
+          ),
+          Expanded(
+            child: _PodiumSlot(player: at(0), index: 0, avatar: 88, lift: 0),
+          ),
+          Expanded(
+            child: _PodiumSlot(player: at(2), index: 2, avatar: 66, lift: 38),
+          ),
         ],
       ),
     );
@@ -216,7 +257,12 @@ class _Podium extends StatelessWidget {
 }
 
 class _PodiumSlot extends StatelessWidget {
-  const _PodiumSlot({required this.player, required this.index, required this.avatar, required this.lift});
+  const _PodiumSlot({
+    required this.player,
+    required this.index,
+    required this.avatar,
+    required this.lift,
+  });
 
   final BestPlayersModel? player;
   final int index;
@@ -239,7 +285,12 @@ class _PodiumSlot extends StatelessWidget {
             if (index == 0)
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
-                child: HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 26, strokeWidth: 1.8),
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedCrown,
+                  color: _gold,
+                  size: 26,
+                  strokeWidth: 1.8,
+                ),
               ),
             Stack(
               clipBehavior: Clip.none,
@@ -255,11 +306,19 @@ class _PodiumSlot extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: color,
-                      border: Border.all(color: const Color(0xFF141416), width: 2),
+                      border: Border.all(
+                        color: const Color(0xFF141416),
+                        width: 2,
+                      ),
                     ),
                     child: Text(
                       '${index + 1}',
-                      style: const TextStyle(color: Colors.black, fontFamily: gilroyBold, fontSize: 13, height: 1),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: gilroyBold,
+                        fontSize: 13,
+                        height: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -271,7 +330,11 @@ class _PodiumSlot extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: index == 0 ? 17 : 15),
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: gilroyBold,
+                fontSize: index == 0 ? 17 : 15,
+              ),
             ),
             const SizedBox(height: 6),
             Container(
@@ -283,7 +346,12 @@ class _PodiumSlot extends StatelessWidget {
               ),
               child: Text(
                 _pointsText(player.points),
-                style: TextStyle(color: color, fontFamily: gilroyBold, fontSize: 15, height: 1.1),
+                style: TextStyle(
+                  color: color,
+                  fontFamily: gilroyBold,
+                  fontSize: 15,
+                  height: 1.1,
+                ),
               ),
             ),
           ],
@@ -308,7 +376,11 @@ class _PlayerRow extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-          gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF161618)]),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF232327), Color(0xFF161618)],
+          ),
         ),
         child: Row(
           children: [
@@ -316,7 +388,11 @@ class _PlayerRow extends StatelessWidget {
               width: 30,
               child: Text(
                 '${index + 1}',
-                style: const TextStyle(color: Colors.white54, fontFamily: gilroyBold, fontSize: 17),
+                style: const TextStyle(
+                  color: Colors.white54,
+                  fontFamily: gilroyBold,
+                  fontSize: 17,
+                ),
               ),
             ),
             _Avatar(url: _imageOf(player), size: 46, color: Colors.white24),
@@ -326,16 +402,28 @@ class _PlayerRow extends StatelessWidget {
                 _nameOf(player),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 16),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: gilroySemiBold,
+                  fontSize: 16,
+                ),
               ),
             ),
             const SizedBox(width: 10),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              decoration: BoxDecoration(color: _gold.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(14)),
+              decoration: BoxDecoration(
+                color: _gold.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(14),
+              ),
               child: Text(
                 _pointsText(player.points),
-                style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 16, height: 1.1),
+                style: const TextStyle(
+                  color: _gold,
+                  fontFamily: gilroyBold,
+                  fontSize: 16,
+                  height: 1.1,
+                ),
               ),
             ),
           ],

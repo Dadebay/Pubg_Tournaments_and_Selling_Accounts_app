@@ -1,60 +1,65 @@
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/player_photo.dart';
 
 import '../../models/tournament_model.dart';
 
-// ignore: must_be_immutable
-class TeamUserCard extends StatefulWidget {
-  // late Teams team;
-  late TeamUsers teamUsers;
-  late String turnirType;
-  TeamUserCard({required this.teamUsers, super.key});
+/// A player of a team: photo, name and Pubg id on a flat row.
+class TeamUserCard extends StatelessWidget {
+  const TeamUserCard({required this.teamUsers, super.key});
 
-  @override
-  State<TeamUserCard> createState() => _TeamUserCardState();
-}
+  final TeamUsers teamUsers;
 
-class _TeamUserCardState extends State<TeamUserCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: kPrimaryColorBlack,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15)), side: BorderSide(width: 1, color: Colors.black26)),
+    final user = teamUsers.user;
+    final pubgId = '${user?.pubgId ?? ''}';
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10), // Image border
-              child: SizedBox(
-                width: 60,
-                height: 60,
-                child: widget.teamUsers.user!.image == null ? Image.asset('assets/image/no_image.png', fit: BoxFit.cover) : Image.network('$serverURL/${widget.teamUsers.user!.image}', fit: BoxFit.cover),
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 46,
+              height: 46,
+              child: PlayerPhoto(image: user?.image),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Text('Pubg user name: '),
-                  Text(widget.teamUsers.user!.nickname.toString()),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  const Text('Pubg id:'),
-                  const SizedBox(
-                    width: 5,
+          const SizedBox(width: 12),
+          // Expanded, so a long name is cut with dots instead of running off the card.
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${user?.nickname ?? ''}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: gilroySemiBold,
+                    fontSize: 15,
                   ),
-                  Text(widget.teamUsers.user!.pubgId.toString()),
+                ),
+                if (pubgId.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    'ID  $pubgId',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white38,
+                      fontFamily: gilroyMedium,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

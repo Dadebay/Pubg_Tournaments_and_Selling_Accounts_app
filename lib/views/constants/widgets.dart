@@ -7,6 +7,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../constants/index.dart';
 import 'balance_chip.dart';
+import 'catalog_empty_state.dart';
 
 SnackbarController showSnackBar(String title, String subtitle, Color color) {
   return Get.snackbar(
@@ -80,19 +81,14 @@ Column errorData({required Function() onTap}) {
   );
 }
 
-Column emptyData() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Lottie.asset(noDataLottie, width: 350, height: 350),
-      const SizedBox(height: 15),
-      Text(
-        'errorLoadEmptyData'.tr,
-        style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 18),
-      ),
-    ],
+/// "Nothing here yet": the shared dark-theme empty state (no lottie, it looks wrong on black).
+Widget emptyData() {
+  return Center(
+    child: CatalogEmptyState(
+      icon: Icons.inbox_outlined,
+      title: 'errorLoadEmptyData'.tr,
+      description: '',
+    ),
   );
 }
 
@@ -125,7 +121,7 @@ ListView waitingData() {
 Container noBannerImage() {
   return Container(
     margin: const EdgeInsets.all(15),
-    width: Get.size.width,
+    width: double.infinity,
     height: 220,
     decoration: const BoxDecoration(borderRadius: borderRadius15, color: kPrimaryColorBlack1),
     child: Center(
@@ -137,28 +133,29 @@ Container noBannerImage() {
   );
 }
 
-Padding listViewName(String text, bool icon, Size size) {
+/// [vipOnly]: the arrow opens the list of VIP accounts only.
+Padding listViewName(String text, bool icon, Size size, {bool vipOnly = false}) {
   return Padding(
-    padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+    padding: const EdgeInsets.only(left: 15, right: 15, top: 16),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: size.width >= 800 ? 30 : 24, fontFamily: gilroyBold),
+          style: TextStyle(color: Colors.white, fontSize: size.width >= 800 ? 24 : 19, fontFamily: gilroyBold),
         ),
         icon
             ? GestureDetector(
-                onTap: () => Get.to(() => const ShowAllAccounts(name: 'accountsForSale')),
+                onTap: () => Get.to(() => ShowAllAccounts(name: 'accountsForSale', vipOnly: vipOnly)),
                 child: Container(
-                  width: size.width >= 800 ? 40 : 30,
-                  height: size.width >= 800 ? 40 : 30,
+                  width: size.width >= 800 ? 34 : 26,
+                  height: size.width >= 800 ? 34 : 26,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white.withValues(alpha: 0.85), width: 1.4),
                   ),
-                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white, size: size.width >= 800 ? 22 : 16, strokeWidth: 2),
+                  child: HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white, size: size.width >= 800 ? 19 : 14, strokeWidth: 2),
                 ),
               )
             : const SizedBox.shrink(),

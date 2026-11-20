@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
 import 'package:game_app/views/constants/constants.dart';
@@ -76,14 +76,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     if (_formKey.currentState!.validate()) {
       final provider = Provider.of<TeamMembersProvider>(context, listen: false);
 
-      final success = await provider.registerTeam(
-        tournamentId: widget.teamMember?.id ?? 0,
-        account: _accountController.text.trim(),
-        extra_name: _userController.text.trim(),
-        user1: _user1Controller.text.trim(),
-        user2: _user2Controller.text.trim(),
-        user3: _user3Controller.text.trim(),
-      );
+      final success = await provider.registerTeam(tournamentId: widget.teamMember?.id ?? 0, account: _accountController.text.trim(), extra_name: _userController.text.trim(), user1: _user1Controller.text.trim(), user2: _user2Controller.text.trim(), user3: _user3Controller.text.trim());
 
       if (!mounted) return;
 
@@ -140,12 +133,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     _headerCard(),
                     const SizedBox(height: 20),
                     _section('Account Name'.tr, HugeIcons.strokeRoundedUserCircle),
-                    _buildTextField(
-                      controller: _accountController,
-                      hint: 'Your account name'.tr,
-                      icon: HugeIcons.strokeRoundedUserCircle,
-                      validator: (value) => _required(value, 'Please enter account name'),
-                    ),
+                    _buildTextField(controller: _accountController, hint: 'Your account name'.tr, icon: HugeIcons.strokeRoundedUserCircle, validator: (value) => _required(value, 'Please enter account name')),
                     const SizedBox(height: 22),
                     Row(
                       children: [
@@ -191,30 +179,15 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     ),
                     _playerBox(
                       number: 2,
-                      child: _buildTextField(
-                        controller: _user1Controller,
-                        hint: 'Second player username'.tr,
-                        icon: HugeIcons.strokeRoundedUser,
-                        validator: (value) => _required(value, 'Please enter player 1 username'),
-                      ),
+                      child: _buildTextField(controller: _user1Controller, hint: 'Second player username'.tr, icon: HugeIcons.strokeRoundedUser, validator: (value) => _required(value, 'Please enter player 1 username')),
                     ),
                     _playerBox(
                       number: 3,
-                      child: _buildTextField(
-                        controller: _user2Controller,
-                        hint: 'Third player username'.tr,
-                        icon: HugeIcons.strokeRoundedUser,
-                        validator: (value) => _required(value, 'Please enter player 2 username'),
-                      ),
+                      child: _buildTextField(controller: _user2Controller, hint: 'Third player username'.tr, icon: HugeIcons.strokeRoundedUser, validator: (value) => _required(value, 'Please enter player 2 username')),
                     ),
                     _playerBox(
                       number: 4,
-                      child: _buildTextField(
-                        controller: _user3Controller,
-                        hint: 'Foths player username'.tr,
-                        icon: HugeIcons.strokeRoundedUser,
-                        validator: (value) => _required(value, 'Please enter player 3 username'),
-                      ),
+                      child: _buildTextField(controller: _user3Controller, hint: 'Foths player username'.tr, icon: HugeIcons.strokeRoundedUser, validator: (value) => _required(value, 'Please enter player 3 username')),
                     ),
                     const SizedBox(height: 6),
                     Container(
@@ -334,7 +307,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      _isVisible ? '${widget.teamMember?.quartturnir?.code ?? 'Unknown Code'}' : '••••••',
+                      _isVisible ? '${widget.teamMember?.quartturnir?.code ?? 'codeNotSet'.tr}' : '••••••',
                       style: TextStyle(color: _isVisible ? const Color(0xFFFF5A5F) : Colors.white54, fontFamily: gilroyBold, fontSize: 16, letterSpacing: _isVisible ? 0.5 : 3),
                     ),
                   ),

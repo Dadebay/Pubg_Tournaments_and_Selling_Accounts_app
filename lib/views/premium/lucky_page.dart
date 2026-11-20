@@ -238,16 +238,38 @@ class _LuckyPageState extends State<LuckyPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            CenteredHeader(title: 'cashbackTitle'.tr, onBack: Get.back, trailing: const BalanceChip()),
-            Expanded(child: _body()),
-          ],
-        ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/image/lucky_hero.webp',
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+            cacheWidth: (width * MediaQuery.devicePixelRatioOf(context)).round(),
+          ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0x22000000), Color(0x00000000), Color(0x990D0E12), Color(0xFF0D0E12)],
+                stops: [0, 0.16, 0.5, 0.84],
+              ),
+            ),
+          ),
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                CenteredHeader(title: 'cashbackTitle'.tr, onBack: Get.back, trailing: const BalanceChip()),
+                Expanded(child: _body()),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -286,12 +308,6 @@ class _LuckyPageState extends State<LuckyPage> with TickerProviderStateMixin {
         return Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset('assets/image/lucky_hero.webp', fit: BoxFit.cover, alignment: Alignment.topCenter, cacheWidth: (width * MediaQuery.devicePixelRatioOf(context)).round()),
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x00000000), Color(0x990D0E12), Color(0xFF0D0E12)], stops: [0, 0.45, 0.8]),
-              ),
-            ),
             Positioned(
               left: 0,
               right: 0,

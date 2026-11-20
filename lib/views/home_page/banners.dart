@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/views/cards/banner_card.dart';
@@ -22,7 +22,7 @@ class Banners extends StatelessWidget {
           return Container(
             margin: const EdgeInsets.all(8),
             height: 220,
-            width: Get.size.width,
+            width: double.infinity,
             decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withValues(alpha: 0.4)),
             child: Center(child: spinKit()),
           );
@@ -60,7 +60,7 @@ class Banners extends StatelessWidget {
   SizedBox dots(AsyncSnapshot<List<BannerModel>> snapshot, Size size) {
     return SizedBox(
       height: size.width >= 800 ? 40 : 20,
-      width: Get.size.width,
+      width: double.infinity,
       child: Center(
         child: ListView.builder(
           shrinkWrap: true,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:game_app/models/team_member.dart';
 import 'package:game_app/models/user_models/user_sign_in_model.dart';
@@ -33,15 +33,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
     if (team == null) {
       return false;
     }
-    final filled =
-        (team.account?.isNotEmpty ?? false) &&
-        (team.user1?.isNotEmpty ?? false) &&
-        (team.user2?.isNotEmpty ?? false) &&
-        (team.user3?.isNotEmpty ?? false) &&
-        member.account.isNotEmpty &&
-        member.user1.isNotEmpty &&
-        member.user2.isNotEmpty &&
-        member.user3.isNotEmpty;
+    final filled = (team.account?.isNotEmpty ?? false) && (team.user1?.isNotEmpty ?? false) && (team.user2?.isNotEmpty ?? false) && (team.user3?.isNotEmpty ?? false) && member.account.isNotEmpty && member.user1.isNotEmpty && member.user2.isNotEmpty && member.user3.isNotEmpty;
     return filled && team.account == member.account && team.user1 == member.user1 && team.user2 == member.user2 && team.user3 == member.user3;
   }
 
@@ -189,7 +181,7 @@ class _TeamRegistrationScreenDetailState extends State<TeamRegistrationScreenDet
                 if (_isVisible)
                   Flexible(
                     child: Text(
-                      '${widget.teamMember.quartturnir?.code ?? 'Unknown Code'}',
+                      '${widget.teamMember.quartturnir?.code ?? 'codeNotSet'.tr}',
                       style: const TextStyle(color: Color(0xFFFF5A5F), fontFamily: gilroyBold, fontSize: 15),
                     ),
                   ),

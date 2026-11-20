@@ -211,19 +211,30 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(child: _avatar()),
-                const SizedBox(height: 28),
+                // The player's name under the picture (it is no longer a row of the card).
+                if (pubgNameController.text.trim().isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  Center(
+                    child: Text(
+                      pubgNameController.text.trim(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 24),
                 _card(
                   children: [
-                    _infoRow(HugeIcons.strokeRoundedUser, 'signIn1', pubgNameController.text),
-                    _infoRow(HugeIcons.strokeRoundedIdentityCard, 'signIn2', pubgIDController.text),
-                    _infoRow(HugeIcons.strokeRoundedCall, 'userPhoneNumber', phoneController.text),
+                    _infoRow(HugeIcons.strokeRoundedCall, 'userPhoneNumber', _withCode(phoneController.text)),
                   ],
                 ),
                 if (teams.isNotEmpty) ...[
                   const SizedBox(height: 24),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 6, bottom: 12),
-                    child: Text('Teams', style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6, bottom: 12),
+                    child: Text('profileTeams'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18)),
                   ),
                   for (var i = 0; i < teams.length; i++) _teamCard(teams[i], i),
                 ],
@@ -401,6 +412,16 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         ],
       ),
     );
+  }
+
+  /// The phone as the player sees it: +993 in front (not doubled when it is already there).
+  String _withCode(String phone) {
+    final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) {
+      return phone;
+    }
+    final local = digits.startsWith('993') && digits.length > 8 ? digits.substring(3) : digits;
+    return '+993 $local';
   }
 
   Widget _teamCard(dynamic team, int index) {

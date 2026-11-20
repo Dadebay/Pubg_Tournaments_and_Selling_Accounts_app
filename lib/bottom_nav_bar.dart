@@ -120,7 +120,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ),
             const SizedBox(height: 30),
             SizedBox(
-              width: Get.size.width,
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
                   await launch('tel://+99362222307');

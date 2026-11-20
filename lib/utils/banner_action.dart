@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/tournament_page/qartar_groups_screen.dart';

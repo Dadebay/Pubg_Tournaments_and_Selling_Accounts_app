@@ -20,7 +20,15 @@ class TournamentProfilPage extends StatefulWidget {
   final bool finised;
   final int tournamentType;
   final TournamentModel winners;
-  const TournamentProfilPage({required this.tag, required this.image, required this.tournamentId, required this.finised, required this.tournamentType, required this.winners, super.key});
+  const TournamentProfilPage({
+    required this.tag,
+    required this.image,
+    required this.tournamentId,
+    required this.finised,
+    required this.tournamentType,
+    required this.winners,
+    super.key,
+  });
 
   @override
   State<TournamentProfilPage> createState() => _TournamentProfilPageState();
@@ -37,15 +45,17 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
   }
 
   dynamic checkStatus() async {
-    await TournamentModel().checkStatus(tournamentID: widget.tournamentId, value: false).then((value) {
-      if (value == 200) {
-        buttonName = 'tournamentInfo12';
-      } else if (value == 204) {
-        buttonName = 'tournamentInfo12';
-      } else {
-        buttonName = 'tournamentInfo11';
-      }
-    });
+    await TournamentModel()
+        .checkStatus(tournamentID: widget.tournamentId, value: false)
+        .then((value) {
+          if (value == 200) {
+            buttonName = 'tournamentInfo12';
+          } else if (value == 204) {
+            buttonName = 'tournamentInfo12';
+          } else {
+            buttonName = 'tournamentInfo11';
+          }
+        });
     return 'tournamentInfo11';
   }
 
@@ -63,21 +73,39 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
             future: TournamentModel().getTournamentID(widget.tournamentId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: Color(0xFFFFC83D)));
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xFFFFC83D)),
+                );
               } else if (snapshot.hasError) {
                 return errorData(onTap: () {});
-              } else if (snapshot.data == null) {
+              } else if (snapshot.data == null || snapshot.data!.id == null) {
+                // The server answered "Turnir not found" (deleted or hidden): nothing to show.
                 return emptyData();
               }
               return TabBarView(
                 children: [
-                  TabPage1(finised: widget.finised, model: snapshot.data!, buttonName: buttonName, tournamentType: widget.tournamentType),
+                  TabPage1(
+                    finised: widget.finised,
+                    model: snapshot.data!,
+                    buttonName: buttonName,
+                    tournamentType: widget.tournamentType,
+                  ),
                   TabPage2(model: snapshot.data!),
-                  snapshot.data!.participated_users!.isEmpty
-                      ? Center(
-                          child: CatalogEmptyState(icon: Icons.groups_outlined, title: 'tournamentInfo13'.tr, description: ''),
+                  _hasParticipants(snapshot.data!)
+                      ? TabPage3(
+                          tournamentType: widget.tournamentType,
+                          finised: widget.finised,
+                          model: snapshot.data!,
+                          tournamentId: widget.tournamentId,
+                          teams: TeamUsers(),
                         )
-                      : TabPage3(tournamentType: widget.tournamentType, finised: widget.finised, model: snapshot.data!, tournamentId: widget.tournamentId, teams: TeamUsers()),
+                      : Center(
+                          child: CatalogEmptyState(
+                            icon: Icons.groups_outlined,
+                            title: 'tournamentInfo13'.tr,
+                            description: '',
+                          ),
+                        ),
                 ],
               );
             },
@@ -87,6 +115,17 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
     );
   }
 
+  /// There is something to show in the participants tab: players listed on the tournament,
+  /// teams that have players, or winners.
+  bool _hasParticipants(TournamentModel model) {
+    final listed = (model.participated_users ?? const []).isNotEmpty;
+    final inTeams = (model.teams ?? const []).any(
+      (team) => (team.teamUsers ?? const []).isNotEmpty,
+    );
+    final winners = (model.winners ?? const []).isNotEmpty;
+    return listed || inTeams || winners;
+  }
+
   SliverAppBar appBar() {
     return SliverAppBar(
       expandedHeight: 300,
@@ -94,7 +133,9 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
       automaticallyImplyLeading: false,
       backgroundColor: kPrimaryColorBlack,
       surfaceTintColor: Colors.transparent,
-      systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+      ),
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.parallax,
         background: Stack(
@@ -104,12 +145,24 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
               tag: widget.tag,
               child: TournamentImage(
                 imageUrl: widget.image,
-                fallbackAsset: tournamentFallbackAsset(finished: widget.finised, id: widget.tournamentId),
+                fallbackAsset: tournamentFallbackAsset(
+                  finished: widget.finised,
+                  id: widget.tournamentId,
+                ),
               ),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x99000000), Color(0x00000000), Color(0xFF000000)], stops: [0, 0.45, 1]),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x99000000),
+                    Color(0x00000000),
+                    Color(0xFF000000),
+                  ],
+                  stops: [0, 0.45, 1],
+                ),
               ),
             ),
           ],
@@ -130,7 +183,12 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
               ),
               child: const Center(
-                child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2),
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedArrowLeft01,
+                  color: Colors.white,
+                  size: 20,
+                  strokeWidth: 2,
+                ),
               ),
             ),
           ),
@@ -153,17 +211,26 @@ class _TournamentProfilPageState extends State<TournamentProfilPage> {
             overlayColor: const WidgetStatePropertyAll(Colors.transparent),
             indicatorSize: TabBarIndicatorSize.tab,
             labelStyle: const TextStyle(fontFamily: gilroyBold, fontSize: 14),
-            unselectedLabelStyle: const TextStyle(fontFamily: gilroySemiBold, fontSize: 14),
+            unselectedLabelStyle: const TextStyle(
+              fontFamily: gilroySemiBold,
+              fontSize: 14,
+            ),
             labelColor: Colors.black,
             unselectedLabelColor: Colors.white70,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(19),
-              gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
+              ),
             ),
             tabs: [
               Tab(text: 'tournamentInfo1'.tr),
               Tab(text: 'tournamentInfo2'.tr),
-              Tab(text: widget.finised ? 'tournamentInfo3'.tr : 'tournamentInfo4'.tr),
+              Tab(
+                text: widget.finised
+                    ? 'tournamentInfo3'.tr
+                    : 'tournamentInfo4'.tr,
+              ),
             ],
           ),
         ),

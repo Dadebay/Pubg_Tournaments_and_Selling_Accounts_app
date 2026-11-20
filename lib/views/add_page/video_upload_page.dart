@@ -99,7 +99,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
         appBar: const MyAppBar(fontSize: 20, backArrow: false, iconRemove: false, name: 'videoUpload', elevationWhite: true),
         body: Container(
           color: kPrimaryColorBlack,
-          width: Get.size.width,
+          width: double.infinity,
           padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
           child: ListView(
             scrollDirection: Axis.vertical,
@@ -137,7 +137,7 @@ class _VideoUploadPageState extends State<VideoUploadPage> {
                 child: AgreeButton(onTap: onTapp, name: 'agree'),
               ),
               SizedBox(
-                width: Get.size.width,
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
                     await Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const ConnectionCheck()), (Route<dynamic> route) => false);

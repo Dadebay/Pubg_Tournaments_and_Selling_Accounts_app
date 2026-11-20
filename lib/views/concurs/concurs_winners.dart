@@ -103,7 +103,7 @@ class ConcursWinners extends StatelessWidget {
                               fadeInCurve: Curves.ease,
                               imageUrl: '$serverURL/media/${snapshot.data![index].img}',
                               imageBuilder: (context, imageProvider) => Container(
-                                width: Get.size.width,
+                                width: double.infinity,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(image: imageProvider, fit: BoxFit.cover),

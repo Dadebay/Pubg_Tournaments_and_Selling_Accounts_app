@@ -1,9 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The ucdayy mobile API (docs: /api/docs/). The old backend on port 80 has its
 /// own database, so balances and accounts set in the admin panel (port 9090)
 /// only exist here.
 const String serverURL = 'http://ucdayy.com.tm:8080';
+
+/// The full address of a picture the API sends, or null when there is none. The API gives a
+/// path ("/media/a.png"), a path without the slash, or already a full address, and sometimes
+/// an empty text, which must not turn into a request for the server root (a 404).
+String? apiImageUrl(String? path) {
+  final value = path?.trim() ?? '';
+  if (value.isEmpty || value == 'null') {
+    return null;
+  }
+  if (value.startsWith('http')) {
+    return value;
+  }
+  return value.startsWith('/') ? '$serverURL$value' : '$serverURL/$value';
+}
+
 const Color backgroundColor = Color(0xfff2f2f2);
 const Color kPrimaryColor = Color(0xFFFF9800);
 const kAccentColor = Color(0xFFFFB74D);
@@ -47,8 +62,10 @@ const String loader = 'assets/lottie/spinKit.json';
 const String noDataLottie = 'assets/lottie/noData.json';
 const String appName = 'UC Daýy';
 const String appShareLink = 'https://ucdayy.online/';
-const String playStoreLink = 'https://play.google.com/store/apps/details?id=com.gurbanov.ucdayy';
-const String appStoreLink = 'https://apps.apple.com/tm/app/uc-dayy/id6737436233';
+const String playStoreLink =
+    'https://play.google.com/store/apps/details?id=com.gurbanov.ucdayy';
+const String appStoreLink =
+    'https://apps.apple.com/tm/app/uc-dayy/id6737436233';
 const String loremImpsum =
     'Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir,Lorem ipsum, yaygın olarak kullanılan bir yer tutucu metne verilen isimdir. Dolgu veya sahte metin olarak da bilinen bu tip yer tutucu metinler, aslında anlamlı bir şey söylemeden bir alanı doldurmaya yarayan metinlerdir';
 

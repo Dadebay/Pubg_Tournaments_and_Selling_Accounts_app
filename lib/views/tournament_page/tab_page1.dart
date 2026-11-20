@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/models/tournament_model.dart';
@@ -20,7 +20,10 @@ class TabPage1 extends StatelessWidget {
 
   const TabPage1({required this.finised, required this.tournamentType, required this.buttonName, required this.model, super.key});
   String formatDateString(String dateString) {
-    final DateTime parsedDate = DateTime.parse(dateString);
+    final DateTime? parsedDate = DateTime.tryParse(dateString);
+    if (parsedDate == null) {
+      return '-';
+    }
 
     // Adjust the parsed date to the local time zone
     final DateTime localTime = parsedDate.toLocal();
@@ -129,7 +132,7 @@ class TabPage1 extends StatelessWidget {
                   showSnackBar('Üns beriň!', 'Ulgama Giriň!', Colors.red);
                 } else {
                   if (buttonName != 'tournamentInfo12') {
-                    subscribeTurnir(price: model.price!, id: model.id!, tournamentType: tournamentType, turnir: model);
+                    await subscribeTurnir(price: model.price!, id: model.id!, tournamentType: tournamentType, turnir: model);
                   } else {
                     await TournamentModel().checkStatus(tournamentID: model.id!, value: true);
                   }

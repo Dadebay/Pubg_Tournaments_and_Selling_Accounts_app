@@ -145,7 +145,7 @@ class _GetGiftsScreenState extends State<GetGiftsScreen> {
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         // shrinkWrap: true,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.8 / 4),
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, childAspectRatio: 2.8 / 4),
                         itemBuilder: (context, index) {
                           return GiftCARD(model: gifts.giftsCart[index], selectedIndex: selectedIndex);
                         },

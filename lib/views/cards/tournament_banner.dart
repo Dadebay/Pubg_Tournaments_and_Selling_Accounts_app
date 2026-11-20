@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -56,16 +56,13 @@ class TournamentBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = startDate?.toLocal();
-    final tags = [
-      if (mode != null && mode!.isNotEmpty) mode!,
-      if (map != null && map!.isNotEmpty) map!,
-    ];
+    final tags = [if (mode != null && mode!.isNotEmpty) mode!, if (map != null && map!.isNotEmpty) map!];
     Widget picture = TournamentImage(imageUrl: imageUrl, fallbackAsset: fallbackAsset);
     if (heroTag != null) {
       picture = Hero(tag: heroTag!, child: picture);
     }
 
-    return GestureDetector(
+    return Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 700), child: GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -150,10 +147,7 @@ class TournamentBanner extends StatelessWidget {
                             ],
                           ),
                         ],
-                        if (!isFinished && finishDate != null) ...[
-                          const SizedBox(height: 8),
-                          _TournamentCountdown(finishDate: finishDate!),
-                        ],
+                        if (!isFinished && finishDate != null) ...[const SizedBox(height: 8), _TournamentCountdown(finishDate: finishDate!)],
                       ],
                     ),
                   ),
@@ -172,23 +166,17 @@ class TournamentBanner extends StatelessWidget {
           ],
         ),
       ),
-    );
+    )));
   }
 
   Widget _chip(List<List<dynamic>>? icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            HugeIcon(icon: icon, color: Colors.white, size: 13, strokeWidth: 1.8),
-            const SizedBox(width: 5),
-          ],
+          if (icon != null) ...[HugeIcon(icon: icon, color: Colors.white, size: 13, strokeWidth: 1.8), const SizedBox(width: 5)],
           Text(
             text,
             style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12, height: 1.1),
@@ -278,7 +266,10 @@ class _TournamentCountdownState extends State<_TournamentCountdown> {
           ),
           if (!ended) ...[
             const SizedBox(width: 6),
-            Text(time, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 12)),
+            Text(
+              time,
+              style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 12),
+            ),
           ],
         ],
       ),

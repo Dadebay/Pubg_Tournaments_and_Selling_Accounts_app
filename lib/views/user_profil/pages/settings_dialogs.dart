@@ -17,7 +17,7 @@ Future<void> showPrivacyDialog() async {
       shape: const RoundedRectangleBorder(borderRadius: borderRadius20, side: BorderSide(color: Colors.white)),
       title: Text('privacy'.tr, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20)),
       content: SizedBox(
-        width: Get.size.width * 0.8,
+        width: 560,
         child: SingleChildScrollView(
           child: Html(data: text, style: {'body': Style(color: Colors.white, fontFamily: gilroyRegular, fontSize: FontSize(16))}),
         ),

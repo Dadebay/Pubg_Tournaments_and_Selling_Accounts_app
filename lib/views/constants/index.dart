@@ -1,4 +1,4 @@
-export 'package:flutter/material.dart';
+export 'package:material_ui/material_ui.dart';
 export 'package:flutter/services.dart';
 export 'package:flutter_iconly/flutter_iconly.dart';
 export 'package:game_app/views/constants/constants.dart';

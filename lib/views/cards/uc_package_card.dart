@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/uc_models.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
@@ -69,17 +69,29 @@ class UcCart {
     await Get.bottomSheet(
       Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(color: Color(0xFF151517), borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        decoration: const BoxDecoration(
+          color: Color(0xFF151517),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${data['title'] ?? model.title}', style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22)),
+            Text(
+              '${data['title'] ?? model.title}',
+              style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22),
+            ),
             const SizedBox(height: 8),
-            Text(priceText(model), style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18)),
+            Text(
+              priceText(model),
+              style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18),
+            ),
             if (description.isNotEmpty) ...[
               const SizedBox(height: 12),
-              Text(description, style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 16)),
+              Text(
+                description,
+                style: const TextStyle(color: Colors.white70, fontFamily: gilroyRegular, fontSize: 16),
+              ),
             ],
           ],
         ),
@@ -98,12 +110,20 @@ class UcStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 42,
-      decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.45), borderRadius: BorderRadius.circular(14), border: Border.all(color: _gold.withValues(alpha: 0.5))),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: _gold.withValues(alpha: 0.5)),
+      ),
       child: Row(
         children: [
           _button(CupertinoIcons.minus, () => UcCart.minus(model)),
           Expanded(
-            child: Text('${UcCart.count(model)}', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18)),
+            child: Text(
+              '${UcCart.count(model)}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18),
+            ),
           ),
           _button(CupertinoIcons.add, () => UcCart.add(model)),
         ],
@@ -207,11 +227,19 @@ class UcPackageCard extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       children: [
         Flexible(
-          child: Text(amount, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1)),
+          child: Text(
+            amount,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 24, height: 1),
+          ),
         ),
         if (unit.isNotEmpty) ...[
           const SizedBox(width: 5),
-          Text(unit, style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 14, height: 1)),
+          Text(
+            unit,
+            style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 14, height: 1),
+          ),
         ],
       ],
     );
@@ -226,7 +254,10 @@ class UcPackageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
       ),
-      child: Text(UcCart.priceText(model), style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 16)),
+      child: Text(
+        UcCart.priceText(model),
+        style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 16),
+      ),
     );
   }
 }

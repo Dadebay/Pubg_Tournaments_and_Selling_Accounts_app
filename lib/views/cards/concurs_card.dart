@@ -10,19 +10,12 @@ import '../constants/price.dart';
 class GiftCARD extends StatelessWidget {
   final GiftsMOdel model;
   final int selectedIndex;
-  const GiftCARD({
-    required this.model,
-    required this.selectedIndex,
-    super.key,
-  });
+  const GiftCARD({required this.model, required this.selectedIndex, super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
-      decoration: const BoxDecoration(
-        borderRadius: borderRadius20,
-        color: Colors.white60,
-      ),
+      decoration: const BoxDecoration(borderRadius: borderRadius20, color: Colors.white60),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,13 +27,10 @@ class GiftCARD extends StatelessWidget {
                 fadeInCurve: Curves.ease,
                 imageUrl: '$serverURL/media/${model.image['name']}',
                 imageBuilder: (context, imageProvider) => Container(
-                  width: Get.size.width,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: borderRadius20,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
                 placeholder: (context, url) => Center(child: spinKit()),
@@ -59,11 +49,7 @@ class GiftCARD extends StatelessWidget {
               model.nameTm,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: Get.size.width >= 800 ? 27 : 25,
-                fontFamily: gilroyBold,
-              ),
+              style: TextStyle(color: Colors.black, fontSize: MediaQuery.sizeOf(context).width >= 800 ? 27 : 25, fontFamily: gilroyBold),
             ),
           ),
           Padding(
@@ -73,11 +59,8 @@ class GiftCARD extends StatelessWidget {
           model.count_left == 0
               ? Container(
                   margin: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: kPrimaryColorBlack,
-                    borderRadius: borderRadius15,
-                  ),
-                  width: Get.size.width,
+                  decoration: const BoxDecoration(color: kPrimaryColorBlack, borderRadius: borderRadius15),
+                  width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: Text(
@@ -85,14 +68,7 @@ class GiftCARD extends StatelessWidget {
                     style: const TextStyle(color: kPrimaryColor, fontFamily: gilroySemiBold),
                   ),
                 )
-              : AddCartButton(
-                  productProfil: false,
-                  id: model.id,
-                  price: model.price.toString(),
-                  image: "/media/${model.image['name']}",
-                  title: model.nameTm,
-                  status: 'gift',
-                ),
+              : AddCartButton(productProfil: false, id: model.id, price: model.price.toString(), image: "/media/${model.image['name']}", title: model.nameTm, status: 'gift'),
         ],
       ),
     );
@@ -102,19 +78,12 @@ class GiftCARD extends StatelessWidget {
 class ThingsCards extends StatelessWidget {
   final ThingsMODEL model;
   final int selectedIndex;
-  const ThingsCards({
-    required this.model,
-    required this.selectedIndex,
-    super.key,
-  });
+  const ThingsCards({required this.model, required this.selectedIndex, super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
-      decoration: const BoxDecoration(
-        borderRadius: borderRadius20,
-        color: Colors.white60,
-      ),
+      decoration: const BoxDecoration(borderRadius: borderRadius20, color: Colors.white60),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -126,13 +95,10 @@ class ThingsCards extends StatelessWidget {
                 fadeInCurve: Curves.ease,
                 imageUrl: '$serverURL${model.image}',
                 imageBuilder: (context, imageProvider) => Container(
-                  width: Get.size.width,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: borderRadius20,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
                 placeholder: (context, url) => Center(child: spinKit()),
@@ -151,25 +117,14 @@ class ThingsCards extends StatelessWidget {
               model.nameTm,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: Get.size.width >= 800 ? 27 : 25,
-                fontFamily: gilroyBold,
-              ),
+              style: TextStyle(color: Colors.black, fontSize: MediaQuery.sizeOf(context).width >= 800 ? 27 : 25, fontFamily: gilroyBold),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 6),
             child: Price(showDiscountedPrice: false, textColor: Colors.black, selectedIndex: selectedIndex, price: model.price),
           ),
-          AddCartButton(
-            productProfil: false,
-            id: model.id,
-            price: model.price.toString(),
-            image: model.image,
-            title: model.nameTm,
-            status: 'thing',
-          ),
+          AddCartButton(productProfil: false, id: model.id, price: model.price.toString(), image: model.image, title: model.nameTm, status: 'thing'),
         ],
       ),
     );

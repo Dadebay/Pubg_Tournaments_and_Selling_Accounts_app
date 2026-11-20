@@ -116,7 +116,7 @@ class _MyPostsPageState extends State<MyPostsPage> {
             padding: const EdgeInsets.all(12),
             physics: const BouncingScrollPhysics(),
             itemCount: posts.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 3 / 4),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 3 / 4),
             itemBuilder: (context, index) => Stack(
               children: [
                 Positioned.fill(child: ShowAllProductsCard(fav: false, model: posts[index])),

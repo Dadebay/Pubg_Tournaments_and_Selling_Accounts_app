@@ -1,3 +1,4 @@
+import 'package:game_app/views/constants/player_photo.dart';
 import 'package:game_app/bottom_nav_bar.dart';
 import 'package:game_app/views/constants/index.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -12,36 +13,190 @@ class GatnashyanlarCard extends StatefulWidget {
   final String teamID;
   final String turnirID;
   final bool showButton;
-  GatnashyanlarCard({required this.teamUsers, required this.teamID, required this.showButton, required this.turnirID, super.key});
+  GatnashyanlarCard({
+    required this.teamUsers,
+    required this.teamID,
+    required this.showButton,
+    required this.turnirID,
+    super.key,
+  });
 
   @override
   State<GatnashyanlarCard> createState() => _GatnashyanlarCardState();
 }
 
 class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
-  dynamic enterSQUADIDS() {
-    final TextEditingController controllers = TextEditingController();
-    final FocusNode focusNode = FocusNode();
+  /// Rename dialog: the field starts with the name the row shows, and it can be changed.
+  Future<void> enterSQUADIDS() async {
+    const gold = Color(0xFFFFC83D);
+    final controller = TextEditingController(
+      text: (widget.teamUsers.user?.nickname ?? '').toString(),
+    );
+    var busy = false;
 
-    Get.defaultDialog(
-      title: 'buySQUAD3'.tr,
-      titleStyle: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomTextField(labelName: '${1} - ${'buySQUAD4'.tr}', borderRadius: true, controller: controllers, focusNode: focusNode, requestfocusNode: focusNode, isNumber: false),
-          const SizedBox(height: 15),
-          AgreeButton(
-            onTap: () async {
-              await TournamentModel().editSQUAD(turnirID: int.parse(widget.turnirID.toString()), pubgID1: controllers.text.toString(), id: int.parse(widget.teamUsers.id.toString())).then((value) {
-                if (value == 200) {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const BottomNavBar(showPages: false)), (route) => false);
-                }
-              });
-            },
-            name: 'agree',
+    await Get.dialog(
+      StatefulBuilder(
+        builder: (context, setLocal) => Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 22,
+            vertical: 24,
           ),
-        ],
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1B1B1F),
+              borderRadius: BorderRadius.circular(26),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(18, 22, 18, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: gold.withValues(alpha: 0.14),
+                        ),
+                        child: const HugeIcon(
+                          icon: HugeIcons.strokeRoundedEdit02,
+                          color: gold,
+                          size: 22,
+                          strokeWidth: 1.8,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'renameTitle'.tr,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: gilroyBold,
+                            fontSize: 19,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: Get.back,
+                        child: const Padding(
+                          padding: EdgeInsets.all(6),
+                          child: HugeIcon(
+                            icon: HugeIcons.strokeRoundedCancel01,
+                            color: Colors.white54,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: controller,
+                    autofocus: true,
+                    cursorColor: gold,
+                    textInputAction: TextInputAction.done,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: gilroySemiBold,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'buySQUAD4'.tr,
+                      hintStyle: const TextStyle(
+                        color: Colors.white30,
+                        fontFamily: gilroyMedium,
+                        fontSize: 15,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white.withValues(alpha: 0.06),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: gold, width: 1.2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: busy
+                        ? null
+                        : () async {
+                            final name = controller.text.trim();
+                            if (name.isEmpty) {
+                              showSnackBar(
+                                'Üns beriň!',
+                                'renameEmpty',
+                                Colors.red,
+                              );
+                              return;
+                            }
+                            setLocal(() => busy = true);
+                            final value = await TournamentModel().editSQUAD(
+                              turnirID: int.parse(widget.turnirID.toString()),
+                              pubgID1: name,
+                              id: int.parse(widget.teamUsers.id.toString()),
+                            );
+                            if (value == 200) {
+                              Get.back();
+                              await Navigator.of(Get.context!)
+                                  .pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BottomNavBar(showPages: false),
+                                    ),
+                                    (route) => false,
+                                  );
+                            } else {
+                              setLocal(() => busy = false);
+                            }
+                          },
+                    child: Container(
+                      height: 52,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(26),
+                        color: busy ? gold.withValues(alpha: 0.5) : gold,
+                      ),
+                      child: busy
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.4,
+                                color: Colors.black,
+                              ),
+                            )
+                          : Text(
+                              'agree'.tr,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: gilroyBold,
+                                fontSize: 17,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -67,17 +222,7 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
               width: 46,
               height: 46,
               color: const Color(0xFF2B2B30),
-              child: image == null || image.isEmpty
-                  ? const Center(
-                      child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.white38, size: 22),
-                    )
-                  : Image.network(
-                      '$serverURL/$image',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Center(
-                        child: HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.white38, size: 22),
-                      ),
-                    ),
+              child: PlayerPhoto(image: image),
             ),
           ),
           const SizedBox(width: 12),
@@ -89,7 +234,11 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
                   (user?.nickname ?? '').toString(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontSize: 15, fontFamily: gilroySemiBold),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontFamily: gilroySemiBold,
+                  ),
                 ),
                 if (pubgId.isNotEmpty) ...[
                   const SizedBox(height: 2),
@@ -97,7 +246,11 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
                     'ID  $pubgId',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white38, fontSize: 12, fontFamily: gilroyMedium),
+                    style: const TextStyle(
+                      color: Colors.white38,
+                      fontSize: 12,
+                      fontFamily: gilroyMedium,
+                    ),
                   ),
                 ],
               ],
@@ -110,8 +263,15 @@ class _GatnashyanlarCardState extends State<GatnashyanlarCard> {
                 width: 36,
                 height: 36,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFFFC83D).withValues(alpha: 0.14)),
-                child: const HugeIcon(icon: HugeIcons.strokeRoundedEdit02, color: Color(0xFFFFC83D), size: 18),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFFFFC83D).withValues(alpha: 0.14),
+                ),
+                child: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedEdit02,
+                  color: Color(0xFFFFC83D),
+                  size: 18,
+                ),
               ),
             ),
         ],
@@ -139,13 +299,24 @@ class TeamEmptySlot extends StatelessWidget {
             width: 46,
             height: 46,
             alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white.withValues(alpha: 0.03)),
-            child: const HugeIcon(icon: HugeIcons.strokeRoundedUserAdd01, color: Colors.white24, size: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withValues(alpha: 0.03),
+            ),
+            child: const HugeIcon(
+              icon: HugeIcons.strokeRoundedUserAdd01,
+              color: Colors.white24,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           const Text(
             '—',
-            style: TextStyle(color: Colors.white24, fontSize: 18, fontFamily: gilroyMedium),
+            style: TextStyle(
+              color: Colors.white24,
+              fontSize: 18,
+              fontFamily: gilroyMedium,
+            ),
           ),
         ],
       ),
@@ -162,7 +333,15 @@ class TeamShell extends StatelessWidget {
   final bool winner;
   final List<Widget> children;
 
-  const TeamShell({required this.number, required this.filled, required this.total, required this.children, this.mine = false, this.winner = false, super.key});
+  const TeamShell({
+    required this.number,
+    required this.filled,
+    required this.total,
+    required this.children,
+    this.mine = false,
+    this.winner = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -172,8 +351,20 @@ class TeamShell extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: highlight ? gold.withValues(alpha: 0.55) : Colors.white.withValues(alpha: 0.07), width: highlight ? 1.5 : 1),
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [highlight ? gold.withValues(alpha: 0.12) : const Color(0xFF232327), const Color(0xFF161618)]),
+        border: Border.all(
+          color: highlight
+              ? gold.withValues(alpha: 0.55)
+              : Colors.white.withValues(alpha: 0.07),
+          width: highlight ? 1.5 : 1,
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            highlight ? gold.withValues(alpha: 0.12) : const Color(0xFF232327),
+            const Color(0xFF161618),
+          ],
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,30 +381,57 @@ class TeamShell extends StatelessWidget {
                   border: Border.all(color: gold.withValues(alpha: 0.5)),
                 ),
                 child: winner
-                    ? const HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: gold, size: 18, strokeWidth: 1.8)
+                    ? const HugeIcon(
+                        icon: HugeIcons.strokeRoundedCrown,
+                        color: gold,
+                        size: 18,
+                        strokeWidth: 1.8,
+                      )
                     : Text(
                         '${number ?? ''}',
-                        style: const TextStyle(color: gold, fontFamily: gilroyBold, fontSize: 15),
+                        style: const TextStyle(
+                          color: gold,
+                          fontFamily: gilroyBold,
+                          fontSize: 15,
+                        ),
                       ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   'Team ${number ?? ''}',
-                  style: const TextStyle(color: Colors.white, fontSize: 17, fontFamily: gilroyBold),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontFamily: gilroyBold,
+                  ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white.withValues(alpha: 0.07)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white.withValues(alpha: 0.07),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const HugeIcon(icon: HugeIcons.strokeRoundedUserMultiple, color: Colors.white54, size: 14),
+                    const HugeIcon(
+                      icon: HugeIcons.strokeRoundedUserMultiple,
+                      color: Colors.white54,
+                      size: 14,
+                    ),
                     const SizedBox(width: 5),
                     Text(
                       '$filled/$total',
-                      style: const TextStyle(color: Colors.white70, fontSize: 12, fontFamily: gilroySemiBold),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontFamily: gilroySemiBold,
+                      ),
                     ),
                   ],
                 ),

@@ -89,11 +89,11 @@ class _TabBarViewPageState extends State<TabBarViewPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            page ? CustomTextField(labelName: 'signIn1', controller: fullNameController, focusNode: fullNameFocusNode, requestfocusNode: idFocusNode, borderRadius: true, isNumber: false) : const SizedBox.shrink(),
+            page ? CustomTextField(labelName: 'profileUsername', controller: fullNameController, focusNode: fullNameFocusNode, requestfocusNode: idFocusNode, borderRadius: true, isNumber: false) : const SizedBox.shrink(),
             page
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: CustomTextField(labelName: 'signIn2', controller: idController, focusNode: idFocusNode, requestfocusNode: phoneNumberFocusNode, borderRadius: true, isNumber: false),
+                    child: CustomTextField(labelName: 'profilePassword', controller: idController, focusNode: idFocusNode, requestfocusNode: phoneNumberFocusNode, borderRadius: true, isNumber: false),
                   )
                 : const SizedBox.shrink(),
             Padding(

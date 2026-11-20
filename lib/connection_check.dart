@@ -6,8 +6,8 @@ import 'package:game_app/models/user_models/abous_us_model.dart';
 import 'package:game_app/new_bottom_nav.dart';
 import 'package:game_app/utils/server_status.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/splash/animated_splash.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
-import 'package:lottie/lottie.dart';
 
 import 'bottom_nav_bar.dart';
 import 'controllers/settings_controller.dart';
@@ -23,15 +23,14 @@ class ConnectionCheck extends StatefulWidget {
 }
 
 class _ConnectionCheckState extends State<ConnectionCheck> {
+  final DateTime _openedAt = DateTime.now();
   String firsttime = 'false';
   String token = 'false';
-  bool showPage = false;
 
   @override
   void initState() {
     super.initState();
     checkConnection();
-    getData();
     Get.find<WalletController>().getUserMoney();
   }
 
@@ -53,42 +52,31 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
         showPage = true;
       }
       if (result.isNotEmpty && result.first.rawAddress.isNotEmpty) {
-        await Future.delayed(const Duration(seconds: 3), () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return showPage == false ? BottomNavBar(showPages: showPage) : NewBottomNavBar(showPages: showPage);
-              },
-            ),
-          );
-        }).then((value) async {
-          await Get.find<SettingsController>().changeUserUI();
-          if (Get.find<SettingsController>().loginUser.value != true) {
-            await showDeleteDialog(context, 'loginError', 'welcome', () {
-              Get.to(() => const TabBarViewPage());
-            });
-          }
-        });
+        final remaining = const Duration(milliseconds: 900) - DateTime.now().difference(_openedAt);
+        if (remaining > Duration.zero) {
+          await Future.delayed(remaining);
+        }
+        if (!mounted) {
+          return;
+        }
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return showPage == false ? BottomNavBar(showPages: showPage) : NewBottomNavBar(showPages: showPage);
+            },
+          ),
+        );
+        await Get.find<SettingsController>().changeUserUI();
+        final dialogContext = Get.context;
+        if (Get.find<SettingsController>().loginUser.value != true && dialogContext != null) {
+          await showDeleteDialog(dialogContext, 'loginError', 'welcome', () {
+            Get.to(() => const TabBarViewPage());
+          });
+        }
       }
     } on SocketException catch (_) {
       _showDialog();
     }
-  }
-
-  dynamic getData() async {
-    int a = 0;
-    await AboutUsModel().getAboutUs().then((value) {
-      print(value);
-      for (var element in value) {
-        if (element.pageShow == true) {
-          a++;
-        }
-      }
-    });
-    if (a == 3) {
-      showPage = true;
-    }
-    setState(() {});
   }
 
   void _showDialog() {
@@ -163,9 +151,6 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kPrimaryColorBlack,
-      body: Center(child: Lottie.asset(loader, fit: BoxFit.cover)),
-    );
+    return const AnimatedSplash();
   }
 }

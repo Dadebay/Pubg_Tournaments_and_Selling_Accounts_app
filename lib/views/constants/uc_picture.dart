@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show AssetManifest, rootBundle;
 
 import 'constants.dart';
@@ -38,10 +38,7 @@ class UcAssets {
       return null;
     }
     // "1 800" / "1,800" → "1800", so a grouped amount is one number.
-    final text = name.replaceAllMapped(
-      RegExp(r'(\d)[\s,.](?=\d{3}\b)'),
-      (m) => m.group(1)!,
-    );
+    final text = name.replaceAllMapped(RegExp(r'(\d)[\s,.](?=\d{3}\b)'), (m) => m.group(1)!);
     for (final match in RegExp(r'\d+').allMatches(text)) {
       final path = assets[match.group(0)];
       if (path != null) {
@@ -90,23 +87,11 @@ class _UcPictureState extends State<UcPicture> {
   Widget build(BuildContext context) {
     final asset = UcAssets.assetFor(widget.name);
     if (asset != null) {
-      return Image.asset(
-        asset,
-        fit: BoxFit.contain,
-        cacheWidth: 240,
-        filterQuality: FilterQuality.medium,
-        errorBuilder: (context, error, stack) => _mark(),
-      );
+      return Image.asset(asset, fit: BoxFit.contain, cacheWidth: 240, filterQuality: FilterQuality.medium, errorBuilder: (context, error, stack) => _mark());
     }
     final image = widget.image;
     if (image != null && image.isNotEmpty && image != 'null') {
-      return CachedNetworkImage(
-        imageUrl: image.startsWith('http') ? image : '$serverURL$image',
-        fit: BoxFit.contain,
-        fadeInCurve: Curves.ease,
-        placeholder: (context, url) => const SizedBox.shrink(),
-        errorWidget: (context, url, error) => _mark(),
-      );
+      return CachedNetworkImage(imageUrl: image.startsWith('http') ? image : '$serverURL$image', fit: BoxFit.contain, fadeInCurve: Curves.ease, placeholder: (context, url) => const SizedBox.shrink(), errorWidget: (context, url, error) => _mark());
     }
     return _mark();
   }

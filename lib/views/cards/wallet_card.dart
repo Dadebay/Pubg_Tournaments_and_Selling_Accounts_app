@@ -10,11 +10,7 @@ import '../constants/price.dart';
 class WalletCard extends StatelessWidget {
   final UcModel model;
   final int selectedIndex;
-  const WalletCard({
-    required this.model,
-    required this.selectedIndex,
-    super.key,
-  });
+  const WalletCard({required this.model, required this.selectedIndex, super.key});
   @override
   Widget build(BuildContext context) {
     double a = 0.0;
@@ -28,10 +24,7 @@ class WalletCard extends StatelessWidget {
     }
     return Container(
       margin: const EdgeInsets.only(left: 5, right: 5, top: 15),
-      decoration: BoxDecoration(
-        borderRadius: borderRadius20,
-        color: Colors.white.withOpacity(0.9),
-      ),
+      decoration: BoxDecoration(borderRadius: borderRadius20, color: Colors.white.withOpacity(0.9)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -43,13 +36,10 @@ class WalletCard extends StatelessWidget {
                 fadeInCurve: Curves.ease,
                 imageUrl: '$serverURL${model.image}',
                 imageBuilder: (context, imageProvider) => Container(
-                  width: Get.size.width,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: borderRadius20,
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                   ),
                 ),
                 placeholder: (context, url) => Center(child: spinKit()),
@@ -70,14 +60,7 @@ class WalletCard extends StatelessWidget {
               child: Price(showDiscountedPrice: false, textColor: Colors.black, selectedIndex: selectedIndex, price: a.toStringAsFixed(1)),
             ),
           ),
-          AddCartButton(
-            productProfil: false,
-            id: model.id!,
-            price: model.price!,
-            image: model.image!,
-            title: model.title!,
-            status: 'uc',
-          ),
+          AddCartButton(productProfil: false, id: model.id!, price: model.price!, image: model.image!, title: model.title!, status: 'uc'),
         ],
       ),
     );

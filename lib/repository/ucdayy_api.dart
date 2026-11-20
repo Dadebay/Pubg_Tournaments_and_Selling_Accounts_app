@@ -183,7 +183,11 @@ class UcdayyApi {
 
   /// The fee is charged from the user's points by the server.
   static Future<ApiResult> addPost({String? title, String? description, String? pubgUsername, String? pubgId, num? price, int? pubgType, bool? vip, int? location, File? image, File? bgImage}) {
-    return _postMultipart('/accounts/add-post/', fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'pubg_type': pubgType, 'vip': vip, 'location': location}, files: {'image': image, 'bg_image': bgImage});
+    return _postMultipart(
+      '/accounts/add-post/',
+      fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'pubg_type': pubgType, 'vip': vip, 'location': location},
+      files: {'image': image, 'bg_image': bgImage},
+    );
   }
 
   static Future<ApiResult> updatePost(
@@ -200,7 +204,11 @@ class UcdayyApi {
     File? image,
     File? bgImage,
   }) {
-    return _postMultipart('/accounts/update-post/$id/', fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'location': clearLocation ? '' : location}, files: {'image': image, 'bg_image': bgImage});
+    return _postMultipart(
+      '/accounts/update-post/$id/',
+      fields: {'title': title, 'description': description, 'pubg_username': pubgUsername, 'pubg_id': pubgId, 'price': price, 'location': clearLocation ? '' : location},
+      files: {'image': image, 'bg_image': bgImage},
+    );
   }
 
   static Future<ApiResult> uploadPostVideo({required int postId, required File video}) {
@@ -274,6 +282,10 @@ class UcdayyApi {
   static Future<ApiResult> payFromBalance(List<Map<String, Object?>> lines) => _postList('/category/paymentFromPoint/', lines, auth: true);
 
   // ---------------------------------------------------------- card payments
+
+  /// The SIM numbers the player sends TMCell balance to: `[{id, phone, phone_full, left_today}]`, no auth.
+  /// An empty list means every number is full or off. Never cached: load it each time the screen opens.
+  static Future<ApiResult> getPhoneTopUpNumbers() => _get('/phone-topup/numbers/');
 
   /// The banks the card payment supports: `[{id, name_tm, name_ru, enabled}]`, no auth.
   static Future<ApiResult> getPaymentBanks() => _get('/payment/banks/');

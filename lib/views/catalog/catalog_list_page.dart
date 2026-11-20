@@ -99,7 +99,7 @@ class _CatalogListPageState extends State<CatalogListPage> {
                     child: GridView.builder(
                       physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 0.74),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 0.74),
                       itemCount: items.length,
                       itemBuilder: (context, index) => _tile(items[index]),
                     ),

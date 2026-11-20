@@ -36,12 +36,24 @@ class PremiumPackageCard extends StatelessWidget {
               Expanded(child: _plate()),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(model.title ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18)),
+                child: Text(
+                  model.title ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18),
+                ),
               ),
               if (description.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 3, 12, 0),
-                  child: Text(description, maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFC9BFA8), fontFamily: gilroyRegular, fontSize: 12, height: 1.25)),
+                  child: Text(
+                    description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Color(0xFFC9BFA8), fontFamily: gilroyRegular, fontSize: 12, height: 1.25),
+                  ),
                 ),
               const SizedBox(height: 12),
               Padding(
@@ -89,7 +101,10 @@ class PremiumPackageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
       ),
-      child: Text(UcCart.priceText(model), style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 16)),
+      child: Text(
+        UcCart.priceText(model),
+        style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 16),
+      ),
     );
   }
 }

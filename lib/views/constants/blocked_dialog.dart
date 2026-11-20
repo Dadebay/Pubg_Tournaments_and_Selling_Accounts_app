@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';

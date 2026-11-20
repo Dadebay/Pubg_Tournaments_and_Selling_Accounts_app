@@ -108,7 +108,7 @@ class _ConcursCardState extends State<ConcursCard> {
                   child: CachedNetworkImage(
                     imageUrl: '$serverURL${widget.imageUrl}',
                     fit: BoxFit.cover,
-                    height: Get.size.height,
+                    height: 120,
                     progressIndicatorBuilder: (context, url, downloadProgress) => const Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),

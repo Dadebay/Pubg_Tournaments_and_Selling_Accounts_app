@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/utils/guard_client.dart' show GuardClient;
 import 'package:game_app/views/constants/constants.dart';
 import 'package:game_app/views/constants/maintenance_dialog.dart';

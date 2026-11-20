@@ -555,7 +555,7 @@ class _NotTournamentPageState extends State<NotTournamentPage> {
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.85, crossAxisSpacing: 12, mainAxisSpacing: 12),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, childAspectRatio: 0.85, crossAxisSpacing: 12, mainAxisSpacing: 12),
                 itemCount: getInformationCategories().length,
                 itemBuilder: (context, index) {
                   final category = getInformationCategories()[index];

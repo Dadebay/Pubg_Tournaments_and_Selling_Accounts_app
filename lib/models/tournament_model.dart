@@ -290,7 +290,9 @@ class TournamentModel {
     return response.statusCode;
   }
 
-  Future editSQUAD({required int turnirID, required int id, required String pubgID1}) async {
+  /// Renames a player in a slot of a tournament (own slot or a teammate's; solo, duo and squad;
+  /// until the tournament finishes). Returns the status code; shows the matching message.
+  Future<int> editSQUAD({required int turnirID, required int id, required String pubgID1}) async {
     final token = await Auth().getToken();
     final response = await http.post(
       Uri.parse('$serverURL/api/turnirs/turnir/$turnirID/'),
@@ -298,26 +300,37 @@ class TournamentModel {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
-      body: jsonEncode(<String, String>{
-        'id': id.toString(),
+      body: jsonEncode(<String, dynamic>{
+        'id': id,
         'pubg_id': pubgID1,
       }),
     );
-    final bodys = jsonDecode(response.body);
-
-    response.statusCode == 200 ? showSnackBar('Üns beriň!', 'Siz üstunlikli turnire goşulduňyz!', Colors.green) : showSnackBar('Üns beriň!', 'tournamentInfo14', Colors.red);
-    // Get.to(() => BottomNavBar());
-    response.statusCode != 200
-        ? showSnackBar(
-            'Üns beriň!',
-            bodys['error'] == 'Siz bu ulanyjy id üýtgedip bilmersiňiz!'
-                ? 'Ulanyjynyň gatnaşmak üçin ýeterlik puly ýok!'
-                : bodys['error'] == 'User already participated!'
-                    ? 'Ulanyjy eýýäm gatnaşdy!'
-                    : bodys['error'],
-            Colors.red,
-          )
-        : null;
+    if (response.statusCode == 200) {
+      showSnackBar('Üns beriň!', 'renameDone', Colors.green);
+      return 200;
+    }
+    var error = '';
+    try {
+      final body = jsonDecode(response.body);
+      if (body is Map) {
+        error = '${body['error'] ?? ''}';
+      }
+    } catch (_) {}
+    String key;
+    if (response.statusCode == 403) {
+      key = 'renameFinished';
+    } else if (error.contains('too long')) {
+      key = 'renameTooLong';
+    } else if (error.contains('already participated')) {
+      key = 'renameTaken';
+    } else if (error.contains('required')) {
+      key = 'renameEmpty';
+    } else if (error.contains('not found')) {
+      key = 'renameNotYours';
+    } else {
+      key = 'tournamentInfo14';
+    }
+    showSnackBar('Üns beriň!', key, Colors.red);
     return response.statusCode;
   }
 

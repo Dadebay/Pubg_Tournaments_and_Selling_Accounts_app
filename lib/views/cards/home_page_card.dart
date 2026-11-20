@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:game_app/models/get_posts_model.dart';
+import 'package:game_app/views/constants/sold_badge.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../constants/index.dart';
@@ -85,6 +86,8 @@ class HomePageCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                // A sold account says so in the top-right corner of the card.
+                if (model.sold) const Positioned(top: 0, right: 0, child: SoldCornerRibbon()),
               ],
             ),
           ),
@@ -123,6 +126,7 @@ class HomePageCard extends StatelessWidget {
                 ),
               ),
             ),
+            if (model.sold) const SoldOverlay(),
           ],
         ),
       ),

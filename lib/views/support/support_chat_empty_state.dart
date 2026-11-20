@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
 
@@ -31,14 +31,7 @@ class SupportChatEmptyState extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(
-                        'assets/image/empty_support_chat.webp',
-                        width: imageWidth,
-                        height: imageWidth * 2 / 3,
-                        fit: BoxFit.contain,
-                        filterQuality: FilterQuality.high,
-                        excludeFromSemantics: true,
-                      ),
+                      Image.asset('assets/image/empty_support_chat.webp', width: imageWidth, height: imageWidth * 2 / 3, fit: BoxFit.contain, filterQuality: FilterQuality.high, excludeFromSemantics: true),
                       const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 28),

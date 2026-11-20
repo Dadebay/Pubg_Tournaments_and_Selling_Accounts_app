@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:game_app/connection_check.dart';
 import 'package:game_app/models/user_models/auth_model.dart';
+import 'package:game_app/views/constants/centered_header.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/utils/support_push.dart';
 import 'package:game_app/views/constants/index.dart';
@@ -41,48 +42,43 @@ class _SettingsState extends State<Settings> {
     final isTm = Get.locale!.toLanguageTag() == 'tr';
     return Scaffold(
       backgroundColor: kPrimaryColorBlack,
-      appBar: const MyAppBar(backArrow: true, iconRemove: true, fontSize: 0.0, name: 'settings', elevationWhite: true),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-        children: [
-          _hero(),
-          _label('select_language'),
-          _group([_row(icon: HugeIcons.strokeRoundedLanguageSquare, title: isTm ? 'Türkmen dili' : 'Rus dili', trailing: _flag(isTm ? tmIcon : ruIcon), onTap: changeLanguage)]),
-          _label('support'),
-          _group([_row(icon: HugeIcons.strokeRoundedCustomerSupport, title: 'support'.tr, trailing: _supportTrailing(), onTap: _openSupport)]),
-          _label('share'),
-          _group([_row(icon: HugeIcons.strokeRoundedShare08, title: 'share'.tr, trailing: _chevron(), onTap: _shareApp)]),
-          const SizedBox(height: 8),
-          _group([
-            _row(
-              icon: HugeIcons.strokeRoundedDelete02,
-              title: 'deleteAccount'.tr,
-              color: _red,
-              trailing: _chevron(color: _red),
-              onTap: _confirmDeleteAccount,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            CenteredHeader(title: 'settings'.tr, onBack: Get.back),
+            Expanded(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+                children: [
+                  _hero(),
+                  _tile(icon: HugeIcons.strokeRoundedLanguageSquare, title: 'select_language'.tr, trailing: _languageTrailing(isTm), onTap: changeLanguage),
+                  _tile(icon: HugeIcons.strokeRoundedCustomerSupport, title: 'support'.tr, trailing: _supportTrailing(), onTap: _openSupport),
+                  _tile(icon: HugeIcons.strokeRoundedShare08, title: 'share'.tr, trailing: _chevron(), onTap: _shareApp),
+                  const SizedBox(height: 10),
+                  _tile(icon: HugeIcons.strokeRoundedDelete02, title: 'deleteAccount'.tr, color: _red, trailing: _chevron(color: _red), onTap: _confirmDeleteAccount),
+                ],
+              ),
             ),
-          ]),
-        ],
+          ],
+        ),
       ),
     );
   }
 
+  /// The app name and version: one flat card at the top.
   Widget _hero() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 22),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [_gold.withValues(alpha: 0.2), const Color(0xFF151517)]),
-        border: Border.all(color: _gold.withValues(alpha: 0.3)),
-      ),
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: const Color(0xFF1B1B1F), border: Border.all(color: Colors.white.withValues(alpha: 0.07))),
       child: Row(
         children: [
           Container(
             width: 52,
             height: 52,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), gradient: const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)])),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: _gold),
             child: const Center(child: HugeIcon(icon: HugeIcons.strokeRoundedSettings02, color: Color(0xFF1A1200), size: 26)),
           ),
           const SizedBox(width: 14),
@@ -92,7 +88,7 @@ class _SettingsState extends State<Settings> {
               children: [
                 Text(appName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20)),
                 const SizedBox(height: 3),
-                Text('${'versia'.tr} 1.0.1', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontFamily: gilroyMedium, fontSize: 14)),
+                Text('${'versia'.tr} 1.0.1', style: TextStyle(color: Colors.white.withValues(alpha: 0.55), fontFamily: gilroyMedium, fontSize: 14)),
               ],
             ),
           ),
@@ -101,61 +97,48 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget _label(String key) => Padding(
-    padding: const EdgeInsets.only(left: 6, bottom: 10),
-    child: Text(key.tr, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroySemiBold, fontSize: 13)),
-  );
-
-  /// A rounded card holding rows separated by hairlines.
-  Widget _group(List<Widget> rows) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF151517)]),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          for (var i = 0; i < rows.length; i++) ...[if (i > 0) Divider(height: 1, indent: 68, color: Colors.white.withValues(alpha: 0.07)), rows[i]],
-        ],
+  /// One flat button-card: an icon tile, the title, something at the end.
+  Widget _tile({required List<List<dynamic>> icon, required String title, Widget? trailing, VoidCallback? onTap, Color color = Colors.white}) {
+    final accent = color == Colors.white ? _gold : color;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: const Color(0xFF1B1B1F),
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: accent.withValues(alpha: 0.10),
+          highlightColor: accent.withValues(alpha: 0.05),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), border: Border.all(color: Colors.white.withValues(alpha: 0.07))),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(13)),
+                  child: Center(child: HugeIcon(icon: icon, color: accent, size: 22, strokeWidth: 1.8)),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: color, fontFamily: gilroySemiBold, fontSize: 17)),
+                ),
+                ?trailing,
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _row({required List<List<dynamic>> icon, required String title, Widget? trailing, VoidCallback? onTap, Color color = Colors.white}) {
-    final accent = color == Colors.white ? _gold : color;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(color: accent.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(12)),
-                child: Center(
-                  child: HugeIcon(icon: icon, color: accent, size: 22),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: color, fontFamily: gilroySemiBold, fontSize: 17),
-                ),
-              ),
-              ?trailing,
-            ],
-          ),
-        ),
-      ),
+  /// The flag of the language in use, then the arrow.
+  Widget _languageTrailing(bool isTm) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [_flag(isTm ? tmIcon : ruIcon), const SizedBox(width: 6), _chevron()],
     );
   }
 

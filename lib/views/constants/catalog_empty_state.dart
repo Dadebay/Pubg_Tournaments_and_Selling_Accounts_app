@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 
 import 'constants.dart';
@@ -77,10 +77,7 @@ class CatalogEmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (imageAsset != null)
-            Image.asset(imageAsset!, width: imageWidth, height: imageWidth * 0.67, fit: BoxFit.contain, filterQuality: FilterQuality.high, excludeFromSemantics: true)
-          else
-            _badge(),
+          if (imageAsset != null) Image.asset(imageAsset!, width: imageWidth, height: imageWidth * 0.67, fit: BoxFit.contain, filterQuality: FilterQuality.high, excludeFromSemantics: true) else _badge(),
           SizedBox(height: imageAsset == null ? 14 : 12),
           Text(
             title,

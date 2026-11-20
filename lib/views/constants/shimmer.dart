@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Sweeps a soft highlight over [child] while something loads. Only the painted
 /// parts of the child get the highlight, so build the child from solid blocks.
@@ -85,7 +85,7 @@ class CatalogSkeletonGrid extends StatelessWidget {
         shrinkWrap: true,
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: premium ? 0.7 : 0.78),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: premium ? 0.7 : 0.78),
         itemBuilder: (context, index) => _SkeletonCard(premium: premium),
       ),
     );
@@ -109,15 +109,10 @@ class _SkeletonCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Expanded(
-            child: Center(child: ShimmerBlock(width: 96, height: 96, radius: 28)),
-          ),
+          const Expanded(child: Center(child: ShimmerBlock(width: 96, height: 96, radius: 28))),
           const SizedBox(height: 10),
           const ShimmerBlock(width: 86, height: 20, radius: 8),
-          if (premium) ...[
-            const SizedBox(height: 8),
-            const ShimmerBlock(width: 120, height: 12, radius: 6),
-          ],
+          if (premium) ...[const SizedBox(height: 8), const ShimmerBlock(width: 120, height: 12, radius: 6)],
           const SizedBox(height: 14),
           const ShimmerBlock(height: 42, radius: 14),
         ],

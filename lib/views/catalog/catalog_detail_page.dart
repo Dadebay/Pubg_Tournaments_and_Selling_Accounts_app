@@ -213,7 +213,7 @@ class _CatalogDetailPageState extends State<CatalogDetailPage> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: _brand.products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 0.72),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, mainAxisSpacing: 14, crossAxisSpacing: 14, childAspectRatio: 0.72),
       itemBuilder: (context, index) => _productCard(_brand.products[index]),
     );
   }

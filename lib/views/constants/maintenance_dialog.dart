@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/utils/server_status.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';

@@ -6,6 +6,9 @@ import 'package:get/get.dart'; // Ensure Get is imported for RxList, etc.
 // import '../models/accouts_for_sale_model.dart';
 
 class ShowAllAccountsController extends GetxController {
+  /// True: the list is `get-vip-posts` (the arrow of the VIP section); false: every post.
+  bool vipOnly = false;
+
   RxString sortType = ''.obs;
   RxString sortName = ''.obs;
   RxString sortCityType = ''.obs;
@@ -57,7 +60,7 @@ class ShowAllAccountsController extends GetxController {
     }
 
     try {
-      final newItems = await GetPostsAccountModel().getPosts(parametrs: _getCurrentParams());
+      final newItems = vipOnly ? await GetPostsAccountModel().getVIPPosts(parametrs: _getCurrentParams()) : await GetPostsAccountModel().getPosts(parametrs: _getCurrentParams());
       if (newItems.isNotEmpty) {
         list.addAll(newItems);
       }

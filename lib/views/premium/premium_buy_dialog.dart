@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/premium_model.dart';
@@ -14,14 +14,8 @@ const _red = Color(0xFFFF5A5F);
 
 /// Asks to buy premium and does it inside the same dialog: confirm → busy →
 /// done (or the reason it failed). Returns true when premium was bought.
-Future<bool> showPremiumBuyDialog(
-  BuildContext context,
-  PremiumStatus status,
-) async {
-  final bought = await Navigator.of(
-    context,
-    rootNavigator: true,
-  ).push<bool>(_PremiumDialogRoute(status));
+Future<bool> showPremiumBuyDialog(BuildContext context, PremiumStatus status) async {
+  final bought = await Navigator.of(context, rootNavigator: true).push<bool>(_PremiumDialogRoute(status));
   return bought ?? false;
 }
 
@@ -32,10 +26,8 @@ class _PremiumDialogRoute extends RawDialogRoute<bool> {
         barrierLabel: 'premium',
         barrierColor: Colors.black.withValues(alpha: 0.7),
         transitionDuration: const Duration(milliseconds: 260),
-        pageBuilder: (context, animation, secondary) =>
-            _PremiumBuyDialog(status: status),
-        transitionBuilder: (context, animation, secondary, child) =>
-            _PremiumDialogTransition(animation: animation, child: child),
+        pageBuilder: (context, animation, secondary) => _PremiumBuyDialog(status: status),
+        transitionBuilder: (context, animation, secondary, child) => _PremiumDialogTransition(animation: animation, child: child),
       );
 
   @override
@@ -43,27 +35,19 @@ class _PremiumDialogRoute extends RawDialogRoute<bool> {
 }
 
 class _PremiumDialogTransition extends StatefulWidget {
-  const _PremiumDialogTransition({
-    required this.animation,
-    required this.child,
-  });
+  const _PremiumDialogTransition({required this.animation, required this.child});
 
   final Animation<double> animation;
   final Widget child;
 
   @override
-  State<_PremiumDialogTransition> createState() =>
-      _PremiumDialogTransitionState();
+  State<_PremiumDialogTransition> createState() => _PremiumDialogTransitionState();
 }
 
 class _PremiumDialogTransitionState extends State<_PremiumDialogTransition> {
   late CurvedAnimation _motion = _createMotion();
 
-  CurvedAnimation _createMotion() => CurvedAnimation(
-    parent: widget.animation,
-    curve: Curves.easeOutCubic,
-    reverseCurve: Curves.easeInCubic,
-  );
+  CurvedAnimation _createMotion() => CurvedAnimation(parent: widget.animation, curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic);
 
   @override
   void didUpdateWidget(_PremiumDialogTransition oldWidget) {
@@ -84,12 +68,7 @@ class _PremiumDialogTransitionState extends State<_PremiumDialogTransition> {
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _motion,
-      child: MediaQuery.disableAnimationsOf(context)
-          ? widget.child
-          : ScaleTransition(
-              scale: Tween<double>(begin: 0.96, end: 1).animate(_motion),
-              child: widget.child,
-            ),
+      child: MediaQuery.disableAnimationsOf(context) ? widget.child : ScaleTransition(scale: Tween<double>(begin: 0.96, end: 1).animate(_motion), child: widget.child),
     );
   }
 }
@@ -125,9 +104,7 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
       return;
     }
     setState(() {
-      _error = result.statusCode == 401 || result.statusCode == 403
-          ? 'premiumLoginFirst'.tr
-          : 'premiumNotEnough'.tr;
+      _error = result.statusCode == 401 || result.statusCode == 403 ? 'premiumLoginFirst'.tr : 'premiumNotEnough'.tr;
       _step = _Step.failed;
     });
   }
@@ -148,22 +125,9 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
                 padding: const EdgeInsets.fromLTRB(22, 26, 22, 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: (_step == _Step.failed ? _red : _gold).withValues(
-                      alpha: 0.4,
-                    ),
-                  ),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF2E2718), Color(0xFF141416)],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _gold.withValues(alpha: 0.18),
-                      blurRadius: 30,
-                    ),
-                  ],
+                  border: Border.all(color: (_step == _Step.failed ? _red : _gold).withValues(alpha: 0.4)),
+                  gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2E2718), Color(0xFF141416)]),
+                  boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.18), blurRadius: 30)],
                 ),
                 child: AnimatedSize(
                   duration: const Duration(milliseconds: 240),
@@ -173,10 +137,7 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
                     duration: const Duration(milliseconds: 220),
                     switchInCurve: Curves.easeOut,
                     switchOutCurve: Curves.easeIn,
-                    layoutBuilder: (current, previous) => Stack(
-                      alignment: Alignment.topCenter,
-                      children: [...previous, ?current],
-                    ),
+                    layoutBuilder: (current, previous) => Stack(alignment: Alignment.topCenter, children: [...previous, ?current]),
                     child: KeyedSubtree(key: ValueKey(_step), child: _body()),
                   ),
                 ),
@@ -187,13 +148,7 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
           // never takes a touch.
           if (_step == _Step.done)
             Positioned.fill(
-              child: IgnorePointer(
-                child: Lottie.asset(
-                  'assets/lottie/confetti.json',
-                  repeat: false,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: IgnorePointer(child: Lottie.asset('assets/lottie/confetti.json', repeat: false, fit: BoxFit.cover)),
             ),
         ],
       ),
@@ -203,29 +158,9 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
   Widget _body() {
     return switch (_step) {
       _Step.confirm => _confirm(),
-      _Step.busy => _status(
-        const SizedBox(
-          width: 44,
-          height: 44,
-          child: CircularProgressIndicator(color: _gold, strokeWidth: 4),
-        ),
-        'premiumBuy'.tr,
-        null,
-      ),
-      _Step.done => _status(
-        const _ResultIcon(icon: Icons.check_rounded, color: _green),
-        'premiumBought'.tr,
-        _button('premiumDone'.tr, () => Navigator.of(context).pop(true)),
-      ),
-      _Step.failed => _status(
-        const _ResultIcon(icon: Icons.close_rounded, color: _red),
-        _error,
-        _button(
-          'premiumCancel'.tr,
-          () => Navigator.of(context).pop(false),
-          outlined: true,
-        ),
-      ),
+      _Step.busy => _status(const SizedBox(width: 44, height: 44, child: CircularProgressIndicator(color: _gold, strokeWidth: 4)), 'premiumBuy'.tr, null),
+      _Step.done => _status(const _ResultIcon(icon: Icons.check_rounded, color: _green), 'premiumBought'.tr, _button('premiumDone'.tr, () => Navigator.of(context).pop(true))),
+      _Step.failed => _status(const _ResultIcon(icon: Icons.close_rounded, color: _red), _error, _button('premiumCancel'.tr, () => Navigator.of(context).pop(false), outlined: true)),
     };
   }
 
@@ -243,49 +178,30 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
             border: Border.all(color: _gold.withValues(alpha: 0.5)),
           ),
           child: const Center(
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedCrown,
-              color: _gold,
-              size: 34,
-              strokeWidth: 1.8,
-            ),
+            child: HugeIcon(icon: HugeIcons.strokeRoundedCrown, color: _gold, size: 34, strokeWidth: 1.8),
           ),
         ),
         const SizedBox(height: 16),
         Text(
           'premiumConfirmTitle'.tr,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: gilroyBold,
-            fontSize: 22,
-          ),
+          style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 22),
         ),
         const SizedBox(height: 14),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.06),
-            borderRadius: BorderRadius.circular(18),
-          ),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(18)),
           child: Column(
             children: [
               _row('premiumDays'.tr, status.days > 0 ? '${status.days}' : '-'),
               const SizedBox(height: 8),
-              _row(
-                'premiumYourBalance'.tr,
-                '${Get.find<WalletController>().userMoney.value} TMT',
-              ),
+              _row('premiumYourBalance'.tr, '${Get.find<WalletController>().userMoney.value} TMT'),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Divider(height: 1, color: Colors.white12),
               ),
-              _row(
-                'premiumBuy'.tr,
-                status.price > 0 ? '${status.priceText} TMT' : '-',
-                big: true,
-              ),
+              _row('premiumBuy'.tr, status.price > 0 ? '${status.priceText} TMT' : '-', big: true),
             ],
           ),
         ),
@@ -296,11 +212,7 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(
             'premiumCancel'.tr,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontFamily: gilroySemiBold,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.white70, fontFamily: gilroySemiBold, fontSize: 14),
           ),
         ),
       ],
@@ -313,20 +225,12 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
         Expanded(
           child: Text(
             label,
-            style: TextStyle(
-              color: const Color(0xFFB8B8C0),
-              fontFamily: gilroyMedium,
-              fontSize: big ? 16 : 14,
-            ),
+            style: TextStyle(color: const Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: big ? 16 : 14),
           ),
         ),
         Text(
           value,
-          style: TextStyle(
-            color: big ? _gold : Colors.white,
-            fontFamily: gilroyBold,
-            fontSize: big ? 22 : 15,
-          ),
+          style: TextStyle(color: big ? _gold : Colors.white, fontFamily: gilroyBold, fontSize: big ? 22 : 15),
         ),
       ],
     );
@@ -342,12 +246,7 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
         Text(
           text,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: gilroyBold,
-            fontSize: 20,
-            height: 1.2,
-          ),
+          style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 20, height: 1.2),
         ),
         if (action != null) ...[const SizedBox(height: 22), action],
         const SizedBox(height: 6),
@@ -364,20 +263,12 @@ class _PremiumBuyDialogState extends State<_PremiumBuyDialog> {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(27),
-          gradient: outlined
-              ? null
-              : const LinearGradient(
-                  colors: [Color(0xFFFFD866), Color(0xFFFF9800)],
-                ),
+          gradient: outlined ? null : const LinearGradient(colors: [Color(0xFFFFD866), Color(0xFFFF9800)]),
           border: outlined ? Border.all(color: Colors.white24) : null,
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: outlined ? Colors.white : Colors.black,
-            fontFamily: gilroyBold,
-            fontSize: 17,
-          ),
+          style: TextStyle(color: outlined ? Colors.white : Colors.black, fontFamily: gilroyBold, fontSize: 17),
         ),
       ),
     );
@@ -395,33 +286,12 @@ class _ResultIcon extends StatefulWidget {
   State<_ResultIcon> createState() => _ResultIconState();
 }
 
-class _ResultIconState extends State<_ResultIcon>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 320),
-  );
+class _ResultIconState extends State<_ResultIcon> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 320));
   late final Animation<double> _scale = _controller.drive(
-    TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween(
-          begin: 0.88,
-          end: 1.04,
-        ).chain(CurveTween(curve: Curves.easeOutCubic)),
-        weight: 68,
-      ),
-      TweenSequenceItem(
-        tween: Tween(
-          begin: 1.04,
-          end: 1.0,
-        ).chain(CurveTween(curve: Curves.easeOutCubic)),
-        weight: 32,
-      ),
-    ]),
+    TweenSequence<double>([TweenSequenceItem(tween: Tween(begin: 0.88, end: 1.04).chain(CurveTween(curve: Curves.easeOutCubic)), weight: 68), TweenSequenceItem(tween: Tween(begin: 1.04, end: 1.0).chain(CurveTween(curve: Curves.easeOutCubic)), weight: 32)]),
   );
-  late final Animation<double> _opacity = _controller.drive(
-    CurveTween(curve: const Interval(0, 0.55, curve: Curves.easeOut)),
-  );
+  late final Animation<double> _opacity = _controller.drive(CurveTween(curve: const Interval(0, 0.55, curve: Curves.easeOut)));
 
   @override
   void didChangeDependencies() {

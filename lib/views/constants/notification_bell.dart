@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/controllers/notification_badge_controller.dart';
 import 'package:game_app/views/user_profil/pages/notification.dart';
 import 'package:get/get.dart';

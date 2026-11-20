@@ -19,9 +19,12 @@ class GetPostsAccountModel {
   final String? bgImage;
   final String? createdAt;
   final bool? vip;
+
+  /// The account was bought (`sold` in every post answer); it can not be bought again.
+  final bool sold;
   final PostByIdModel? user;
   final List<GetAccountVideos>? videos;
-  GetPostsAccountModel({this.id, this.bgImage, this.pubgUserName, this.pubgID, this.image, this.createdAt, this.price, this.desc, this.pubgType, this.title, this.vip, this.user, this.videos, this.phone});
+  GetPostsAccountModel({this.id, this.bgImage, this.pubgUserName, this.pubgID, this.image, this.createdAt, this.price, this.desc, this.pubgType, this.title, this.vip, this.sold = false, this.user, this.videos, this.phone});
 
   factory GetPostsAccountModel.fromJson(Map<dynamic, dynamic> json) {
     return GetPostsAccountModel(
@@ -36,6 +39,7 @@ class GetPostsAccountModel {
       desc: json['description'] ?? '0.0',
       pubgType: json['pubg_type'] ?? '0.0',
       title: json['title'] ?? '0.0',
+      sold: json['sold'] == true,
       vip: json['vip'] == true, // always a bool on the new API; false for older answers
       user: json['user'] == null ? PostByIdModel() : PostByIdModel.fromJson(json['user']),
       videos: json['videos'] == null ? [] : ((json['videos'] ?? []) as List).map((json) => GetAccountVideos.fromJson(json)).toList(),

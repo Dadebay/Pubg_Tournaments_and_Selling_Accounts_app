@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 
 import '../constants/constants.dart';
@@ -6,13 +6,7 @@ import 'animated_nav_icon.dart';
 
 /// One tab of the [FloatingNavBar].
 class FloatingNavItem {
-  const FloatingNavItem({
-    required this.kind,
-    required this.icon,
-    required this.selectedIcon,
-    required this.label,
-    this.hugeIcon,
-  });
+  const FloatingNavItem({required this.kind, required this.icon, required this.selectedIcon, required this.label, this.hugeIcon});
 
   final NavIconKind kind;
   final IconData icon;
@@ -29,12 +23,7 @@ class FloatingNavItem {
 /// A full-width black bar above the page with an icon and a label per tab;
 /// the selected tab turns gold and plays its icon scene in place.
 class FloatingNavBar extends StatelessWidget {
-  const FloatingNavBar({
-    required this.items,
-    required this.selectedIndex,
-    required this.onTap,
-    super.key,
-  });
+  const FloatingNavBar({required this.items, required this.selectedIndex, required this.onTap, super.key});
 
   final List<FloatingNavItem> items;
   final int selectedIndex;
@@ -54,10 +43,11 @@ class FloatingNavBar extends StatelessWidget {
         top: false,
         child: SizedBox(
           height: 68,
-          child: Row(
-            children: [
-              for (var i = 0; i < items.length; i++) Expanded(child: _tab(i)),
-            ],
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680),
+              child: Row(children: [for (var i = 0; i < items.length; i++) Expanded(child: _tab(i))]),
+            ),
           ),
         ),
       ),
@@ -79,30 +69,14 @@ class FloatingNavBar extends StatelessWidget {
             width: 28,
             height: 28,
             child: Center(
-              child: AnimatedNavIcon(
-                kind: item.kind,
-                icon: selected ? item.selectedIcon : item.icon,
-                hugeIcon: item.hugeIcon,
-                hugeStrokeWidth: selected ? 2.2 : 1.5,
-                selected: selected,
-                color: color,
-              ),
+              child: AnimatedNavIcon(kind: item.kind, icon: selected ? item.selectedIcon : item.icon, hugeIcon: item.hugeIcon, hugeStrokeWidth: selected ? 2.2 : 1.5, selected: selected, color: color),
             ),
           ),
           const SizedBox(height: 4),
           AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 220),
-            style: TextStyle(
-              color: color,
-              fontFamily: selected ? gilroySemiBold : gilroyRegular,
-              fontSize: 12,
-              height: 1.2,
-            ),
-            child: Text(
-              item.label.tr,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            style: TextStyle(color: color, fontFamily: selected ? gilroySemiBold : gilroyRegular, fontSize: 12, height: 1.2),
+            child: Text(item.label.tr, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),

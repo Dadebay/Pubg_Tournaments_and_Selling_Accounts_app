@@ -12,6 +12,7 @@ import 'package:game_app/views/constants/shimmer.dart';
 import 'package:game_app/views/home_page/paymant/data/team_members_provider.dart';
 import 'package:game_app/views/home_page/paymant/data/tournament_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:game_app/views/constants/refresh_header.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../cards/tournament_card.dart';
@@ -236,7 +237,7 @@ class _TournamentPageState extends State<TournamentPage> {
                   onRefresh: _onRefresh,
                   enablePullDown: true,
                   enablePullUp: false,
-                  header: const MaterialClassicHeader(color: kPrimaryColor),
+                  header: appRefreshHeader(),
                   child: widget.tournamentType == 1 ? _buildProviderBody() : _buildGetXBody(),
                 ),
               ),

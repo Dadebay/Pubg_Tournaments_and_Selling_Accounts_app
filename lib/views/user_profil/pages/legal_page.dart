@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';

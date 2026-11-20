@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -163,7 +163,10 @@ class CollapsingTabsPage extends StatelessWidget {
                   key: ValueKey(selectedIndex),
                   child: Column(
                     children: [
-                      ConstrainedBox(constraints: BoxConstraints(minHeight: minHeight), child: body),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: minHeight),
+                        child: body,
+                      ),
                       SizedBox(height: bottomPadding),
                     ],
                   ),

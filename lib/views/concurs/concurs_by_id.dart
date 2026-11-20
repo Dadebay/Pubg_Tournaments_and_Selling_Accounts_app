@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:game_app/controllers/settings_controller.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:game_app/models/history_order_model.dart';
@@ -367,7 +367,7 @@ class _ConcursByIDState extends State<ConcursByID> {
             return Container(
               margin: const EdgeInsets.all(8),
               height: 220,
-              width: Get.size.width,
+              width: double.infinity,
               decoration: BoxDecoration(borderRadius: borderRadius15, color: Colors.grey.withValues(alpha: 0.4)),
               child: Center(child: spinKit()),
             );

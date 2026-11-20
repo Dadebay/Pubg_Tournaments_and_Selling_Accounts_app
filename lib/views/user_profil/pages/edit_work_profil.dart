@@ -253,7 +253,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                   fadeInCurve: Curves.ease,
                   imageUrl: '$serverURL${widget.model.image}',
                   imageBuilder: (context, imageProvider) => Container(
-                    width: Get.size.width,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: borderRadius20,
                       image: DecorationImage(
@@ -350,7 +350,7 @@ class _EditWorkProfileState extends State<EditWorkProfile> {
                     fadeInCurve: Curves.ease,
                     imageUrl: '$serverURL${widget.model.bgImage}',
                     imageBuilder: (context, imageProvider) => Container(
-                      width: Get.size.width,
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: borderRadius20,
                         image: DecorationImage(

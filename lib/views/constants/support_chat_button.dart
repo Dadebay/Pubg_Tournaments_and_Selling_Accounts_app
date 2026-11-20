@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/utils/support_push.dart';
 import 'package:game_app/views/support/support_chat_page.dart';
 import 'package:get/get.dart';
@@ -73,7 +73,10 @@ class _SupportChatButtonState extends State<SupportChatButton> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.black, width: 1.8),
                       ),
-                      child: Text(unread > 99 ? '99+' : '$unread', style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                      child: Text(
+                        unread > 99 ? '99+' : '$unread',
+                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                      ),
                     );
                   },
                 ),

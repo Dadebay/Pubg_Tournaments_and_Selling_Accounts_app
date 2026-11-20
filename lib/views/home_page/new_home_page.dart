@@ -15,6 +15,7 @@ import 'package:game_app/views/constants/support_chat_button.dart';
 import 'package:game_app/views/home_page/home_banner.dart';
 import 'package:game_app/views/home_page/new_pubg_types.dart';
 import 'package:http/http.dart' as http;
+import 'package:game_app/views/constants/refresh_header.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../models/user_models/auth_model.dart';
@@ -179,7 +180,7 @@ class _NewHomePageState extends State<NewHomePage> {
               enablePullDown: true,
               enablePullUp: true,
               physics: const BouncingScrollPhysics(),
-              header: const MaterialClassicHeader(color: kPrimaryColor),
+              header: appRefreshHeader(),
               child: ListView(
                 children: [
                   HomeBanner(future: _futureBanners),
@@ -192,7 +193,7 @@ class _NewHomePageState extends State<NewHomePage> {
                       return Container(
                         margin: const EdgeInsets.all(8),
                         height: 220,
-                        width: Get.size.width,
+                        width: double.infinity,
                         child: Center(child: spinKit()),
                       );
                     } else if (postsController.list.isEmpty &&
@@ -211,10 +212,8 @@ class _NewHomePageState extends State<NewHomePage> {
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(8.0),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: size.width >= 800
-                            ? 3
-                            : (size.width >= 600 ? 2 : 1),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 480,
                         mainAxisExtent: 188,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 8,

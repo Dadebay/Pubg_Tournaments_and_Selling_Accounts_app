@@ -25,8 +25,8 @@ class BoughtThings extends StatelessWidget {
           children: [
             CenteredHeader(title: 'orders'.tr, onBack: Get.back),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
+              child: GridView.extent(
+                maxCrossAxisExtent: 320,
                 mainAxisSpacing: 14,
                 crossAxisSpacing: 14,
                 childAspectRatio: 0.95,

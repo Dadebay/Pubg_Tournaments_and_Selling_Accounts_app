@@ -77,19 +77,21 @@ class AccountBuyBar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           GestureDetector(
-            onTap: () => _buy(context),
+            // A sold account can not be bought again.
+            onTap: model.sold ? null : () => _buy(context),
             child: Container(
               height: 54,
               padding: const EdgeInsets.symmetric(horizontal: 26),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(27),
-                gradient: const LinearGradient(colors: [Color(0xFFFFD866), _goldDark]),
-                boxShadow: [BoxShadow(color: _gold.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 5))],
+                color: model.sold ? Colors.white.withValues(alpha: 0.12) : null,
+                gradient: model.sold ? null : const LinearGradient(colors: [Color(0xFFFFD866), _goldDark]),
+                boxShadow: model.sold ? null : [BoxShadow(color: _gold.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 5))],
               ),
               child: Text(
-                'accountBuy'.tr,
-                style: const TextStyle(color: Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 17),
+                model.sold ? 'accountSoldBadge'.tr : 'accountBuy'.tr,
+                style: TextStyle(color: model.sold ? Colors.white54 : const Color(0xFF1A1200), fontFamily: gilroyBold, fontSize: 17),
               ),
             ),
           ),
@@ -171,8 +173,9 @@ class _BuyAccountDialogState extends State<BuyAccountDialog> {
     }
     if (result.ok) {
       final data = result.data;
-      if (data is Map && data['points_balance'] != null) {
-        _wallet.setMoneyFromPoints('${data['points_balance']}');
+      final newBalance = data is Map ? (data['balance'] ?? data['points_balance']) : null;
+      if (newBalance != null) {
+        _wallet.setMoneyFromPoints('$newBalance');
       } else {
         _wallet.getUserMoney();
       }
@@ -180,12 +183,17 @@ class _BuyAccountDialogState extends State<BuyAccountDialog> {
       await showDialog(context: Get.context!, barrierColor: Colors.black.withValues(alpha: 0.75), builder: (context) => const _DoneDialog());
       return;
     }
+    final code = result.data is Map ? result.data['code'] : null;
+    if (code == 'not_enough_money') {
+      // The balance on the screen was old: offer the top-up.
+      _wallet.getUserMoney();
+      Get.back();
+      await Get.to(() => const TopUpScreen());
+      return;
+    }
     setState(() {
       _busy = false;
-      _error = switch (result.statusCode) {
-        409 => 'accountBuySold'.tr,
-        _ => result.error ?? 'accountBuyFailed'.tr,
-      };
+      _error = code == 'already_sold' || result.statusCode == 409 ? 'accountBuySold'.tr : (result.error ?? 'accountBuyFailed'.tr);
     });
   }
 

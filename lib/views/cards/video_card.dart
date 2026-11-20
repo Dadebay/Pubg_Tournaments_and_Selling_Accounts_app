@@ -10,20 +10,12 @@ class VideoCard extends StatelessWidget {
   final String videoPath;
   final String image;
 
-  const VideoCard({
-    required this.videoPath,
-    required this.image,
-    super.key,
-  });
+  const VideoCard({required this.videoPath, required this.image, super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(
-          () => VideoPLayerMine(
-            videoURL: videoPath,
-          ),
-        );
+        Get.to(() => VideoPLayerMine(videoURL: videoPath));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -34,18 +26,15 @@ class VideoCard extends StatelessWidget {
               children: [
                 SizedBox(
                   height: 200,
-                  width: Get.size.width,
+                  width: double.infinity,
                   child: CachedNetworkImage(
                     fadeInCurve: Curves.ease,
                     imageUrl: image,
                     imageBuilder: (context, imageProvider) => Container(
-                      width: Get.size.width,
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: borderRadius15,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
+                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                       ),
                     ),
                     placeholder: (context, url) => Center(child: spinKit()),
@@ -67,16 +56,7 @@ class VideoCard extends StatelessWidget {
                   ),
                 ),
                 Positioned.fill(
-                  child: Center(
-                    child: Lottie.asset(
-                      'assets/lottie/playButton.json',
-                      repeat: true,
-                      animate: true,
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  child: Center(child: Lottie.asset('assets/lottie/playButton.json', repeat: true, animate: true, width: 150, height: 150, fit: BoxFit.cover)),
                 ),
               ],
             ),

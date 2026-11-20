@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, must_be_immutable
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/tournament_model.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/constants.dart';

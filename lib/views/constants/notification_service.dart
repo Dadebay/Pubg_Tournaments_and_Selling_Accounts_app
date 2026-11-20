@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/utils/order_push.dart';
 import 'package:game_app/utils/support_push.dart';
 
@@ -46,6 +46,8 @@ class FCMConfig {
       SupportPush.open();
     } else if (action.payload?['type'] == 'game_order') {
       OrderPush.open();
+    } else if (action.payload?['type'] == 'account_order') {
+      OrderPush.open(account: true);
     }
   }
 

@@ -1,17 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import 'constants.dart';
 
 /// The top bar of a page: a round back button on the left and the title centered.
 class CenteredHeader extends StatelessWidget {
-  const CenteredHeader({
-    required this.title,
-    this.onBack,
-    this.trailing,
-    this.size = 22,
-    super.key,
-  });
+  const CenteredHeader({required this.title, this.onBack, this.trailing, this.size = 22, super.key});
 
   /// Shown as given; pass it translated.
   final String title;
@@ -38,11 +32,7 @@ class CenteredHeader extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: gilroyBold,
-                  fontSize: size,
-                ),
+                style: TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: size),
               ),
             ),
             if (onBack != null)
@@ -56,23 +46,15 @@ class CenteredHeader extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white.withValues(alpha: 0.06),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.14),
-                      ),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
                     ),
                     child: const Center(
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedArrowLeft01,
-                        color: Colors.white,
-                        size: 20,
-                        strokeWidth: 2,
-                      ),
+                      child: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.white, size: 20, strokeWidth: 2),
                     ),
                   ),
                 ),
               ),
-            if (trailing != null)
-              Align(alignment: Alignment.centerRight, child: trailing),
+            if (trailing != null) Align(alignment: Alignment.centerRight, child: trailing),
           ],
         ),
       ),

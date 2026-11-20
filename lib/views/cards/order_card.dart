@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:game_app/controllers/wallet_controller.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -14,15 +14,7 @@ class OrderCard extends StatelessWidget {
   final String image;
   final String status;
   final String price;
-  const OrderCard({
-    required this.id,
-    required this.count,
-    required this.title,
-    required this.status,
-    required this.image,
-    required this.price,
-    super.key,
-  });
+  const OrderCard({required this.id, required this.count, required this.title, required this.status, required this.image, required this.price, super.key});
 
   static const _gold = Color(0xFFFFC83D);
 
@@ -42,8 +34,7 @@ class OrderCard extends StatelessWidget {
     _cart.cartList.refresh();
   }
 
-  String _money(double value) =>
-      '${value == value.roundToDouble() ? value.toInt() : value.toStringAsFixed(2)} TMT';
+  String _money(double value) => '${value == value.roundToDouble() ? value.toInt() : value.toStringAsFixed(2)} TMT';
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +44,7 @@ class OrderCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF232327), Color(0xFF141416)],
-        ),
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF232327), Color(0xFF141416)]),
         border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Row(
@@ -77,11 +64,7 @@ class OrderCard extends StatelessWidget {
                           title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: gilroyBold,
-                            fontSize: 18,
-                          ),
+                          style: const TextStyle(color: Colors.white, fontFamily: gilroyBold, fontSize: 18),
                         ),
                       ),
                       GestureDetector(
@@ -89,23 +72,14 @@ class OrderCard extends StatelessWidget {
                         behavior: HitTestBehavior.opaque,
                         child: const Padding(
                           padding: EdgeInsets.only(left: 10, bottom: 4),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedDelete02,
-                            color: Color(0xFF8D9AB8),
-                            size: 20,
-                            strokeWidth: 1.6,
-                          ),
+                          child: HugeIcon(icon: HugeIcons.strokeRoundedDelete02, color: Color(0xFF8D9AB8), size: 20, strokeWidth: 1.6),
                         ),
                       ),
                     ],
                   ),
                   Text(
                     _money(unit),
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      fontFamily: gilroyMedium,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontFamily: gilroyMedium, fontSize: 13),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -114,11 +88,7 @@ class OrderCard extends StatelessWidget {
                       const Spacer(),
                       Text(
                         _money(unit * current),
-                        style: const TextStyle(
-                          color: _gold,
-                          fontFamily: gilroyBold,
-                          fontSize: 18,
-                        ),
+                        style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 18),
                       ),
                     ],
                   ),
@@ -138,12 +108,7 @@ class OrderCard extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: RadialGradient(
-          colors: [
-            _gold.withValues(alpha: 0.26),
-            Colors.black.withValues(alpha: 0.35),
-          ],
-        ),
+        gradient: RadialGradient(colors: [_gold.withValues(alpha: 0.26), Colors.black.withValues(alpha: 0.35)]),
         border: Border.all(color: _gold.withValues(alpha: 0.22)),
       ),
       child: CachedNetworkImage(
@@ -151,12 +116,7 @@ class OrderCard extends StatelessWidget {
         fit: BoxFit.contain,
         fadeInCurve: Curves.ease,
         placeholder: (context, url) => Center(child: spinKit()),
-        errorWidget: (context, url, error) => Center(
-          child: Icon(
-            CupertinoIcons.photo,
-            color: Colors.white.withValues(alpha: 0.3),
-          ),
-        ),
+        errorWidget: (context, url, error) => Center(child: Icon(CupertinoIcons.photo, color: Colors.white.withValues(alpha: 0.3))),
       ),
     );
   }
@@ -174,12 +134,7 @@ class OrderCard extends StatelessWidget {
       ),
       child: Text(
         '× $current',
-        style: const TextStyle(
-          color: _gold,
-          fontFamily: gilroyBold,
-          fontSize: 16,
-          height: 1,
-        ),
+        style: const TextStyle(color: _gold, fontFamily: gilroyBold, fontSize: 16, height: 1),
       ),
     );
   }

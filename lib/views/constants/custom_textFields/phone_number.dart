@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, must_be_immutable, use_key_in_widget_constructors
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:game_app/views/constants/constants.dart';
 import 'package:get/get.dart';
@@ -33,9 +33,7 @@ class PhoneNumber extends StatelessWidget {
           }
           return null;
         },
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(8),
-        ],
+        inputFormatters: [LengthLimitingTextInputFormatter(8)],
         onEditingComplete: () {
           requestFocus.requestFocus();
         },

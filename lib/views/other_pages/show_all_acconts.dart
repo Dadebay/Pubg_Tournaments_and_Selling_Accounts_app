@@ -3,13 +3,17 @@ import 'package:game_app/controllers/show_all_account_controller.dart';
 import 'package:game_app/models/home_page_model.dart';
 import 'package:game_app/views/constants/dialogs.dart';
 import 'package:game_app/views/constants/index.dart';
+import 'package:game_app/views/constants/refresh_header.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../cards/show_all_accounts_card.dart';
 
 class ShowAllAccounts extends StatefulWidget {
   final String name;
-  const ShowAllAccounts({required this.name, super.key});
+
+  /// Only the VIP accounts (opened from the arrow of the VIP section on the home page).
+  final bool vipOnly;
+  const ShowAllAccounts({required this.name, this.vipOnly = false, super.key});
 
   @override
   State<ShowAllAccounts> createState() => _ShowAllAccountsState();
@@ -30,6 +34,7 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
 
     name = 'selectCitySubtitle';
     value = 0;
+    controller.vipOnly = widget.vipOnly;
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // Bu kod birinji kadr çekilenden soň işlär
@@ -43,6 +48,8 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
 
   @override
   void dispose() {
+    // The controller is shared with the home page: give it back as the list of every post.
+    controller.vipOnly = false;
     _controller.dispose();
     _controller1.dispose();
     _refreshController.dispose();
@@ -318,7 +325,6 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: kPrimaryColorBlack,
@@ -337,15 +343,15 @@ class _ShowAllAccountsState extends State<ShowAllAccounts> {
             enablePullDown: true,
             enablePullUp: controller.list.isNotEmpty,
             physics: const BouncingScrollPhysics(),
-            header: const MaterialClassicHeader(color: kPrimaryColor),
+            header: appRefreshHeader(),
             child: GridView.builder(
               itemCount: controller.list.length,
               shrinkWrap: false,
               padding: const EdgeInsets.all(12.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: size.width >= 800 ? 3 : 2,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 320,
                 mainAxisSpacing: 12,
-                childAspectRatio: size.width >= 800 ? 3 / 4 : 0.68,
+                childAspectRatio: 0.68,
                 crossAxisSpacing: 10,
               ),
               itemBuilder: (BuildContext context, int index) {

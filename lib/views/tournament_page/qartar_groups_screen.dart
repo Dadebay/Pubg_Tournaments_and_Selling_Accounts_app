@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/views/cards/tournament_image.dart';
 import 'package:game_app/views/constants/balance_chip.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
@@ -75,22 +77,11 @@ class _QuarterGroupsScreenState extends State<QuarterGroupsScreen> {
                   final cards = <Widget>[];
                   if (widget.filter == 'final') {
                     if (sortedGroups.isNotEmpty) {
-                      cards.add(
-                        QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[0], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[0]]!.first, static_g: ''),
-                      );
+                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[0], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[0]]!.first, static_g: ''));
                     }
                   } else if (widget.filter == 'yarym_final') {
                     for (var i = 0; i < 2 && i < sortedGroups.length; i++) {
-                      cards.add(
-                        QuarterGroupCard(
-                          filter: widget.filter,
-                          groupName: sortedGroups[i],
-                          teamCount: 25,
-                          tournament: widget.tournament,
-                          member: groupedTeams[sortedGroups[i]]!.first,
-                          static_g: i == 0 ? '' : 'B2',
-                        ),
-                      );
+                      cards.add(QuarterGroupCard(filter: widget.filter, groupName: sortedGroups[i], teamCount: 25, tournament: widget.tournament, member: groupedTeams[sortedGroups[i]]!.first, static_g: i == 0 ? '' : 'B2'));
                     }
                   } else {
                     for (final groupName in sortedGroups) {
@@ -198,6 +189,11 @@ class QuarterGroupCard extends StatelessWidget {
     final String start;
     final String finish;
     final String dataDay;
+    final QuartTurnir? stageData = filter == 'yarym_final'
+        ? member.halfturnir
+        : filter == 'final'
+        ? member.finalturnir
+        : member.quartturnir;
 
     if (filter == 'yarym_final') {
       start = formatTime(member.halfturnir?.startDate);
@@ -213,85 +209,83 @@ class QuarterGroupCard extends StatelessWidget {
       dataDay = formatDate(member.quartturnir?.startDate);
     }
 
+    final stage = filter == 'yarym_final'
+        ? 'pol_final'.tr
+        : filter == 'final'
+        ? 'final_tournament'.tr
+        : 'qarterFinals'.tr;
+
     return GestureDetector(
       onTap: () {
         Get.to(() => TournamentDetailPage(filter: filter, tournament: tournament, groupName: groupName, members: member, static_g: static_g));
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 12),
+        // Clipped to the rounded corners, so the colored edge follows the border.
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-          gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF232327), Color(0xFF151517)]),
+          color: const Color(0xFF1B1B1E),
         ),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // A colored edge tells the groups apart without coloring the whole card.
-              Container(width: 5, color: color),
+              Container(width: 6, color: color),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-                  child: Row(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 54,
-                        height: 54,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), color: color.withValues(alpha: 0.15)),
-                        child: Text(
-                          groupName,
-                          style: TextStyle(fontFamily: gilroyBold, fontSize: 22, color: color),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${'group'.tr}$groupName',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontFamily: gilroyBold, fontSize: 18, color: Colors.white),
+                      Row(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(17), color: color.withValues(alpha: 0.18)),
+                            child: Text(
+                              groupName,
+                              style: TextStyle(fontFamily: gilroyBold, fontSize: 21, color: color),
                             ),
-                            const SizedBox(height: 6),
-                            Row(
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: Color(0xFF8E8E98), size: 14, strokeWidth: 1.8),
-                                const SizedBox(width: 5),
-                                Flexible(
-                                  child: Text(
-                                    '$dataDay · $start-$finish',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: Color(0xFFB8B8C0), fontFamily: gilroyMedium, fontSize: 12.5),
-                                  ),
+                                Text(
+                                  '${'group'.tr}$groupName',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontFamily: gilroyBold, fontSize: 19, color: Colors.white),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  stage,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontFamily: gilroyMedium, fontSize: 13, color: Color(0xFFB8B8C0)),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$teamCount',
-                            style: TextStyle(fontFamily: gilroyBold, fontSize: 20, color: color, height: 1),
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            'Team'.tr,
-                            style: const TextStyle(fontFamily: gilroyMedium, fontSize: 11, color: Color(0xFF8E8E98), height: 1),
-                          ),
+                          const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white38, size: 20, strokeWidth: 2),
                         ],
                       ),
-                      const SizedBox(width: 12),
-                      const HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: Colors.white38, size: 20, strokeWidth: 2),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(child: _info(color, HugeIcons.strokeRoundedCalendar03, dataDay)),
+                          const SizedBox(width: 8),
+                          Expanded(child: _info(color, HugeIcons.strokeRoundedClock01, '$start - $finish')),
+                          const SizedBox(width: 8),
+                          Expanded(child: _info(color, HugeIcons.strokeRoundedUserGroup, '$teamCount ${'Team'.tr}')),
+                        ],
+                      ),
+                      _StartCountdown(color: color, start: DateTime.tryParse(stageData?.startDate ?? ''), finish: DateTime.tryParse(stageData?.finishDate ?? '')),
                     ],
                   ),
                 ),
@@ -299,6 +293,115 @@ class QuarterGroupCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// A small tile of the card: a tinted icon over its value.
+  Widget _info(Color color, List<List<dynamic>> icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.06), borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        children: [
+          HugeIcon(icon: icon, color: color, size: 18, strokeWidth: 1.8),
+          const SizedBox(height: 6),
+          Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 12.5),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// How long is left until the stage starts, ticking every second. While it runs it says
+/// so, and once it is over it says it ended. Nothing is shown when the start is unknown.
+class _StartCountdown extends StatefulWidget {
+  const _StartCountdown({required this.color, required this.start, required this.finish});
+
+  final Color color;
+  final DateTime? start;
+  final DateTime? finish;
+
+  @override
+  State<_StartCountdown> createState() => _StartCountdownState();
+}
+
+class _StartCountdownState extends State<_StartCountdown> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String _two(int value) => value.toString().padLeft(2, '0');
+
+  @override
+  Widget build(BuildContext context) {
+    final start = widget.start?.toLocal();
+    if (start == null) {
+      return const SizedBox.shrink();
+    }
+    final now = DateTime.now();
+    final finish = widget.finish?.toLocal();
+    final left = start.difference(now);
+    final String label;
+    final String value;
+    Color tone = widget.color;
+    if (left > Duration.zero) {
+      label = 'startsIn'.tr;
+      final days = left.inDays;
+      final clock = '${_two(left.inHours % 24)}:${_two(left.inMinutes % 60)}:${_two(left.inSeconds % 60)}';
+      value = days > 0 ? '$days ${'premiumDays'.tr}  $clock' : clock;
+    } else if (finish != null && now.isAfter(finish)) {
+      // A finished stage has nothing left to count, so nothing is shown.
+      return const SizedBox.shrink();
+    } else {
+      label = '';
+      value = 'stageLive'.tr;
+      tone = const Color(0xFF34D399);
+    }
+    return Container(
+      // The gap above lives here, so a hidden strip leaves no empty space.
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(color: tone.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(14)),
+      child: Row(
+        children: [
+          HugeIcon(icon: HugeIcons.strokeRoundedTimer02, color: tone, size: 18, strokeWidth: 1.8),
+          const SizedBox(width: 8),
+          if (label.isNotEmpty)
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Color(0xFFD0D0D6), fontFamily: gilroyMedium, fontSize: 13),
+              ),
+            )
+          else
+            const Spacer(),
+          Text(
+            value,
+            style: TextStyle(color: tone, fontFamily: gilroyBold, fontSize: 15, height: 1.1, fontFeatures: const [FontFeature.tabularFigures()]),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 
 import '../constants/constants.dart';
@@ -14,12 +14,13 @@ class WalletPageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardHeight = (size.height / 4).clamp(150.0, 240.0);
     return GestureDetector(
       onTap: ontapp,
       child: Stack(
         children: [
           Container(
-            height: size.height / 4,
+            height: cardHeight,
             width: double.infinity,
             margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
             decoration: BoxDecoration(
@@ -33,7 +34,7 @@ class WalletPageCard extends StatelessWidget {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height / 4,
+            height: cardHeight,
             width: double.infinity,
             margin: const EdgeInsets.only(left: 15, right: 15, top: 15),
             decoration: BoxDecoration(borderRadius: borderRadius25, color: Colors.black12.withValues(alpha: 0.6)),

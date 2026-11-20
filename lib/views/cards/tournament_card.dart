@@ -12,13 +12,7 @@ class TournamentCard extends StatelessWidget {
   final bool finised;
   final int tournamentType;
   final TournamentModel tournamentModel;
-  const TournamentCard({
-    required this.index,
-    required this.tournamentModel,
-    required this.finised,
-    required this.tournamentType,
-    super.key,
-  });
+  const TournamentCard({required this.index, required this.tournamentModel, required this.finised, required this.tournamentType, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +31,7 @@ class TournamentCard extends StatelessWidget {
       mode: tournamentModel.mode,
       map: tournamentModel.map,
       badge: finised ? 'endTournament'.tr : null,
-      onTap: () => Get.to(
-        () => TournamentProfilPage(tag: heroTag, finised: finised, tournamentType: tournamentType, image: imageUrl, tournamentId: tournamentModel.id!, winners: tournamentModel),
-      ),
+      onTap: () => Get.to(() => TournamentProfilPage(tag: heroTag, finised: finised, tournamentType: tournamentType, image: imageUrl, tournamentId: tournamentModel.id!, winners: tournamentModel)),
     );
   }
 }

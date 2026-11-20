@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:game_app/models/turnir.dart';
 import 'package:game_app/views/cards/tournament_banner.dart';
 import 'package:game_app/views/cards/tournament_image.dart';

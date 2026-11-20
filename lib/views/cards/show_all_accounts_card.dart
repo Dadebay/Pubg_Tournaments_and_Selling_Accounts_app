@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:game_app/models/get_posts_model.dart';
+import 'package:game_app/views/constants/sold_badge.dart';
 import 'package:game_app/views/other_pages/account_profil_page/account_profil_page.dart';
 import 'package:game_app/views/other_pages/account_profil_page/video_preview.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -221,6 +222,8 @@ class _ShowAllProductsCardState extends State<ShowAllProductsCard> {
         fit: StackFit.expand,
         children: [
           content,
+          if (widget.model.sold) const SoldOverlay(),
+          if (widget.model.sold) const Positioned(top: 0, right: 0, child: SoldCornerRibbon(size: 100)),
           if (vip)
             Positioned(
               top: 8,

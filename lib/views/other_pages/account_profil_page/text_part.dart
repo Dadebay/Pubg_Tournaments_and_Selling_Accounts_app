@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 
 import '../../../models/get_posts_model.dart';
 import '../../other_pages/video_player_profile.dart';
+import '../../constants/sold_badge.dart';
 import 'notice_card.dart';
 import 'video_preview.dart';
 import '../../constants/index.dart';
@@ -39,6 +40,7 @@ class CustomFlexibleSpace extends StatelessWidget {
               child: videos.isEmpty ? _banner(model) : _videoArea(videos.first, big: true, cover: model.bgImage),
             ),
           ),
+          if (model.sold) const Positioned(top: 70, right: 14, child: SoldBadge(big: false)),
           if (videos.length > 1)
             Positioned(
               bottom: 0,

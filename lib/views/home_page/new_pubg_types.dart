@@ -23,8 +23,28 @@ class NewPubgTypes extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
+    if (size.shortestSide >= 600) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: SizedBox(
+              height: 190,
+              child: Row(
+                children: [
+                  for (var index = 0; index < 2; index++)
+                    Expanded(child: NewMiniCategoryCard(index: index, image: images[index], name: names[index])),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
-      height: size.width >= 800 ? 300 : 150,
+      height: 150,
       margin: const EdgeInsets.only(top: 25, bottom: 25),
       color: kPrimaryColorBlack,
       alignment: Alignment.center,
@@ -35,7 +55,7 @@ class NewPubgTypes extends StatelessWidget {
         },
         options: CarouselOptions(
           onPageChanged: (index, CarouselPageChangedReason a) {},
-          height: size.width >= 800 ? 300 : 150,
+          height: 150,
           viewportFraction: 0.6,
           autoPlay: true,
           enableInfiniteScroll: true,

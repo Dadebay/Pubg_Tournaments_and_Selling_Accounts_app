@@ -5,6 +5,7 @@ import 'package:game_app/repository/ucdayy_api.dart';
 import 'package:game_app/views/catalog/catalog_common.dart';
 import 'package:game_app/views/constants/catalog_empty_state.dart';
 import 'package:game_app/views/constants/centered_header.dart';
+import 'package:game_app/views/constants/shimmer.dart';
 import 'package:game_app/views/user_profil/auth/tab_bar_view.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -59,10 +60,18 @@ String catalogImageUrl(dynamic value) {
 
 class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
   /// Where the order was bought: (type sent as `?type=`, label key). The first one is "all".
-  static const _sources = [(null, 'allOrders'), ('uc', 'ordersTypeUc'), ('game', 'homeGames'), ('program', 'homePrograms'), ('gift', 'homeGifts'), ('account_post', 'accountsForSale')];
+  static const _sources = [
+    (null, 'allOrders'),
+    ('uc', 'ordersTypeUc'),
+    ('game', 'homeGames'),
+    ('program', 'homePrograms'),
+    ('gift', 'homeGifts'),
+    ('account_post', 'accountsForSale'),
+    ('account_buy', 'ordersTypeAccountBuy'),
+  ];
 
   /// What "all" asks the server for (`?type=a,b,...`).
-  static const _purchaseTypes = 'uc,game,program,gift,account_post';
+  static const _purchaseTypes = 'uc,game,program,gift,account_post,account_buy';
 
   final ScrollController _scroll = ScrollController();
   late final List<GlobalKey> _sourceKeys = List.generate(_sources.length, (_) => GlobalKey());
@@ -195,38 +204,47 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
 
   /// Where the orders come from: UC, games, programs, gift cards, contests, premium, ...
   /// A second bar under the status tabs, sent to the server as `?type=`.
+  /// The source buttons in two rows that scroll sideways together. The buttons are shared out so both
+  /// rows are about equally long, every button keeps its full size and its icon.
   Widget _sourceBar() {
-    final count = _sources.length;
-    // An estimate of each button's natural width, to share them between the rows evenly.
-    final widths = [for (final source in _sources) source.$2.tr.length * 8.0 + 52];
+    const gap = 8.0;
+    const extra = 8.0 + 8.0 + 17.0 + 6.0 + 2.0; // padding + icon + space + border
+    final widths = [
+      for (final source in _sources)
+        (TextPainter(
+              text: TextSpan(
+                text: source.$2.tr,
+                style: const TextStyle(fontFamily: gilroyBold, fontSize: 14.5),
+              ),
+              textDirection: TextDirection.ltr,
+              maxLines: 1,
+            )..layout()).width +
+            extra,
+    ];
+    // Longest first onto the shorter row, then each row back in its original order.
+    final order = List.generate(_sources.length, (i) => i)..sort((x, y) => widths[y].compareTo(widths[x]));
     final rows = <List<int>>[[], []];
-    if (count <= 5) {
-      rows[0].addAll(List.generate(count, (i) => i));
-      rows.removeLast();
-    } else {
-      // Longest first onto the lighter row, then each row goes back to the original order.
-      final order = List.generate(count, (i) => i)..sort((x, y) => widths[y].compareTo(widths[x]));
-      final totals = [0.0, 0.0];
-      for (final i in order) {
-        final row = totals[0] <= totals[1] ? 0 : 1;
-        rows[row].add(i);
-        totals[row] += widths[i];
-      }
-      for (final row in rows) {
-        row.sort();
-      }
+    final totals = [0.0, 0.0];
+    for (final i in order) {
+      final row = totals[0] <= totals[1] ? 0 : 1;
+      rows[row].add(i);
+      totals[row] += widths[i];
     }
-    // Every row spans the whole width (a button is as wide as its text needs, text shrinks a little
-    // when it must), so there is no empty gap at the end of a row.
-    return Padding(
+    for (final row in rows) {
+      row.sort();
+    }
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var r = 0; r < rows.length; r++) ...[
-            if (r > 0) const SizedBox(height: 8),
+            if (r > 0) const SizedBox(height: gap),
             Row(
               children: [
-                for (var k = 0; k < rows[r].length; k++) ...[if (k > 0) const SizedBox(width: 8), Expanded(flex: widths[rows[r][k]].round(), child: _sourceChip(rows[r][k]))],
+                for (var k = 0; k < rows[r].length; k++) ...[if (k > 0) const SizedBox(width: gap), _sourceChip(rows[r][k])],
               ],
             ),
           ],
@@ -251,20 +269,17 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
           gradient: LinearGradient(colors: selected ? const [Color(0xFFFFD96B), Color(0xFFFFC83D)] : const [Color(0xFF1C1C20), Color(0xFF1C1C20)]),
           border: Border.all(color: selected ? Colors.transparent : Colors.white.withValues(alpha: 0.09)),
         ),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              HugeIcon(icon: source.$1 == null ? HugeIcons.strokeRoundedGridView : _icon(source.$1!), color: selected ? const Color(0xFF1A1200) : catalogGold, size: 19, strokeWidth: 1.9),
-              const SizedBox(width: 7),
-              Text(
-                source.$2.tr,
-                maxLines: 1,
-                style: TextStyle(color: selected ? const Color(0xFF1A1200) : Colors.white70, fontFamily: gilroyBold, fontSize: 14.5),
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            HugeIcon(icon: source.$1 == null ? HugeIcons.strokeRoundedGridView : _icon(source.$1!), color: selected ? const Color(0xFF1A1200) : catalogGold, size: 17, strokeWidth: 1.9),
+            const SizedBox(width: 6),
+            Text(
+              source.$2.tr,
+              maxLines: 1,
+              style: TextStyle(color: selected ? const Color(0xFF1A1200) : Colors.white70, fontFamily: gilroyBold, fontSize: 14.5),
+            ),
+          ],
         ),
       ),
     );
@@ -292,7 +307,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
       );
     }
     if (_loading) {
-      return const Center(child: CircularProgressIndicator(color: catalogGold));
+      return _skeleton();
     }
     if (_failed) {
       return Center(
@@ -340,6 +355,39 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
     );
   }
 
+  /// Shimmering placeholders shaped like the order cards, shown while the list loads (also when the
+  /// player comes to the page through the bottom bar).
+  Widget _skeleton() {
+    Widget card() => Container(
+      height: 96,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: const Color(0xFF1B1B1F), borderRadius: BorderRadius.circular(20)),
+      child: const Row(
+        children: [
+          ShimmerBlock(width: 68, height: 68, radius: 16),
+          SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [ShimmerBlock(width: 150, height: 16, radius: 8), SizedBox(height: 10), ShimmerBlock(width: 100, height: 12, radius: 6)],
+            ),
+          ),
+          ShimmerBlock(width: 56, height: 22, radius: 8),
+        ],
+      ),
+    );
+    return Shimmer(
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+        itemCount: 7,
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemBuilder: (context, index) => card(),
+      ),
+    );
+  }
+
   // --------------------------------------------------------------- helpers
 
   List<List<dynamic>> _icon(String type) => switch (type) {
@@ -352,6 +400,7 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
     'spins' => HugeIcons.strokeRoundedRotate01,
     'turnir' => HugeIcons.strokeRoundedChampion,
     'account_post' => HugeIcons.strokeRoundedUserStar01,
+    'account_buy' => HugeIcons.strokeRoundedUserCheck01,
     _ => HugeIcons.strokeRoundedShoppingBag01,
   };
 
@@ -492,6 +541,14 @@ class _OrdersHistoryPageState extends State<OrdersHistoryPage> {
         final start = DateTime.tryParse('${extra['start_date'] ?? ''}')?.toLocal();
         add('tournamentInfo7'.tr.replaceAll(':', '').trim(), start == null ? null : _date(start));
         add('Team', extra['team']);
+      case 'account_buy':
+        // What the buyer sent to the admin, and the bought account itself.
+        add('Gmail', extra['gmail']);
+        add('Pubg ID', extra['pubg_id']);
+        add('accountBuyBoughtAccount'.tr, extra['account_pubg_username']);
+        if (entry.status == 'failed') {
+          add('orderRefunded'.tr, '✓');
+        }
       case 'account_post':
         add('accountDetaile5'.tr.replaceAll(':', '').trim(), extra['account_price'] == null ? null : '${extra['account_price']} TMT');
         if (extra['vip'] == true) {
